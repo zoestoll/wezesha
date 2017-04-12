@@ -247,7 +247,7 @@ td {
     font-family: Lucida Grande;
     font-size: 18px;
     /* Background */
-    /*background-image: linear-gradient(to bottom, black 0%, white 100%); /* the gradient */*/
+    /*background-image: linear-gradient(to bottom, black 0%, white 100%); /* the gradient */
     background-origin: border-box;
     opacity:0.5;
     /* Border */
@@ -256,7 +256,7 @@ td {
     background-color: transparent !important;
     border-collapse: collapse;
     /* Position */
-    margin-top: 100px;
+    margin-top: 30;
     width: 40%;
 }
 
@@ -372,6 +372,19 @@ div.panel {
     -webkit-touch-callout: none;
     transition-duration:0.3s;
 }
+
+.flex-container {
+    background-color: #a6a6a6;
+    display: flex; 
+    justify-content: space-around;
+    
+}
+
+/*.flex-container > * {
+    padding: 15px;
+    -webkit-flex: 1 100%;
+    flex: 1 100%;
+}*/
 
 /******************* Footer *******************/
 
