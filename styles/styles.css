@@ -6,7 +6,7 @@ html {
 }
 
 body {
-    background-color: gray;
+    background-color: lightgray;
     /*background-color: transparent !important;*/
     background-position: right; 
     padding-bottom: 100px;
@@ -29,7 +29,7 @@ p {
 .highlight-card {
     min-height: 200px;
     margin-top: -300px;
-    background-color: gray;
+    background-color: lightgray;
     /*background-color: transparent !important;*/
 }
 
@@ -38,7 +38,7 @@ nav .container, footer .container {
 }
 
 h1, h2, h3, h4, h5, h6 {
-    color: pink;
+    color: black;
 }
 
 h3 {
@@ -247,16 +247,15 @@ td {
     font-family: Lucida Grande;
     font-size: 18px;
     /* Background */
-    /*background-image: linear-gradient(to bottom, black 0%, white 100%); /* the gradient */
-    background-origin: border-box;
-    opacity:0.5;
     /* Border */
     border-spacing: 5px;
-    border: 10px solid transparent;
-    background-color: transparent !important;
+    /*border: 10px solid transparent;*/
+    background-color: black;
     border-collapse: collapse;
     /* Position */
-    margin-top: 30;
+    margin-top: 100px;
+    margin-left: 50px;
+    position: relative;
     width: 40%;
 }
 
@@ -268,7 +267,11 @@ td {
 }
 
 .donations_form {
-	text-align: center
+    text-align: center;
+}
+
+.flex-container {
+    text-align: center;
 }
 
 .donations_list table {
@@ -331,9 +334,28 @@ td {
 }
 
 div.panel {
-    background-color: white;
+    background-color: black;
     overflow: hidden;
 }
+
+
+/*.panel-group .panel-default .panel-heading .panel-title a {
+    color: green;
+
+}
+
+.panel-group .panel-default .panel-collapse .panel-body {
+    background-color: black;
+
+}
+
+.panel-group .panel-default .panel-heading {
+  background-color: black;
+}
+
+.panel-title > a {
+  color: green;
+}*/
 
 /******************* Staff (i.e. Pamela) *******************/
 
@@ -372,19 +394,6 @@ div.panel {
     -webkit-touch-callout: none;
     transition-duration:0.3s;
 }
-
-.flex-container {
-    background-color: #a6a6a6;
-    display: flex; 
-    justify-content: space-around;
-    
-}
-
-/*.flex-container > * {
-    padding: 15px;
-    -webkit-flex: 1 100%;
-    flex: 1 100%;
-}*/
 
 /******************* Footer *******************/
 

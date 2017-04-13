@@ -35,9 +35,7 @@
                     <li ><a href="news.html"><b>News</b></a></li>
                     <li class="active"><a href="resources.html"><b>Resources</b></a></li>
                     <li ><a href="sponsors.html"><b>Sponsors</b></a></li>
-                    <li ><a href="donations.html"><b>Donations</b></a></li>
-                    <!-- <li ><a href="contact.html"><b>Contact</b></a></li> -->
-                    <!-- <li ><a href="staff.html"><b>Staff</b></a></li> -->
+                    <li ><a href="donations.html"><b>Donations</b></a></li>s
                 </ul>
             </div>
         </div>
@@ -45,8 +43,8 @@
 
     <section class="view_top">
         <div class="container">
-            <h1>Donate to Wezesha Kupaa</h1>
-            <div class="view_top"><h2>Information</h2></div>
+            <h1>Wezesha Kupaa</h1>
+            <div class="view_top"><h2>Resources</h2></div>
         </div>
     </section>
 
@@ -65,6 +63,37 @@
             <li> Pamela Follett </li>
         </ul>
     </div>
+
+    <!-- Some code used from https://developers.google.com/maps/documentation/javascript/adding-a-google-map -->
+    <head>
+    <style>
+       #map {
+        height: 400px;
+        width: 100%;
+       }
+    </style>
+  </head>
+
+    <body>
+    <h3>Map of World</h3>
+    <div id="map"></div>
+    <script>
+      function initMap() {
+        var location = {lat: -5, lng: 36};
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 4,
+          center: location
+        });
+        var marker = new google.maps.Marker({
+          position: location,
+          map: map
+        });
+      }
+    </script>
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=&callback=initMap"> // todo
+    </script>
+  </body>
 
 
     <div>
