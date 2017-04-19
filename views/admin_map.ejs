@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<head>
+    <% include header %>
+</head>
+
+
+    <p> Please use this search tool to find resources near you! </p>
+
+    <!-- ################## FORM TO ADD TO MAP ################## -->
+
+    <!-- This feature only available to admins. -->
+
+    <script>
+        function disable() {
+            document.getElementById("dropdownSelect").disabled=true;
+        }
+        function enable() {
+            document.getElementById("dropdownSelect").disabled=false;
+        }
+    </script>
+    </head>
+    <body>
+
+    <form action="/addPin" method="POST">
+        <select name="serviceType">
+            <option>Medical</option>
+            <option>Educational</option>
+            <option>Counseling</option>
+            <option>Other</option>
+        </select>
+        <label><b>Name of Service</b></label>
+            <input placeholder="XYZ Medical Center" name="serviceName" required>
+        </label>
+        <label><b>Address of Service</b></label>
+            <input placeholder="50 X Street, Providence, RI" name="address" required>
+        </label>
+        <p>Latitude: <input size="20" type="text" id="latitude" name="latitude" ></p>
+        <p>Longitude: <input size="20" type="text" id="longitude" name="longitude" ></p>
+        <button type="submit">Add to Map</button>
+    </form>
+
+
+    <!-- ################## EMBEDDED MAP ################## -->
+   
+    <!-- Some code used from https://developers.google.com/maps/documentation/javascript/adding-a-google-map -->
+
+    <head>
+    <style>
+       #map {
+        height: 400px;
+        width: 100%;
+       }
+    </style>
+
+    <div id="map"></div>
+
+    <script>
+        var marker = null;
+        function initMap() {
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 6,
+                center: {lat: -6.337356, lng: 34.798079 } /* Coordinates within Tanzania */
+            });
+            map.addListener('click', function(e) {
+                pinAndLocate(e.latLng, map);
+            });
+        }
+        /* Called when a location on the map is clicked. Drops a pin and pans to it. */
+        function pinAndLocate(latLng, map) {
+                if (marker) {
+                    marker.setMap(null);
+                    marker = null;
+                }
+                marker = new google.maps.Marker({
+                    position: latLng,
+                    map: map
+                });
+            map.panTo(latLng);
+            /* Populate the form fields so that coordinates will be send over on form submit */
+            formlat = document.getElementById("latitude").value = latLng.lat();
+            formlng = document.getElementById("longitude").value = latLng.lng();
+        }
+        /* Double click to zoom in on map */
+        var infowindow = new google.maps.InfoWindow({
+            content: 'Adjust Zoom',
+            position: originalMapCenter
+        });
+        infowindow.open(map);
+        map.addListener('zoom_changed', function() {
+            infowindow.setContent('Zoom: ' + map.getZoom());
+        });
+    </script>
+
+    <!-- Load the map -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDBs20a1Nr7ZDxF7Tq8-69JheH2zeQOLkg&callback=initMap"
+            async defer>
+    </script>
+
+<footer>
+    <% include footer %>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

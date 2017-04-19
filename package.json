@@ -1,0 +1,14 @@
+{
+  "name": "chatroom",
+  "description": "Chatroom",
+  "dependencies": {
+    "any-db": "2.2.0",
+    "any-db-sqlite3": "2.1.4",
+    "body-parser": "1.4.3",
+    "ejs": "^2.5.6",
+    "express": "4.6.1",
+    "http": "0.0.0",
+    "jade": "1.4.2",
+    "socket.io": "1.0.6"
+  }
+}

@@ -1,0 +1,32 @@
+<html class="donations_main">
+<head>
+    <% include header %>
+</head>
+
+<title> Admin Login </title>
+
+<form action="/login" method="POST">
+
+  <div class="container">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="username" placeholder="Enter your full name" />
+
+    <label><b>Password</b></label>
+    <input type="password" placeholder="Enter Password" name="password" required>
+
+    <button type="submit">Login</button>
+    <input type="checkbox" checked="checked"> Remember me
+  </div>
+
+  <div class="container" style="background-color:#f1f1f1">
+    <button type="button" class="cancelbtn">Cancel</button>
+    <span class="password">Forgot <a href="#">password?</a></span>
+  </div>
+
+</form>
+
+<footer>
+    <% include footer %>
+</footer>
+
+</body>

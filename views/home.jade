@@ -1,0 +1,27 @@
+doctype html
+html
+  head
+    link(href='/css/style.css', rel='stylesheet')
+    script(src='//code.jquery.com/jquery-1.11.0.min.js')
+    script(src='/socket.io/socket.io.js')
+    title Home Page
+  body
+    h1 Pick a Chatroom
+    div
+      ul
+        li
+          a(href=pageData.room[0]) Room 1
+          | : Chat room 1
+        li
+          a(href=pageData.room[1]) Room 2
+          | : Chat room 1
+        li
+          a(href=pageData.room[2]) Room 3
+          | : Chat room 1
+        li
+          a(href=pageData.room[3]) Room 4
+          | : Chat room 1
+        li
+          a(href=pageData.room[4]) Room 5
+          | : Chat room 1
+    div

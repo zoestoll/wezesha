@@ -1,0 +1,31 @@
+CREATE DATABASE WEZESHA_DB;
+USE WEZESHA_DB;
+
+DROP TABLE IF EXISTS Users;
+DROP TABLE IF EXISTS BlogPosts;
+
+CREATE TABLE Users (
+   userId int AUTO_INCREMENT NOT NULL PRIMARY KEY,
+   userName character(255),
+   firstName character(255),
+   lastName character(255),
+   email character(255),
+   passwordHash character(255),
+   isAdmin bool DEFAULT FALSE
+);
+-- CREATE INDEX UserNameIndex ON User ( userName );
+
+CREATE TABLE BlogPosts (
+   userId int PRIMARY KEY,
+   time int,
+   postText character(255)
+);
+
+CREATE TABLE Memos (
+   memo text,
+   memotime timestamp DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT INTO Users VALUES (1,'admin','Pamela','Admin', NULL, DEFAULT,'Admin_123', TRUE);
+
+INSERT INTO BlogPosts VALUES (1, 1, "hi");
