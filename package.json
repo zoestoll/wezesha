@@ -1,6 +1,6 @@
 {
-  "name": "chatroom",
-  "description": "Chatroom",
+  "name": "Wezesha Kupaa",
+  "description": "Wezesha Kupaa Website",
   "dependencies": {
     "any-db": "2.2.0",
     "any-db-sqlite3": "2.1.4",
