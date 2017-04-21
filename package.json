@@ -1,14 +1,31 @@
 {
-  "name": "Wezesha Kupaa",
-  "description": "Wezesha Kupaa Website",
+  "name": "wezesha",
+  "version": "1.0.0",
+  "description": "website for wezesha kupaa",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zoestoll/wezesha.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zoestoll/wezesha/issues"
+  },
+  "homepage": "https://github.com/zoestoll/wezesha#readme",
   "dependencies": {
-    "any-db": "2.2.0",
-    "any-db-sqlite3": "2.1.4",
-    "body-parser": "1.4.3",
+    "any-db": "^2.2.0",
+    "any-db-sqlite3": "^2.1.4",
+    "body-parser": "^1.17.1",
     "ejs": "^2.5.6",
-    "express": "4.6.1",
+    "express": "^4.15.2",
     "http": "0.0.0",
-    "jade": "1.4.2",
-    "socket.io": "1.0.6"
+    "jade": "^1.11.0",
+    "node-geocoder": "^3.16.0",
+    "socket.io": "^1.7.3"
   }
 }

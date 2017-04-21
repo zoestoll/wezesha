@@ -30,8 +30,8 @@ app.set("ipaddr", localhost);
 app.set("port", port);
 app.set("views", __dirname + "/views");
 app.set('view engine', 'ejs');
-app.use(express.static("public", __dirname + "/public")); /* For client js */
-app.use(express.static("views", __dirname + "/views")); /* For client js */
+app.use(express.static(__dirname + "/public")); /* For client js */
+app.use(express.static(__dirname + "/views")); /* For client js */
 app.use(bodyParser.json()); /* Interpret JSON requests */
 app.use(bodyParser.urlencoded({     
   extended: true
@@ -182,7 +182,7 @@ app.get('/maps2', function(request, response){
 
 /* TODO: All socket events */
 io.on("connection", function(socket) {
-;
+  
 });
 
 function generateRandomID() { /* From TA suggested code */
