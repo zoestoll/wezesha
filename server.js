@@ -244,41 +244,41 @@ app.post('/map', searchServices, renderServices);
 
 /****************************************************** BLOG/NEWS ******************************************************/
 
-Realm = require('realm');
+// Realm = require('realm');
 
 /* TODO: Transform post schema to use this instead of the array below */
-let PostSchema = {
-    id: 'id',
-    name: 'Post',
-    properties: {
-        timestamp: 'date',
-        title: 'string',
-        content: 'string'
-    }
-};
+// let PostSchema = {
+//     id: 'id',
+//     name: 'Post',
+//     properties: {
+//         timestamp: 'date',
+//         title: 'string',
+//         content: 'string'
+//     }
+// };
 
-var blogRealm = new Realm({
-  path: 'blog.realm',
-  schema: [PostSchema]
-});
+// var blogRealm = new Realm({
+//   path: 'blog.realm',
+//   schema: [PostSchema]
+// });
 
 
-/* For writing a new blog post */
-/* TODO: Get this part working. Currently not doing anything with input given. */
+// /* For writing a new blog post */
+// /* TODO: Get this part working. Currently not doing anything with input given. */
 
-app.get('/write', function(req, res) {
-    res.render("write", { title: "Write a Post!", page_name: "write" });
-});
+// app.get('/write', function(req, res) {
+//     res.render("write", { title: "Write a Post!", page_name: "write" });
+// });
 
-app.post('/write', function(req, res) {
-    var title = req.body['title'];
-    var content = req.body['content'];
-    var timestamp = new Date();
-    var id = 1;
-    blogRealm.write(() => { blogRealm.create('Post', {title: title, content: content, timestamp: timestamp, id: id});
-  });
-  res.redirect("news");
-});
+// app.post('/write', function(req, res) {
+//     var title = req.body['title'];
+//     var content = req.body['content'];
+//     var timestamp = new Date();
+//     var id = 1;
+//     blogRealm.write(() => { blogRealm.create('Post', {title: title, content: content, timestamp: timestamp, id: id});
+//   });
+//   res.redirect("news");
+// });
 
 /* Fake posts to display for now */
 const posts = [

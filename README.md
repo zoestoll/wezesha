@@ -16,6 +16,8 @@ our client's website. We have all the pages that our client requested, with cont
 that our client has provided. Our login page, which is partially functional, directs the user to an admin page in which
 our client, Pamela, will be able to edit the contents of the website without too much trouble. 
 
+Blog/News: currently we don't have the ability to add new blog posts or edit current ones. We are working on this.
+
 Upcoming Tasks 
 ==============
 1. Our News page, which is the "blog" portion of the website that presents and gets updated with new information, will potentially be re-done in blog format using npm modules (ex. blogging, hexo). 
@@ -27,3 +29,4 @@ Upcoming Tasks
 4. Our Maps and Login pages will store the information to a backend database and the login page will be secure and safe from attacks.
 
 5. Finally, our website will undergo major changes in design, in terms of color, font, layout, etc.  
+
