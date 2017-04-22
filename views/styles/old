@@ -1,0 +1,43 @@
+// const posts = [
+//   {
+//     id: 1,
+//     author: 'Pamela',
+//     title: 'Upcoming Graduation Event!',
+//     body: 'There is a graduation event coming up soon!',
+//     img: "../img/baby.jpg",
+//     time: "Feb 10 10:30pm"
+//   },
+//   {
+//     id: 2,
+//     author: 'Pamela',
+//     title: 'Recent Medical News',
+//     body: 'Some really cool recent medical news!',
+//     img: "../img/baby.jpg",
+//     time: "August 20 3:30pm"
+//   },
+//   {
+//     id: 3,
+//     author: 'Pamela',
+//     title: 'Check out these kids',
+//     body: 'Yeah!',
+//     img: "../img/baby.jpg",
+//     time: "Sept 5 6:00pm"
+//   },
+//   {
+//     id: 4,
+//     author: 'Pamela',
+//     title: 'Kids doing cool stuff',
+//     body: 'Awesome stuff!',
+//     img: "../img/baby.jpg",
+//     time: "April 12 9:30pm"
+//   }
+// ]
+
+// set the view engine to ejs
+// app.set('view engine', 'ejs')
+
+// blog home page
+// app.get('/news', (req, res) => {
+//   // render `home.ejs` with the list of posts
+//   res.render('news', { title: "News", page_name: "news", posts: posts});
+// })

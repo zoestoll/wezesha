@@ -1,26 +1,34 @@
-<!-- views/pages/maps.ejs -->
+<!-- views/maps.ejs -->
 
 <!DOCTYPE html>
 <head>
     <% include header %>
 </head>
 
-<script>
 
-
-</script>
-
-    <!-- ################## EMBEDDED MAP ################## -->
+<!-- ################## EMBEDDED MAP ################## -->
    
-    <!-- Some code used from https://developers.google.com/maps/documentation/javascript/adding-a-google-map -->
-    <head>
+<!-- Some code used from https://developers.google.com/maps/documentation/javascript/adding-a-google-map -->
+<head>
     <style>
-       #map {
+    #map {
         height: 400px;
         width: 100%;
-       }
+    }
     </style>
-  </head>
+</head>
+
+  <form action="/map" method="POST">
+        <select name="serviceType">
+            <option>Medical</option>
+            <option>Educational</option>
+            <option>Counseling</option>
+            <option>Other</option>
+        </select>
+<!--         <p>Latitude: <input size="20" type="text" id="latitude" name="latitude" ></p>
+        <p>Longitude: <input size="20" type="text" id="longitude" name="longitude" ></p> -->
+        <button type="submit">Search for Services near these Coordinates</button>
+    </form>
 
     <body>
     <h3>Map of World</h3>
@@ -28,15 +36,15 @@
     <script>
 
     function addPin(map, lat, lng) {
-    	/* Adds a pin/marker on the map at these coordinates */
-	    marker = new google.maps.Marker({
-	        map: map,
-	        position: new google.maps.LatLng(lat, lng),
-	        title: "Location" /* TODO: Make these titles meaningful */
-	    });
-	    
-	    marker.setMap(map);
-	}
+      /* Adds a pin/marker on the map at these coordinates */
+      marker = new google.maps.Marker({
+          map: map,
+          position: new google.maps.LatLng(lat, lng),
+          title: "Location" /* TODO: Make these titles meaningful */
+      });
+      
+      marker.setMap(map);
+  }
 
      function initMap() {
         var location = {lat: -5, lng: 36};
@@ -45,14 +53,14 @@
           center: location
         });
         var marker = new google.maps.Marker({
-          position: location,
-          map: map
+      position: location,
+      map: map
         });
         <% pins.rows.forEach(function(row) { %>
-		    var lat = <%= row.latitude %> 
-		    var lng = <%= row.longitude %>
-		    addPin(map, lat,lng);
-		<% }); %>
+        var lat = <%= row.latitude %> 
+        var lng = <%= row.longitude %>
+        addPin(map, lat,lng);
+    <% }); %>
       }
     </script>
     <!-- async because the map API can't be loaded after the document has finished loading by default -->

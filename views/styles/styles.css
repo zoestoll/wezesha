@@ -13,9 +13,9 @@ body {
 }
 
 p { 
-	font-size: 18px;
-	color: green;
-	padding: 0 30px;
+    font-size: 18px;
+    color: green;
+    padding: 0 30px;
 }
 
 .container {
@@ -185,6 +185,18 @@ a, a:hover, a:active, a:focus {
     padding-top: 50px;
     position: relative;
     text-align: left;
+}
+
+.post-button {
+    font-style: italic;
+    font-size: 24px;
+    color: blue;
+    background: pink;
+    /*width: 20%;*/
+    padding: 12px 20px;
+    margin: 8px 20px;
+    display: inline-block;
+    border: 2px solid black;
 }
 
 /******************* About *******************/
@@ -509,7 +521,7 @@ span.password {
     height: 20px;
     position: fixed;
     bottom: 0;
-    margin-top: 50px	;
+    margin-top: 50px    ;
     padding-bottom: 75px;
     padding-top: 20px;
     width: 100%;
