@@ -7,7 +7,6 @@ html {
 
 body {
     background-color: lightgray;
-    /*background-color: transparent !important;*/
     background-position: right; 
     padding-bottom: 100px;
 }
@@ -22,15 +21,12 @@ p {
     width: 100%;
     max-width: 2000px !important;
     padding: 20px 30px;
-    /*background-color: gray;*/
-    /*background-color: transparent !important;*/
 }
 
 .highlight-card {
     min-height: 200px;
     margin-top: -300px;
     background-color: lightgray;
-    /*background-color: transparent !important;*/
 }
 
 nav .container, footer .container {
@@ -73,11 +69,6 @@ a, a:hover, a:active, a:focus {
 .nav_title {
     font-size: 24px;
     font-color: gray;
- /*   background-color: blue;
-    border-radius: 0;
-    border: 0;*/
-    /*box-shadow: white 0px 0px 12px 0px;*/
-    /*margin-bottom: 0;*/
 }
 
 /******************* Header *******************/
@@ -108,10 +99,6 @@ a, a:hover, a:active, a:focus {
 }
 
 /******************* Home *******************/
-
-.home_main {
-    /*background-image: url('../images/home_image.jpg');*/
-}
 
 .home_info {
     font-family: Lucida Grande;
@@ -148,7 +135,6 @@ a, a:hover, a:active, a:focus {
 /******************* News *******************/
 
 .news_main {
-    /*background-image: url('../images/news_image.jpg');*/
     background-size: 110%;
 }
 
@@ -158,8 +144,7 @@ a, a:hover, a:active, a:focus {
     font-size: 24px;
     /* Background settings */
     border-spacing: 5px;
-    /*background-image: linear-gradient(to bottom, green 0%, yellow 100%); /* the gradient */*/
-     /* Position settings */
+    /* Position settings */
     margin-left: 100px;
     width: 50%;
 }
@@ -188,10 +173,6 @@ a, a:hover, a:active, a:focus {
 }
 
 /******************* About *******************/
-
-.about_main {
-    /*background-image: url('../images/about_image.jpg');*/
-}
 
 .about_list table {
     /* Font settings */
@@ -227,7 +208,6 @@ td {
 /******************* Find a Resource *******************/
 
 .resources_main {
-    /*background-image: url('../images/resources_image.jpg');*/
     background-size: 90%;
 }
 
@@ -252,7 +232,6 @@ td {
 /******************* Sponsors & NGOs *******************/
 
 .sponsors_main {
-    /*background-image: url('../images/sponsors_image.jpg');*/
     background-size: 90%;
 }
 
@@ -276,51 +255,30 @@ td {
 
 /******************* Donations *******************/
 
-.donations_main {
-    /*background-image: url('../images/donations_image.jpg');*/
-}
-
 .donations_form {
     text-align: center;
 }
 
 .flex-container {
-    text-align: center;
+    display: flex;
+    justify-content: space-around;
 }
 
-.donations_list table {
-    /* Font */
-    font-size:18px;
-    font-family: Lucida Grande;
-    /* Position */
-    margin-top: 100px;
+.b1, .b2, .b3 {
+    display: flex;
+    justify-content: center;
+}
+
+.amount {
+    width: 45%;
+}
+
+.b1, .b2, .b3 {
     width: 40%;
-    position: center;
-    /* Background */
-    border-radius:20px;
-    /*background-image: linear-gradient(to bottom, black 0%, white 100%); /* the gradient */*/
-    background-origin: border-box;
-    opacity:0.8;
-    /* Border */
-    border-spacing: 5px;
-    border: 10px solid transparent;
-    border-collapse: collapse;
 }
 
-.amount, .b1, .b2, .b3 {
-    width: 75%;
-    position: relative;
-}
-
-.donations_list table th, a {
-    color: black;
-}
 
 /******************* Resources *******************/
-
-.resources_main {
-     /*background-image: url('../images/resources_image.jpg');*/
-}
 
 .resources {
     padding-left: 40px;
@@ -333,7 +291,6 @@ td {
 
 .resources ul {
     list-style-type: none;
-    /*background-image: linear-gradient(to bottom, cyan 0%, black 100%);*/
     padding: 10px;
     opacity: 0.8;
     width: 40%;
@@ -358,63 +315,6 @@ div.panel {
     overflow: hidden;
 }
 
-
-/*.panel-group .panel-default .panel-heading .panel-title a {
-    color: green;
-
-}
-
-.panel-group .panel-default .panel-collapse .panel-body {
-    background-color: black;
-
-}
-
-.panel-group .panel-default .panel-heading {
-  background-color: black;
-}
-
-.panel-title > a {
-  color: green;
-}*/
-
-/******************* Staff (i.e. Pamela) *******************/
-
-.staff_main {
-     /*background-image: url('../images/individuals_image.jpg');*/
-}
-
-.staff_header ul {
-    list-style: none;
-    padding-left: 0;
-    -webkit-column-count: 2;
-    column-count: 2;
-}
-
-.staff_list {
-    /*background-image: linear-gradient(to bottom, black 0%, white 100%); /* the gradient */*/
-    width: 60%;
-    text-align: left;
-    font-size: 20px;
-    margin-bottom:60px;
-    margin-left:60px;
-    padding-left:60px;
-    transition: 0.4s;
-}
-
-.staff_pic:hover{
-    /*background-image: url('../images/lizard.jpg');*/
-}
-
-.staff_pic {
-    height: 100px;
-    background-size: auto 100%;
-    background-repeat: no-repeat;
-    /*background-image: url('../images/small_lizard_3.jpg');*/
-    -webkit-user-select: none;
-    -webkit-touch-callout: none;
-    transition-duration:0.3s;
-}
-
 /******************* Login Form *******************/
 
 .login_button {
@@ -426,7 +326,6 @@ div.panel {
     margin: 8px 0;
     display: inline-block;
     border: 5px solid black;
-    /*box-sizing: border-box;*/
 }
 
 /* Some code borrowed from: https://www.w3schools.com/howto/howto_css_login_form.asp */

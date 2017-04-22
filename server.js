@@ -203,7 +203,9 @@ function getPrettyDate() {
 }
 
 /* Start listening */
-http.listen(app.get("port"), app.get("ipaddr"));
+http.listen(app.get("port"), app.get("ipaddr"), function(){
+  console.log("server listening on port " + port);
+});
 
 
 
