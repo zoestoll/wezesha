@@ -1,0 +1,26 @@
+<header>
+<nav class="navbar navbar-default navbar-top">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand hidden-lg hidden-md hidden-sm" href="#">Wezesha Kupaa</a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-fixed-top">
+                <li class="nav_title" <% if (page_name === 'home') { %>class="active" <% } %> ><a href="/index">Home</a></li>
+                <li class="nav_title" <% if (page_name === 'about') { %>class="active" <% } %> ><a href="/about">About</a></li>
+                <li class="nav_title" <% if (page_name === 'news') { %>class="active" <% } %> ><a href="/news">News</a></li>
+                <li class="nav_title" <% if (page_name === 'maps') { %>class="active" <% } %> ><a href="/map">Maps</a></li>
+                <li class="nav_title" <% if (page_name === 'sponsors') { %>class="active" <% } %> ><a href="/sponsors">Sponsors</a></li>
+                <li class="nav_title" <% if (page_name === 'donations') { %>class="active" <% } %> ><a href="/donations">Donations</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+</header>
