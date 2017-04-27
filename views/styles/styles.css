@@ -10,6 +10,7 @@ body {
     background-color: lightgray;
     background-position: right; 
     /* padding-bottom: 100px; */
+    margin-top: 50px;
     width: 80%;
     margin: 0 auto;
 }
@@ -58,6 +59,7 @@ p {
 /******************* Navigation *******************/
 
 .navbar {
+    position: fixed;
     background-color: black;
     border-radius: 0;
     border: 0;
@@ -81,6 +83,10 @@ p {
     background-color: black;
     position: fixed;
     width: 100%;
+}
+
+header {
+    height: 50px;
 }
 
 /******************* Header *******************/
@@ -283,6 +289,20 @@ p {
 }
 
 /******************* About *******************/
+
+#about_head {
+    padding: 15px 0;
+    font-size: 30pt;
+    font-family: Lora;
+    font-weight: bold;
+}
+
+.about h2 {
+    font-size: 24pt;
+    border-bottom: 3px solid #000080;
+    padding-bottom: 5px;
+    margin: 15px 0;
+}
 
 .about_list table {
     /* Font settings */
