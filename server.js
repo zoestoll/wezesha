@@ -29,10 +29,12 @@ var conn = anyDB.createConnection('sqlite3://wezesha.db');
 /* User table */
 userTableCreate = "CREATE TABLE IF NOT EXISTS 'users' ('id' INTEGER PRIMARY KEY AUTOINCREMENT, 'username' VARCHAR(255), 'password' VARCHAR(255), 'createdAt' DATETIME, 'updatedAt' DATETIME, 'salt' VARCHAR(255), 'isAdmin' BOOLEAN)"
 conn.query(userTableCreate);
-/* Create fake user */
+
+/* Create fake user - for testing purposes */
 salt = bCrypt.genSaltSync(10);
 hash = bCrypt.hashSync("admin", salt, null);
-conn.query("INSERT INTO users (id, username, password, salt, isAdmin) VALUES (?, ?, ?, ?, ?)", [1, "admin", hash, salt, true]);
+conn.query("INSERT INTO users (username, password, salt, isAdmin) VALUES (?, ?, ?, ?)", ["admin", hash, salt, true]);
+
 /* Session table */
 conn.query("CREATE TABLE IF NOT EXISTS sessions (id INTEGER PRIMARY KEY AUTOINCREMENT, userID INTEGER, sessionID NVARCHAR(64))");
 
@@ -56,7 +58,7 @@ app.use(bodyParser.urlencoded({
 
 /* TODO: Session config (Couldn't get this working) */
 
-app.use(session({ secret: 'example' }));
+// app.use(session({ secret: 'example' }));
 
 // app.use(session({  
 //   store: new RedisStore({
@@ -360,61 +362,7 @@ app.post('/map', searchServices, renderServices);
 
 /****************************************************** BLOG/NEWS ******************************************************/
 
-// Realm = require('realm');
-
-/* TODO: Transform post schema to use this instead of the array below */
-// let PostSchema = {
-//     id: 'id',
-//     name: 'Post',
-//     properties: {
-//         timestamp: 'date',
-//         title: 'string',
-//         content: 'string'
-//     }
-// };
-
-// var blogRealm = new Realm({
-//   path: 'blog.realm',
-//   schema: [PostSchema]
-// });
-
-
-
-/* Fake posts to display for now */
-const posts = [
-  {
-    id: 1,
-    author: 'Pamela',
-    title: 'Upcoming Graduation Event!',
-    body: 'There is a graduation event coming up soon!',
-    img: "../img/baby.jpg",
-    time: "Feb 10 10:30pm"
-  },
-  {
-    id: 2,
-    author: 'Pamela',
-    title: 'Recent Medical News',
-    body: 'Some really cool recent medical news!',
-    img: "../img/baby.jpg",
-    time: "August 20 3:30pm"
-  },
-  {
-    id: 3,
-    author: 'Pamela',
-    title: 'Check out these kids',
-    body: 'Yeah!',
-    img: "../img/baby.jpg",
-    time: "Sept 5 6:00pm"
-  },
-  {
-    id: 4,
-    author: 'Pamela',
-    title: 'Kids doing cool stuff',
-    body: 'Awesome stuff!',
-    img: "../img/baby.jpg",
-    time: "April 12 9:30pm"
-  }
-]
+const posts = [];
 
 /* View a single blog post */
 app.get('/post/:id', (req, res) => {
@@ -426,9 +374,11 @@ app.get('/post/:id', (req, res) => {
   res.render('post', { title: "Post", page_name: "post", author: post.author, title: post.title, body: post.body, img: post.img , logged_in: isLoggedIn});
 })
 
-// /* For writing a new blog post */
-// /* TODO: Get this part working. Currently not doing anything with input given. */
+/* User table */
+newsTableCreate = "CREATE TABLE IF NOT EXISTS 'news' ('id' INTEGER PRIMARY KEY AUTOINCREMENT, 'title' VARCHAR(255), 'content' VARCHAR(255), 'timestamp' DATETIME)";
+conn.query(newsTableCreate);
 
+/* For writing a new blog post */
 app.get('/write', function(req, res) {
     res.render("write", { title: "Write a Post!", page_name: "write" , logged_in: isLoggedIn});
 });
@@ -437,8 +387,10 @@ app.post('/write', function(req, res) {
     var title = req.body['title'];
     var content = req.body['content'];
     var timestamp = new Date();
-    var id = 1;
-    posts.push({id: 5, author: 'Pamela', title: title, content: content, timestamp: timestamp});
+    // var sql = 'INSERT INTO news ('
+
+    // var id = 1;
+    // posts.push({id: 5, author: 'Pamela', title: title, content: content, timestamp: timestamp});
     res.redirect("news");
 });
 
