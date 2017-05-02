@@ -8,6 +8,8 @@ var NodeGeocoder = require('node-geocoder');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var Sequelize = require('sequelize');
+var bCrypt = require("bcrypt-nodejs");
+var crypto = require('crypto');
 
 
 /* TODO: Update these values */
@@ -22,13 +24,15 @@ var APIKey = "AIzaSyDBs20a1Nr7ZDxF7Tq8-69JheH2zeQOLkg";
 var conn = anyDB.createConnection('sqlite3://wezesha.db');
 /* Temporary - won't need to drop tables every time. */
 // conn.query("DROP TABLE mapLocations");
-// conn.query("DROP TABLE users");
+conn.query("DROP TABLE users");
 
 /* User table */
-userTableCreate = "CREATE TABLE IF NOT EXISTS 'Users' ('id' INTEGER PRIMARY KEY AUTOINCREMENT, 'username' VARCHAR(255), 'password' VARCHAR(255), 'createdAt' DATETIME NOT NULL, 'updatedAt' DATETIME NOT NULL, 'isAdmin' BOOLEAN)"
+userTableCreate = "CREATE TABLE IF NOT EXISTS 'users' ('id' INTEGER PRIMARY KEY AUTOINCREMENT, 'username' VARCHAR(255), 'password' VARCHAR(255), 'createdAt' DATETIME, 'updatedAt' DATETIME, 'salt' VARCHAR(255), 'isAdmin' BOOLEAN)"
 conn.query(userTableCreate);
-// conn.query("INSERT INTO Users (userID, username, password, isAdmin) VALUES (?, ?, ?, ?)", [1, "admin", "admin", true]);
-
+/* Create fake user */
+salt = bCrypt.genSaltSync(10);
+hash = bCrypt.hashSync("admin", salt, null);
+conn.query("INSERT INTO users (id, username, password, salt, isAdmin) VALUES (?, ?, ?, ?, ?)", [1, "admin", hash, salt, true]);
 /* Session table */
 conn.query("CREATE TABLE IF NOT EXISTS sessions (id INTEGER PRIMARY KEY AUTOINCREMENT, userID INTEGER, sessionID NVARCHAR(64))");
 
@@ -66,7 +70,15 @@ app.use(session({ secret: 'example' }));
 // app.use(passport.initialize())  
 // app.use(passport.session())  
 
-var isAdmin = 0; /* TEMPORARY FOR DEMONSTRATION PURPOSES. REMOVE THIS LATER! */
+app.use(require('express-session')({
+  secret: 'keyboard cat',
+  resave: true,
+  saveUninitialized: true
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
+var isLoggedIn = 0; /* TEMPORARY FOR DEMONSTRATION PURPOSES. REMOVE THIS LATER! */
 
 /* Maps config */
 var geocoder = NodeGeocoder(options);
@@ -80,212 +92,59 @@ var options = {
 
 /****************************************************** AUTHENTICATION & SESSION MANAGEMENT ******************************************************/
 
+// TODO: SESSION STUFF
 
-var sequelize = new Sequelize("_databaseName_", "_username_", "_password_", {
-  dialect: 'sqlite',
-  storage: "wezesha.db"
-});
+// app.use(function (req, res, next) {
+//     var err = req.session.error,
+//         msg = req.session.success;
+//     delete req.session.error;
+//     delete req.session.success;
+//     res.locals.message = '';
+//     if (err) res.locals.message = '<p class="msg error">' + err + '</p>';
+//     if (msg) res.locals.message = '<p class="msg success">' + msg + '</p>';
+//     next();
+// });
 
-var User = sequelize.define('User', 
-{
-  username: Sequelize.STRING,
-  password: Sequelize.STRING
-});
 
-User.sync();
+/* Hasing Functions & Password Storage */
 
-app.use(function (req, res, next) {
-    var err = req.session.error,
-        msg = req.session.success;
-    delete req.session.error;
-    delete req.session.success;
-    res.locals.message = '';
-    if (err) res.locals.message = '<p class="msg error">' + err + '</p>';
-    if (msg) res.locals.message = '<p class="msg success">' + msg + '</p>';
-    next();
-});
 
-/* Authentication */
-
-function authenticate(name, pass, fn) {
-    console.log('authenticating %s:%s', name, pass);
-
-    conn.query("SELECT * FROM users WHERE username=(?) AND passwordHash=(?)", [name, pass], function (err, rows) {
-        var user = rows.username;
-        if (user) {
-            if (err) return fn(new Error('cannot find user'));
-            console.log("username found: ", user);
-            // hash(pass, user.salt, function (err, hash) {
-            //     if (err) return fn(err);
-            //     if (hash == user.hash) return fn(null, user);
-            //     fn(new Error('invalid password'));
-            // });
-        } else {
-            console.log("username found: ", user);
-            return fn(new Error('cannot find user'));
-        }
-    });
-}
-
-function requiredAuthentication(req, res, next) {
-    console.log("requiredAuthentication");
-    if (req.session.user) {
-        next();
-    } else {
-        req.session.error = 'Access denied!';
-        res.redirect('/admin_login');
-    }
-}
-
-function userExist(req, res, next) {
-    console.log("userExist");
-    User.count({
-        username: req.body.username
-    }, function (err, count) {
-        if (count === 0) {
-            next();
-        } else {
-            req.session.error = "User Exist"
-            res.redirect("/signup");
-        }
-    });
-}
-
-app.get("/", function (req, res) {
-    console.log("main");
-    if (req.session.user) {
-        console.log("accept");
-        res.send("Welcome " + req.session.user.username + "<br>" + "<a href='/logout'>logout</a>");
-    } else {
-        console.log("unaccept");
-        res.redirect("/admin_login");
-        // res.send("<a href='/login'> Login</a>" + "<br>" + "<a href='/signup'> Sign Up</a>");
-    }
-});
-
-/* Signup */
-
-app.get('/signup', function(req, res) {
-    console.log("signup get");
-    res.render('signup', { title: "Signup", page_name: "signup"});
-});
-
-var bCrypt = require("bcrypt-nodejs");
-
-// Generates hash using bCrypt
 var createHash = function(password){
     return bCrypt.hashSync(password, bCrypt.genSaltSync(10), null);
 }
-    
-app.post('/signup', function(req, res) {
-    console.log("signup post");
-    var password = req.body.password;
-    var username = req.body.username;
-    hash = createHash(password);
-    var user = User.create({ username: username, password: hash });
-    // Account.register(new Account({ username : req.body.username }), req.body.password, function(err, account) {
-    //     if (err) {
-    //         return res.render('signup', { account : account });
-    //     }
-    //     passport.authenticate('local')(req, res, function () {
-    res.redirect('/');
-    //     });
-    // });
-});
-
-// app.post("/signup", userExist, function (req, res) {
-//     var password = req.body.password;
-//     var username = req.body.username;
-
-
-
-//     hash(password, function (err, salt, hash) {
-//         if (err) throw err;
-//         var user = new User({
-//             username: username,
-//             salt: salt,
-//             hash: hash,
-//         }).save(function (err, newUser) {
-//             if (err) throw err;
-//             authenticate(newUser.username, password, function(err, user){
-//                 if(user){
-//                     req.session.regenerate(function(){
-//                         req.session.user = user;
-//                         req.session.success = 'Authenticated as ' + user.username + ' click to <a href="/logout">logout</a>. ' + ' You may now access <a href="/restricted">/restricted</a>.';
-//                         res.redirect('/');
-//                     });
-//                 }
-//             });
-//         });
-//     });
-// });
-
-/* Password storage using module passport */
-
-var crypto = require('crypto');
 
 function hashPassword(password, salt) {
-    console.log("hashPassword");
     var hash = crypto.createHash('sha256');
     hash.update(password);
     hash.update(salt);
     return hash.digest('hex');
 }
 
-// passport.use(new LocalStrategy(function(username, password, done) {
-//     console.log("LocalStrategy");
-//     conn.query('SELECT salt FROM users WHERE username = ?', username, function(err, row) {
-//         if (!row) {
-//             console.log("1!");
-//             return done(null, false);
-//         }
-//         console.log("Password, salt: ", password, row.salt);
-//         var hash = hashPassword(password, row.salt);
-//         conn.get('SELECT username, id FROM users WHERE username = ? AND password = ?', username, hash, function(err, row) {
-//             if (!row){
-//                 console.log("2!");
-//                 return done(null, false);
-//             }
-//             return done(null, row);
-//         });
-//     });
-// }));
+/* Authentication using Passport module */ 
+passport.use(new LocalStrategy(function(username, password, done) {
+    console.log('authenticating %s:%s', username, password);
+    conn.query('SELECT * FROM users', function(err, row) {
+        if (!row) {
+            return done(null, false);
+        }
 
-// Use local strategy to create user account
-/* Some code borrowed from: https://github.com/jaredhanson/passport-local */
-passport.use(new LocalStrategy(
-    function(username, password, done) {
-        console.log("Username: ", username);
-        console.log(User);
-        User.findOne({ username: username }, function (err, user) {
-            if (err) {
-                console.log("1");
-                return done(err);
+        var hash = hashPassword(password, row.rows[0].salt);
+        conn.query('SELECT * FROM users', function(err, row) {
+            if (!row) {
+                return done(null, false)
             }
-            if (!user) {
-                console.log("2");
-                return done(null, false);
-            }
-            if (!user.verifyPassword(password)) {
-                console.log("3");
-                return done(null, false);
-            }
-            console.log("4");
-            return done(null, user);
-        });
-    }
-));
-
+            return done(null, row.rows[0].id);
+    });
+  });
+}));
 
 /* Serialize session */
 passport.serializeUser(function(user, done) {
-    console.log("serializeUser");
-    return done(null, user.id);
+    return done(null, user);
 });
 
 passport.deserializeUser(function(id, done) {
-    console.log("deserializeUser");
-    db.get('SELECT id, username FROM users WHERE id = ?', id, function(err, row) {
+    conn.query('SELECT id, username FROM users WHERE id = ?', id, function(err, row) {
         if (!row) {
             return done(null, false);
         }
@@ -293,39 +152,34 @@ passport.deserializeUser(function(id, done) {
   });
 });
 
-/* Request handling */
+/* Login */
 
 app.get("/admin_login", function (req, res) {
-    console.log("Dog here!");
-    res.render('admin_login', { title: "Admin Login", page_name: "admin_login"});
+    res.render('admin_login', { title: "Admin Login", page_name: "admin_login", logged_in: isLoggedIn});
 });
 
-app.post('/admin_login', 
-  passport.authenticate('local', { failureRedirect: '/admin_login' }),
-  function(req, res) {
-    console.log("Just authenticated!");
-    res.redirect('/');
-  });
+app.post('/admin_login', passport.authenticate('local', { failureRedirect: '/admin_login' }), function(req, res) {
+    isLoggedIn = 1;
+    res.render('index', { title: "Home", page_name: "home", logged_in: isLoggedIn});
+});
 
-// app.post('/admin_login', passport.authenticate('local'), function(req, res) {
-//     console.log("Just authenticated!");
-//     res.redirect('/');
-// });
+/* Signup */
 
-// app.post("/login", function (req, res) {
-//     authenticate(req.body.username, req.body.password, function (err, user) {
-//         if (user) {
-//             req.session.regenerate(function () {
-//                 req.session.user = user;
-//                 req.session.success = 'Authenticated as ' + user.username + ' click to <a href="/logout">logout</a>. ' + ' You may now access <a href="/restricted">/restricted</a>.';
-//                 res.redirect('/');
-//             });
-//         } else {
-//             req.session.error = 'Authentication failed, please check your ' + ' username and password.';
-//             res.redirect('/login');
-//         }
-//     });
-// });
+app.get('/signup', function(req, res) {
+    res.render('signup', { title: "Signup", page_name: "signup", logged_in: isLoggedIn});
+});
+
+app.post('/signup', function(req, res) {
+    var password = req.body.password;
+    var username = req.body.username;
+    salt = bCrypt.genSaltSync(10);
+    hash = bCrypt.hashSync(password, salt, null);
+    conn.query("INSERT INTO users (id, username, password, salt, isAdmin) VALUES (?, ?, ?, ?, ?)", [1, username, hash, salt, true], function(err) {
+        console.log(err);
+        console.log("Signed up for a new account with username: ", username, " Password: ", password, " Password hash: ", hash, " Salt: ", salt);
+        res.redirect('/admin_login');
+    });
+});
 
 app.get('/logout', function (req, res) {
     req.session.destroy(function () {
@@ -333,20 +187,14 @@ app.get('/logout', function (req, res) {
     });
 });
 
-app.get('/profile', requiredAuthentication, function (req, res) {
-    res.send('Profile page of '+ req.session.user.username +'<br>'+' click to <a href="/logout">logout</a>');
-});
-
 /****************************************************** BASIC GET REQUESTS ******************************************************/
 
 /* GET request for top directory (http://localhost:8080) */
 app.get('/',function(req, res){
-    if (req.session.user) {
-        console.log("Already authenticated!");
-        res.redirect("/index");
+    if (isLoggedIn == 0) {
+        res.render('index', { title: "Home", page_name: "home", logged_in: isLoggedIn});
     } else {
-        console.log("Not authenticated!");
-        res.render('index', { title: "Home", page_name: "home"});
+        res.render('index', { title: "Home", page_name: "home", logged_in: isLoggedIn});
     }
 });
 
@@ -355,52 +203,53 @@ app.get("/signup", function (req, res) {
     if (req.session.user) {
         res.redirect("/");
     } else {
-        console.log("Not authenticated!");
-        // res.redirect("/index");
-        res.render('signup', { title: "Signup", page_name: "signup"});
+        res.render('signup', { title: "Signup", page_name: "signup", logged_in: isLoggedIn});
     }
 });
 
 app.get('/index', function (req, res) {
-    res.render('index', { title: "Home", page_name: "index", logged_in: 0});
+    res.render('index', { title: "Home", page_name: "index", logged_in: isLoggedIn});
 });
 
 /* GET request for room directory (e.g. http://localhost:8080/ABCD) */
 app.get('/about', function (req, res) {
-    res.render('about', { title: "About", page_name: "about"});
+    res.render('about', { title: "About", page_name: "about", logged_in: isLoggedIn});
 });
 
 /* GET request for news page */
-app.get('/news', (req, res) => {
-    res.render('news', { title: "News", page_name: "news", posts: posts});
+app.get('/news', function (req, res) {
+    res.render('news', { title: "News", page_name: "news", posts: posts, logged_in: isLoggedIn});
 })
 
 /* GET request for admin's version of the news page */
 app.get('/admin_blog', function (req, res) {
-    res.render('admin_blog', { title: "Admin Blog", page_name: "admin_blog"});
+    res.render('admin_blog', { title: "Admin Blog", page_name: "admin_blog", logged_in: isLoggedIn});
 });
 
 /* GET request for sponsors page*/
 app.get('/sponsors', function (req, res) {
-    res.render('sponsors', { title: "Sponsors", page_name: "sponsors"});
+    res.render('sponsors', { title: "Sponsors", page_name: "sponsors", logged_in: isLoggedIn});
 });
 
 /* GET request for general map page */
 app.get('/map', findPins, renderPins);
 
+/* GET request for general map page */
+app.get('/admin_map', findPins, renderPins);
+
 /* GET request for donations page */
 app.get('/donations', function (req, res) {
-    res.render('donations', { title: "Donations", page_name: "donations"});
+    res.render('donations', { title: "Donations", page_name: "donations", logged_in: isLoggedIn});
 });
 
 /* GET request for login form */
 app.get('/login', function (req, res) {
-    res.render('admin_login', { title: "Login", page_name: "login"});
+    res.render('admin_login', { title: "Login", page_name: "login", logged_in: isLoggedIn});
 });
 
 /* GET request for login form */
 app.get('/admin_map', function (req, res) {
-    res.render('admin_map', { title: "Admin Map", page_name: "admin_map"});
+    res.render('admin_map', { title: "Admin Map", page_name: "admin_map", logged_in: isLoggedIn});
 });
 
 /****************************************************** LOGIN ******************************************************/
@@ -418,38 +267,10 @@ function createSessionID() {
             });
         }
         else {
-            console.log("rows: ", rows);
             return 0;
         }
     });
 }
-
-// app.post('/login', function(request, response) {
-//     username = request.body.username;
-//     password = request.body.password;
-//     /* TODO: Check database for user authentication. Generate session ID. */
-
-//     /* Generate session ID */
-//     var unique = createSessionID()
-//     while (unique == 0) {
-//         /* Keep generating session IDs until we get one that is unique */
-//         unique = createSessionID();
-//     };
-
-//     /* If admin, login and then redirect to the admin version of the site */
-//     conn.query("SELECT isAdmin FROM users WHERE username=(?) AND passwordHash=(?)", ["admin", "admin"], function(err, rows) {
-//         /* TODO: Figure out if there's a better way to retrieve this data. Seems clunky to have to call "rows.rows[0].isAdmin" */
-//         if (rows.rows[0].isAdmin == true) {
-//             /* If there an admin, redirect to admin version of site */
-//             response.render('index', { title: "Home", page_name: "index", logged_in: 1});
-//         }
-//         else {
-//             /* Else, just log them in */
-//             response.redirect("map");
-//         }
-//     });
-
-// });
 
 /****************************************************** MAP ******************************************************/
 
@@ -464,11 +285,9 @@ app.post('/addPin', function(request, response) {
     address = request.body.address;
     lat = request.body.latitude;
     lng = request.body.longitude;
-
-    console.log(lat, lng);
     queryStr = "INSERT INTO mapLocations (serviceType, serviceName, address, latitude, longitude) VALUES (?,?,?,?,?)"
     conn.query(queryStr, [serviceType, serviceName, address, lat, lng], function() {
-        console.log("Inserted pin into mapLocations: ", serviceType, serviceName);
+        // console.log("Inserted pin into mapLocations: ", serviceType, serviceName);
         response.redirect("map");
     });
     
@@ -498,7 +317,8 @@ function renderServices(req, res) {
     res.render('map', {
         title: "Map",
         page_name: "map",
-        pins: req.pins
+        pins: req.pins,
+        logged_in: isLoggedIn
     });
 }
 
@@ -516,11 +336,23 @@ function findPins(req, res, next) {
 
 /* Tells the client to render these pins */
 function renderPins(req, res) {
-    res.render('map', {
-        title: "Map",
-        page_name: "map",
-        pins: req.pins
-    });
+    console.log("Rendering pins: ", req.pins);
+    if (isLoggedIn == 1) {
+        res.render('admin_map', {
+            title: "Admin Map",
+            page_name: "map",
+            pins: req.pins,
+            logged_in: isLoggedIn
+        });
+    }
+    else {
+        res.render('map', {
+            title: "Map",
+            page_name: "map",
+            pins: req.pins,
+            logged_in: isLoggedIn
+        });
+    }
 }
 
 /* POST request when user looks up some services (lookup feature) */
@@ -547,22 +379,6 @@ app.post('/map', searchServices, renderServices);
 // });
 
 
-// /* For writing a new blog post */
-// /* TODO: Get this part working. Currently not doing anything with input given. */
-
-// app.get('/write', function(req, res) {
-//     res.render("write", { title: "Write a Post!", page_name: "write" });
-// });
-
-// app.post('/write', function(req, res) {
-//     var title = req.body['title'];
-//     var content = req.body['content'];
-//     var timestamp = new Date();
-//     var id = 1;
-//     blogRealm.write(() => { blogRealm.create('Post', {title: title, content: content, timestamp: timestamp, id: id});
-//   });
-//   res.redirect("news");
-// });
 
 /* Fake posts to display for now */
 const posts = [
@@ -607,8 +423,24 @@ app.get('/post/:id', (req, res) => {
   })[0]
 
   /* render the 'post.ejs' template with the post content */
-  res.render('post', { title: "Post", page_name: "post", author: post.author, title: post.title, body: post.body, img: post.img });
+  res.render('post', { title: "Post", page_name: "post", author: post.author, title: post.title, body: post.body, img: post.img , logged_in: isLoggedIn});
 })
+
+// /* For writing a new blog post */
+// /* TODO: Get this part working. Currently not doing anything with input given. */
+
+app.get('/write', function(req, res) {
+    res.render("write", { title: "Write a Post!", page_name: "write" , logged_in: isLoggedIn});
+});
+
+app.post('/write', function(req, res) {
+    var title = req.body['title'];
+    var content = req.body['content'];
+    var timestamp = new Date();
+    var id = 1;
+    posts.push({id: 5, author: 'Pamela', title: title, content: content, timestamp: timestamp});
+    res.redirect("news");
+});
 
 /****************************************************** SOCKET EVENTS ******************************************************/
 
