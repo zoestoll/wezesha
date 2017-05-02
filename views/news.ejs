@@ -4,7 +4,7 @@
     <% include header %>
 </head>
 
-<a class="post-button" href="/write">Write a new post!</a>
+<a <% if (logged_in === 1) { %> <a class="post-button" href="/write">Write a new post! <% } %> <% if (logged_in === 0)  { %> DOG <% } %> </a>
 
      <!-- Page Content -->
     <div class="container">

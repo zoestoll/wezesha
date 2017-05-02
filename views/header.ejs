@@ -35,7 +35,7 @@
                     <li class="nav_title" <% if (page_name === 'sponsors') { %>class="active" <% } %> ><a href="/sponsors">Sponsors</a></li>
                     <li class="nav_title" <% if (page_name === 'donations') { %>class="active" <% } %> ><a href="/donations">Donations</a></li>
                 </ul>
-            <a class="login_button" href="/login">Login</a>
+            <a class="login_button" <% if (logged_in === 0) { %> <a href="/admin_login">Login <% } %> <% if (logged_in === 1)  { %> <a href="/about">View Profile <% } %></a>
             </div>
         </div>
     </nav>
