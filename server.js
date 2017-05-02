@@ -24,7 +24,7 @@ var APIKey = "AIzaSyDBs20a1Nr7ZDxF7Tq8-69JheH2zeQOLkg";
 var conn = anyDB.createConnection('sqlite3://wezesha.db');
 /* Temporary - won't need to drop tables every time. */
 // conn.query("DROP TABLE mapLocations");
-conn.query("DROP TABLE users");
+// conn.query("DROP TABLE users");
 
 /* User table */
 userTableCreate = "CREATE TABLE IF NOT EXISTS 'users' ('id' INTEGER PRIMARY KEY AUTOINCREMENT, 'username' VARCHAR(255), 'password' VARCHAR(255), 'createdAt' DATETIME, 'updatedAt' DATETIME, 'salt' VARCHAR(255), 'isAdmin' BOOLEAN)"
