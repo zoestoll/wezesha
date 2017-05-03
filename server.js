@@ -371,45 +371,6 @@ app.post('/map', searchServices, renderServices);
 
 /****************************************************** BLOG/NEWS ******************************************************/
 
-// <<<<<<< HEAD
-// /* Fake posts to display for now */
-// const posts = [
-//   {
-//     id: 1,
-//     author: 'Pamela',
-//     title: 'Upcoming Graduation Event!',
-//     body: 'There is a graduation event coming up soon!',
-//     img: "../img/baby.jpg",
-//     time: "Feb 10 10:30pm"
-//   },
-//   {
-//     id: 2,
-//     author: 'Pamela',
-//     title: 'Recent Medical News',
-//     body: 'Some really cool recent medical news!',
-//     img: "../img/baby.jpg",
-//     time: "August 20 3:30pm"
-//   },
-//   {
-//     id: 3,
-//     author: 'Pamela',
-//     title: 'Check out these kids',
-//     body: 'Yeah!',
-//     img: "../img/baby.jpg",
-//     time: "Sept 5 6:00pm"
-//   },
-//   {
-//     id: 4,
-//     author: 'Pamela',
-//     title: 'Kids doing cool stuff',
-//     body: 'Awesome stuff!',
-//     img: "../img/baby.jpg",
-//     time: "April 12 9:30pm"
-//   }
-// ]
-
-// =======
-// >>>>>>> refs/remotes/origin/master
 /* View a single blog post */
 app.get('/post/:id', (req, res) => {
   const post = posts.filter((post) => {
@@ -421,6 +382,7 @@ app.get('/post/:id', (req, res) => {
 });
 
 /* For writing a new blog post */
+
 app.get('/write', function(req, res) {
     if (req.user) {
         res.render("write", { title: "Write a Post!", page_name: "write" , logged_in: 1});
@@ -430,31 +392,19 @@ app.get('/write', function(req, res) {
 });
 
 app.post('/write', function(req, res) {
-    var author = req.body['author'];
-    var title = req.body['title'];
-// <<<<<<< HEAD
-//     var content = req.body['content'];
-//     var timestamp = new Date();
-//     var id = 1;
-//     if (req.user) {
-//         posts.push({id: 5, author: 'Pamela', title: title, content: content, timestamp: timestamp});
-//         res.redirect("news");
-//     } else { /* unauthorized to post */
-//         res.redirect('news');
-//     }
-// =======
-    var body = req.body['body'];
-    var timestamp = getPrettyDate();
-
-    var sql = 'INSERT INTO news (author, title, body, timestamp) VALUES ($1, $2, $3, $4)';
-    conn.query(sql, [author, title, body, timestamp]);
-
-    // new posts are on top
-    var sql2 = 'SELECT id, author, title, body, timestamp FROM news ORDER BY timestamp DESC';
-    conn.query(sql2, function(error, result){
-        posts = result.rows;
-    });
-
+    if (req.user) { /* Check that they're authorized to send this request */
+        var author = req.body['author'];
+        var title = req.body['title'];
+        var body = req.body['body'];
+        var timestamp = getPrettyDate();
+        var sql = 'INSERT INTO news (author, title, body, timestamp) VALUES ($1, $2, $3, $4)';
+        conn.query(sql, [author, title, body, timestamp]);
+        /* new posts are on top */
+        var sql2 = 'SELECT id, author, title, body, timestamp FROM news ORDER BY timestamp DESC';
+        conn.query(sql2, function(error, result){
+            posts = result.rows;
+        });
+    }
     res.redirect("news");
 });
 
