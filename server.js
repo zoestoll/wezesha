@@ -121,9 +121,7 @@ app.use(function (req, res, next) {
 });
 
 
-/* Hasing Functions & Password Storage */
-
-
+/* Hashing Functions & Password Storage */
 var createHash = function(password){
     return bCrypt.hashSync(password, bCrypt.genSaltSync(10), null);
 }
@@ -168,7 +166,6 @@ passport.deserializeUser(function(id, done) {
 });
 
 /* Login */
-
 app.get("/admin_login", function (req, res) {
     res.render('admin_login', { title: "Admin Login", page_name: "admin_login", logged_in: isLoggedIn});
 });
@@ -426,8 +423,38 @@ app.post('/write', function(req, res) {
     res.redirect("news");
 });
 
-/****************************************************** SOCKET EVENTS ******************************************************/
+/****************************************************** EDUCATION NEWS PAGE ******************************************************/
 
+/* GET request for news page */
+app.get('/education', function (req, res) {
+    res.render('education', { title: "Education", page_name: "education", posts: posts, logged_in: isLoggedIn});
+})
+
+/****************************************************** MEDICAL NEWS PAGE ******************************************************/
+
+
+/* GET request for news page */
+app.get('/medical', function (req, res) {
+    res.render('medical', { title: "Medical", page_name: "medical", posts: posts, logged_in: isLoggedIn});
+})
+
+/****************************************************** COMMUNITY NEWS PAGE ******************************************************/
+
+
+/* GET request for news page */
+app.get('/community', function (req, res) {
+    res.render('community', { title: "Community", page_name: "community", posts: posts, logged_in: isLoggedIn});
+})
+
+/****************************************************** PARTNERS NEWS PAGE ******************************************************/
+
+
+/* GET request for news page */
+app.get('/partners', function (req, res) {
+    res.render('partners', { title: "Partners", page_name: "partners", posts: posts, logged_in: isLoggedIn});
+})
+
+/****************************************************** SOCKET EVENTS ******************************************************/
 
 function generateRandomID() { /* From TA suggested code */
     /* make a list of legal characters */

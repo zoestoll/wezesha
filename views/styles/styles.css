@@ -285,6 +285,11 @@ header {
     border: 2px solid black;
 }
 
+.news-top-img {
+    float: left;
+    padding: 20px;
+}
+
 /******************* About *******************/
 
 #about_head {
