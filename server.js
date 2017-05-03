@@ -30,7 +30,17 @@ var conn = anyDB.createConnection('sqlite3://wezesha.db');
 userTableCreate = "CREATE TABLE IF NOT EXISTS 'users' ('id' INTEGER PRIMARY KEY AUTOINCREMENT, 'username' VARCHAR(255), 'password' VARCHAR(255), 'createdAt' DATETIME, 'updatedAt' DATETIME, 'salt' VARCHAR(255), 'isAdmin' BOOLEAN)"
 conn.query(userTableCreate);
 
+/* News Posts table */
+newsTableCreate = "CREATE TABLE IF NOT EXISTS 'news' ('id' INTEGER PRIMARY KEY AUTOINCREMENT, 'author' VARCHAR(255), 'title' VARCHAR(255), 'body' VARCHAR(255), 'timestamp' DATETIME)";
+conn.query(newsTableCreate);
+var posts = [];
+var sql2 = 'SELECT id, author, title, body, timestamp FROM news ORDER BY timestamp DESC';
+    conn.query(sql2, function(error, result){
+    posts = result.rows;
+});
+
 /* Create fake user - for testing purposes */
+
 salt = bCrypt.genSaltSync(10);
 hash = bCrypt.hashSync("admin", salt, null);
 conn.query("INSERT INTO users (username, password, salt, isAdmin) VALUES (?, ?, ?, ?)", ["admin", hash, salt, true]);
@@ -96,16 +106,18 @@ var options = {
 
 // TODO: SESSION STUFF
 
-// app.use(function (req, res, next) {
-//     var err = req.session.error,
-//         msg = req.session.success;
-//     delete req.session.error;
-//     delete req.session.success;
-//     res.locals.message = '';
-//     if (err) res.locals.message = '<p class="msg error">' + err + '</p>';
-//     if (msg) res.locals.message = '<p class="msg success">' + msg + '</p>';
-//     next();
-// });
+// app.use(passport.session());
+
+app.use(function (req, res, next) {
+    var err = req.session.error,
+        msg = req.session.success;
+    delete req.session.error;
+    delete req.session.success;
+    res.locals.message = '';
+    if (err) res.locals.message = '<p class="msg error">' + err + '</p>';
+    if (msg) res.locals.message = '<p class="msg success">' + msg + '</p>';
+    next();
+});
 
 
 /* Hasing Functions & Password Storage */
@@ -193,10 +205,11 @@ app.get('/logout', function (req, res) {
 
 /* GET request for top directory (http://localhost:8080) */
 app.get('/',function(req, res){
-    if (isLoggedIn == 0) {
-        res.render('index', { title: "Home", page_name: "home", logged_in: isLoggedIn});
+    // console.log("Req session: ", req.session)
+    if (req.user) {
+        res.render('index', { title: "Home", page_name: "home", logged_in: 1});
     } else {
-        res.render('index', { title: "Home", page_name: "home", logged_in: isLoggedIn});
+        res.render('index', { title: "Home", page_name: "home", logged_in: 0});
     }
 });
 
@@ -210,16 +223,29 @@ app.get("/signup", function (req, res) {
 });
 
 app.get('/index', function (req, res) {
-    res.render('index', { title: "Home", page_name: "index", logged_in: isLoggedIn});
+    if (req.user) {
+        res.render('index', { title: "Home", page_name: "home", logged_in: 1});
+    } else {
+        res.render('index', { title: "Home", page_name: "home", logged_in: 0});
+    }
 });
 
 /* GET request for room directory (e.g. http://localhost:8080/ABCD) */
 app.get('/about', function (req, res) {
-    res.render('about', { title: "About", page_name: "about", logged_in: isLoggedIn});
+    if (req.user) {
+        res.render('about', { title: "About", page_name: "about", logged_in: 1});
+    } else {
+        res.render('about', { title: "About", page_name: "about", logged_in: 0});
+    }
 });
 
 /* GET request for news page */
 app.get('/news', function (req, res) {
+    var sql2 = 'SELECT id, author, title, body, timestamp FROM news ORDER BY timestamp DESC';
+    conn.query(sql2, function(error, result){
+        posts = result.rows;
+    });
+
     res.render('news', { title: "News", page_name: "news", posts: posts, logged_in: isLoggedIn});
 })
 
@@ -254,30 +280,14 @@ app.get('/admin_map', function (req, res) {
     res.render('admin_map', { title: "Admin Map", page_name: "admin_map", logged_in: isLoggedIn});
 });
 
-/****************************************************** LOGIN ******************************************************/
-
-/* Helper function to generate a unique ID and insert into the database. */
-function createSessionID() {
-    var sessionID = generateRandomID();
-    /* Check that sessionID doesn't collide with another existing session */
-    conn.query("SELECT * FROM sessions WHERE sessionID=(?)", [sessionID], function(err, rows) {
-        console.log("rows length: ", rows.rows.length);
-        /* Check that sessionID doesn't collide with another existing session */
-        if (rows.rows.length == 0) {
-            conn.query("INSERT INTO sessions (sessionID, userID) VALUES (?, ?)", [sessionID, 1], function() {
-                return 1;
-            });
-        }
-        else {
-            return 0;
-        }
-    });
-}
 
 /****************************************************** MAP ******************************************************/
 
 
 app.post('/addPin', function(request, response) {
+    // if (!request.user) {  Unauthorized to add pin. TODO: check that user is admin. 
+    //     response.redirect("map");
+    // }
     username = request.body.username;
     /* TODO: Check session ID and CSRF token to be sure the user is logged in, and is the admin. This prevents CSRF. */
 
@@ -293,8 +303,8 @@ app.post('/addPin', function(request, response) {
         response.redirect("map");
     });
     
-  /* TODO: Check validity of latitude/longitude sent to us */
-  /* TODO: Check authentication of user sending request */
+    /* TODO: Check validity of latitude/longitude sent to us */
+    /* TODO: Check authentication of user sending request */
 
 });
 
@@ -339,20 +349,19 @@ function findPins(req, res, next) {
 /* Tells the client to render these pins */
 function renderPins(req, res) {
     console.log("Rendering pins: ", req.pins);
-    if (isLoggedIn == 1) {
-        res.render('admin_map', {
+     if (req.user) { // TODO: Check that they're an admin
+         res.render('admin_map', {
             title: "Admin Map",
             page_name: "map",
             pins: req.pins,
-            logged_in: isLoggedIn
+            logged_in: 1
         });
-    }
-    else {
+    } else { /* unauthorized to view admin map */
         res.render('map', {
             title: "Map",
             page_name: "map",
             pins: req.pins,
-            logged_in: isLoggedIn
+            logged_in: 0
         });
     }
 }
@@ -362,45 +371,95 @@ app.post('/map', searchServices, renderServices);
 
 /****************************************************** BLOG/NEWS ******************************************************/
 
-const posts = [];
+// <<<<<<< HEAD
+// /* Fake posts to display for now */
+// const posts = [
+//   {
+//     id: 1,
+//     author: 'Pamela',
+//     title: 'Upcoming Graduation Event!',
+//     body: 'There is a graduation event coming up soon!',
+//     img: "../img/baby.jpg",
+//     time: "Feb 10 10:30pm"
+//   },
+//   {
+//     id: 2,
+//     author: 'Pamela',
+//     title: 'Recent Medical News',
+//     body: 'Some really cool recent medical news!',
+//     img: "../img/baby.jpg",
+//     time: "August 20 3:30pm"
+//   },
+//   {
+//     id: 3,
+//     author: 'Pamela',
+//     title: 'Check out these kids',
+//     body: 'Yeah!',
+//     img: "../img/baby.jpg",
+//     time: "Sept 5 6:00pm"
+//   },
+//   {
+//     id: 4,
+//     author: 'Pamela',
+//     title: 'Kids doing cool stuff',
+//     body: 'Awesome stuff!',
+//     img: "../img/baby.jpg",
+//     time: "April 12 9:30pm"
+//   }
+// ]
 
+// =======
+// >>>>>>> refs/remotes/origin/master
 /* View a single blog post */
 app.get('/post/:id', (req, res) => {
   const post = posts.filter((post) => {
     return post.id == req.params.id
-  })[0]
+  })[0];
 
   /* render the 'post.ejs' template with the post content */
-  res.render('post', { title: "Post", page_name: "post", author: post.author, title: post.title, body: post.body, img: post.img , logged_in: isLoggedIn});
-})
-
-/* User table */
-newsTableCreate = "CREATE TABLE IF NOT EXISTS 'news' ('id' INTEGER PRIMARY KEY AUTOINCREMENT, 'title' VARCHAR(255), 'content' VARCHAR(255), 'timestamp' DATETIME)";
-conn.query(newsTableCreate);
+  res.render('post', { title: "Post", page_name: "post", author: post.author, title: post.title, body: post.body, logged_in: isLoggedIn});
+});
 
 /* For writing a new blog post */
 app.get('/write', function(req, res) {
-    res.render("write", { title: "Write a Post!", page_name: "write" , logged_in: isLoggedIn});
+    if (req.user) {
+        res.render("write", { title: "Write a Post!", page_name: "write" , logged_in: 1});
+    } else {
+        res.redirect('news');
+    }
 });
 
 app.post('/write', function(req, res) {
+    var author = req.body['author'];
     var title = req.body['title'];
-    var content = req.body['content'];
-    var timestamp = new Date();
-    // var sql = 'INSERT INTO news ('
+// <<<<<<< HEAD
+//     var content = req.body['content'];
+//     var timestamp = new Date();
+//     var id = 1;
+//     if (req.user) {
+//         posts.push({id: 5, author: 'Pamela', title: title, content: content, timestamp: timestamp});
+//         res.redirect("news");
+//     } else { /* unauthorized to post */
+//         res.redirect('news');
+//     }
+// =======
+    var body = req.body['body'];
+    var timestamp = getPrettyDate();
 
-    // var id = 1;
-    // posts.push({id: 5, author: 'Pamela', title: title, content: content, timestamp: timestamp});
+    var sql = 'INSERT INTO news (author, title, body, timestamp) VALUES ($1, $2, $3, $4)';
+    conn.query(sql, [author, title, body, timestamp]);
+
+    // new posts are on top
+    var sql2 = 'SELECT id, author, title, body, timestamp FROM news ORDER BY timestamp DESC';
+    conn.query(sql2, function(error, result){
+        posts = result.rows;
+    });
+
     res.redirect("news");
 });
 
 /****************************************************** SOCKET EVENTS ******************************************************/
 
-
-/* TODO: All socket events */
-io.on("connection", function(socket) {
-;
-});
 
 function generateRandomID() { /* From TA suggested code */
     /* make a list of legal characters */
@@ -415,13 +474,15 @@ function getPrettyDate() {
     /* Get current time */
     var time = new Date();
     /* Make it pretty */
-    var prettyDate = time.getDate()  + "-" + (time.getMonth()+1) + "-" + time.getFullYear() + " " + ("0" + time.getHours()).slice(-2) + ":" + ("0" + time.getMinutes()).slice(-2);
-    return prettyDate;
+    var pd = (time.getMonth()+1) + "-" + time.getDate()  + "-"; 
+    pd += time.getFullYear() + " " + ("0" + time.getHours()).slice(-2);
+    pd += ":" + ("0" + time.getMinutes()).slice(-2);
+    return pd;
 }
 
 /* Start listening */
 http.listen(app.get("port"), app.get("ipaddr"), function(){
-  console.log("server listening on port " + port);
+    console.log("server listening on port " + port);
 });
 
 
