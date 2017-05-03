@@ -383,6 +383,7 @@ app.get('/post/:id', (req, res) => {
 });
 
 /* For writing a new blog post */
+
 app.get('/write', function(req, res) {
     if (req.user) {
         res.render("write", { title: "Write a Post!", page_name: "write" , logged_in: 1});
@@ -392,6 +393,7 @@ app.get('/write', function(req, res) {
 });
 
 app.post('/write', function(req, res) {
+
     var author = req.body['author'];
     var title = req.body['title'];
     var body = req.body['body'];
@@ -405,6 +407,21 @@ app.post('/write', function(req, res) {
     conn.query(sql2, function(error, result){
         posts = result.rows;
     });
+
+
+    if (req.user) { /* Check that they're authorized to send this request */
+        var author = req.body['author'];
+        var title = req.body['title'];
+        var body = req.body['body'];
+        var timestamp = getPrettyDate();
+        var sql = 'INSERT INTO news (author, title, body, timestamp) VALUES ($1, $2, $3, $4)';
+        conn.query(sql, [author, title, body, timestamp]);
+        /* new posts are on top */
+        var sql2 = 'SELECT id, author, title, body, timestamp FROM news ORDER BY timestamp DESC';
+        conn.query(sql2, function(error, result){
+            posts = result.rows;
+        });
+    }
 
     res.redirect("news");
 });
