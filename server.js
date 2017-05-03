@@ -30,9 +30,6 @@ var conn = anyDB.createConnection('sqlite3://wezesha.db');
 userTableCreate = "CREATE TABLE IF NOT EXISTS 'users' ('id' INTEGER PRIMARY KEY AUTOINCREMENT, 'username' VARCHAR(255), 'password' VARCHAR(255), 'createdAt' DATETIME, 'updatedAt' DATETIME, 'salt' VARCHAR(255), 'isAdmin' BOOLEAN)"
 conn.query(userTableCreate);
 
-<<<<<<< HEAD
-/* Create fake user */
-=======
 /* News Posts table */
 newsTableCreate = "CREATE TABLE IF NOT EXISTS 'news' ('id' INTEGER PRIMARY KEY AUTOINCREMENT, 'author' VARCHAR(255), 'title' VARCHAR(255), 'body' VARCHAR(255), 'timestamp' DATETIME)";
 conn.query(newsTableCreate);
@@ -43,7 +40,7 @@ var sql2 = 'SELECT id, author, title, body, timestamp FROM news ORDER BY timesta
 });
 
 /* Create fake user - for testing purposes */
->>>>>>> refs/remotes/origin/master
+
 salt = bCrypt.genSaltSync(10);
 hash = bCrypt.hashSync("admin", salt, null);
 conn.query("INSERT INTO users (username, password, salt, isAdmin) VALUES (?, ?, ?, ?)", ["admin", hash, salt, true]);
