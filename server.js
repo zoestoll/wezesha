@@ -29,6 +29,7 @@ conn.query("DROP TABLE users");
 /* User table */
 userTableCreate = "CREATE TABLE IF NOT EXISTS 'users' ('id' INTEGER PRIMARY KEY AUTOINCREMENT, 'username' VARCHAR(255), 'password' VARCHAR(255), 'createdAt' DATETIME, 'updatedAt' DATETIME, 'salt' VARCHAR(255), 'isAdmin' BOOLEAN)"
 conn.query(userTableCreate);
+
 /* Create fake user */
 salt = bCrypt.genSaltSync(10);
 hash = bCrypt.hashSync("admin", salt, null);
@@ -94,16 +95,18 @@ var options = {
 
 // TODO: SESSION STUFF
 
-// app.use(function (req, res, next) {
-//     var err = req.session.error,
-//         msg = req.session.success;
-//     delete req.session.error;
-//     delete req.session.success;
-//     res.locals.message = '';
-//     if (err) res.locals.message = '<p class="msg error">' + err + '</p>';
-//     if (msg) res.locals.message = '<p class="msg success">' + msg + '</p>';
-//     next();
-// });
+// app.use(passport.session());
+
+app.use(function (req, res, next) {
+    var err = req.session.error,
+        msg = req.session.success;
+    delete req.session.error;
+    delete req.session.success;
+    res.locals.message = '';
+    if (err) res.locals.message = '<p class="msg error">' + err + '</p>';
+    if (msg) res.locals.message = '<p class="msg success">' + msg + '</p>';
+    next();
+});
 
 
 /* Hasing Functions & Password Storage */
@@ -191,10 +194,11 @@ app.get('/logout', function (req, res) {
 
 /* GET request for top directory (http://localhost:8080) */
 app.get('/',function(req, res){
-    if (isLoggedIn == 0) {
-        res.render('index', { title: "Home", page_name: "home", logged_in: isLoggedIn});
+    // console.log("Req session: ", req.session)
+    if (req.user) {
+        res.render('index', { title: "Home", page_name: "home", logged_in: 1});
     } else {
-        res.render('index', { title: "Home", page_name: "home", logged_in: isLoggedIn});
+        res.render('index', { title: "Home", page_name: "home", logged_in: 0});
     }
 });
 
@@ -208,12 +212,20 @@ app.get("/signup", function (req, res) {
 });
 
 app.get('/index', function (req, res) {
-    res.render('index', { title: "Home", page_name: "index", logged_in: isLoggedIn});
+    if (req.user) {
+        res.render('index', { title: "Home", page_name: "home", logged_in: 1});
+    } else {
+        res.render('index', { title: "Home", page_name: "home", logged_in: 0});
+    }
 });
 
 /* GET request for room directory (e.g. http://localhost:8080/ABCD) */
 app.get('/about', function (req, res) {
-    res.render('about', { title: "About", page_name: "about", logged_in: isLoggedIn});
+    if (req.user) {
+        res.render('about', { title: "About", page_name: "about", logged_in: 1});
+    } else {
+        res.render('about', { title: "About", page_name: "about", logged_in: 0});
+    }
 });
 
 /* GET request for news page */
@@ -252,30 +264,14 @@ app.get('/admin_map', function (req, res) {
     res.render('admin_map', { title: "Admin Map", page_name: "admin_map", logged_in: isLoggedIn});
 });
 
-/****************************************************** LOGIN ******************************************************/
-
-/* Helper function to generate a unique ID and insert into the database. */
-function createSessionID() {
-    var sessionID = generateRandomID();
-    /* Check that sessionID doesn't collide with another existing session */
-    conn.query("SELECT * FROM sessions WHERE sessionID=(?)", [sessionID], function(err, rows) {
-        console.log("rows length: ", rows.rows.length);
-        /* Check that sessionID doesn't collide with another existing session */
-        if (rows.rows.length == 0) {
-            conn.query("INSERT INTO sessions (sessionID, userID) VALUES (?, ?)", [sessionID, 1], function() {
-                return 1;
-            });
-        }
-        else {
-            return 0;
-        }
-    });
-}
 
 /****************************************************** MAP ******************************************************/
 
 
 app.post('/addPin', function(request, response) {
+    // if (!request.user) {  Unauthorized to add pin. TODO: check that user is admin. 
+    //     response.redirect("map");
+    // }
     username = request.body.username;
     /* TODO: Check session ID and CSRF token to be sure the user is logged in, and is the admin. This prevents CSRF. */
 
@@ -291,8 +287,8 @@ app.post('/addPin', function(request, response) {
         response.redirect("map");
     });
     
-  /* TODO: Check validity of latitude/longitude sent to us */
-  /* TODO: Check authentication of user sending request */
+    /* TODO: Check validity of latitude/longitude sent to us */
+    /* TODO: Check authentication of user sending request */
 
 });
 
@@ -337,20 +333,19 @@ function findPins(req, res, next) {
 /* Tells the client to render these pins */
 function renderPins(req, res) {
     console.log("Rendering pins: ", req.pins);
-    if (isLoggedIn == 1) {
-        res.render('admin_map', {
+     if (req.user) { // TODO: Check that they're an admin
+         res.render('admin_map', {
             title: "Admin Map",
             page_name: "map",
             pins: req.pins,
-            logged_in: isLoggedIn
+            logged_in: 1
         });
-    }
-    else {
+    } else { /* unauthorized to view admin map */
         res.render('map', {
             title: "Map",
             page_name: "map",
             pins: req.pins,
-            logged_in: isLoggedIn
+            logged_in: 0
         });
     }
 }
@@ -359,26 +354,6 @@ function renderPins(req, res) {
 app.post('/map', searchServices, renderServices);
 
 /****************************************************** BLOG/NEWS ******************************************************/
-
-// Realm = require('realm');
-
-/* TODO: Transform post schema to use this instead of the array below */
-// let PostSchema = {
-//     id: 'id',
-//     name: 'Post',
-//     properties: {
-//         timestamp: 'date',
-//         title: 'string',
-//         content: 'string'
-//     }
-// };
-
-// var blogRealm = new Realm({
-//   path: 'blog.realm',
-//   schema: [PostSchema]
-// });
-
-
 
 /* Fake posts to display for now */
 const posts = [
@@ -430,7 +405,11 @@ app.get('/post/:id', (req, res) => {
 // /* TODO: Get this part working. Currently not doing anything with input given. */
 
 app.get('/write', function(req, res) {
-    res.render("write", { title: "Write a Post!", page_name: "write" , logged_in: isLoggedIn});
+    if (req.user) {
+        res.render("write", { title: "Write a Post!", page_name: "write" , logged_in: 1});
+    } else {
+        res.redirect('news');
+    }
 });
 
 app.post('/write', function(req, res) {
@@ -438,17 +417,16 @@ app.post('/write', function(req, res) {
     var content = req.body['content'];
     var timestamp = new Date();
     var id = 1;
-    posts.push({id: 5, author: 'Pamela', title: title, content: content, timestamp: timestamp});
-    res.redirect("news");
+    if (req.user) {
+        posts.push({id: 5, author: 'Pamela', title: title, content: content, timestamp: timestamp});
+        res.redirect("news");
+    } else { /* unauthorized to post */
+        res.redirect('news');
+    }
 });
 
 /****************************************************** SOCKET EVENTS ******************************************************/
 
-
-/* TODO: All socket events */
-io.on("connection", function(socket) {
-;
-});
 
 function generateRandomID() { /* From TA suggested code */
     /* make a list of legal characters */
@@ -469,7 +447,7 @@ function getPrettyDate() {
 
 /* Start listening */
 http.listen(app.get("port"), app.get("ipaddr"), function(){
-  console.log("server listening on port " + port);
+    console.log("server listening on port " + port);
 });
 
 
