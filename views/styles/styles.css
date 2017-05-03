@@ -288,7 +288,7 @@ header {
 /******************* About *******************/
 
 #about_head {
-    padding: 15px 0;
+    padding: 15px;
     font-size: 30pt;
     font-weight: bold;
 }
@@ -300,7 +300,7 @@ header {
     color: rgb(182,0,0);
     border-bottom: 3px solid #000080;
     padding-bottom: 5px;
-    margin: 15px 0;
+    margin: 15px;
 }
 
 .about-who h2 {
@@ -316,9 +316,9 @@ header {
 /* Three columns side by side */
 .column {
     float: left;
-    width: 33.3%;
+    width: 20%;
     margin-bottom: 16px;
-    padding: 0 8px;
+    padding: 8px;
 }
 
 /* Display the columns below each other instead of side by side on small screens */
@@ -330,18 +330,14 @@ header {
 }
 
 /* Add some shadows to create a card effect */
-.joel_card {
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-}
-
-/* Add some shadows to create a card effect */
 .card {
+    padding: 20px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
 
 /* Some left and right padding inside the container */
 .container {
-    padding: 0 16px;
+    padding: 16px;
 }
 
 /* Clear floats */
@@ -364,7 +360,7 @@ header {
     background-color: #000;
     text-align: center;
     cursor: pointer;
-    width: 100%;
+    /*width: 100%;*/
 }
 
 .button:hover {
