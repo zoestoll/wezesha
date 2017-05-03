@@ -10,6 +10,7 @@ var LocalStrategy = require('passport-local').Strategy;
 var Sequelize = require('sequelize');
 var bCrypt = require("bcrypt-nodejs");
 var crypto = require('crypto');
+var exp = module.exports = {};
 
 
 /* TODO: Update these values */
@@ -392,6 +393,22 @@ app.get('/write', function(req, res) {
 });
 
 app.post('/write', function(req, res) {
+
+    var author = req.body['author'];
+    var title = req.body['title'];
+    var body = req.body['body'];
+    var timestamp = getPrettyDate();
+
+    var sql = 'INSERT INTO news (author, title, body, timestamp) VALUES ($1, $2, $3, $4)';
+    conn.query(sql, [author, title, body, timestamp]);
+
+    // new posts are on top
+    var sql2 = 'SELECT id, author, title, body, timestamp FROM news ORDER BY timestamp DESC';
+    conn.query(sql2, function(error, result){
+        posts = result.rows;
+    });
+
+
     if (req.user) { /* Check that they're authorized to send this request */
         var author = req.body['author'];
         var title = req.body['title'];
@@ -405,6 +422,7 @@ app.post('/write', function(req, res) {
             posts = result.rows;
         });
     }
+
     res.redirect("news");
 });
 
@@ -435,7 +453,10 @@ http.listen(app.get("port"), app.get("ipaddr"), function(){
     console.log("server listening on port " + port);
 });
 
-
+/* for backend testing */
+exp.closeServer = function(){
+    http.close();
+};
 
 
 
