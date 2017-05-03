@@ -30,6 +30,15 @@ var conn = anyDB.createConnection('sqlite3://wezesha.db');
 userTableCreate = "CREATE TABLE IF NOT EXISTS 'users' ('id' INTEGER PRIMARY KEY AUTOINCREMENT, 'username' VARCHAR(255), 'password' VARCHAR(255), 'createdAt' DATETIME, 'updatedAt' DATETIME, 'salt' VARCHAR(255), 'isAdmin' BOOLEAN)"
 conn.query(userTableCreate);
 
+/* News Posts table */
+newsTableCreate = "CREATE TABLE IF NOT EXISTS 'news' ('id' INTEGER PRIMARY KEY AUTOINCREMENT, 'author' VARCHAR(255), 'title' VARCHAR(255), 'body' VARCHAR(255), 'timestamp' DATETIME)";
+conn.query(newsTableCreate);
+var posts = [];
+var sql2 = 'SELECT id, author, title, body, timestamp FROM news ORDER BY timestamp DESC';
+    conn.query(sql2, function(error, result){
+    posts = result.rows;
+});
+
 /* Create fake user - for testing purposes */
 salt = bCrypt.genSaltSync(10);
 hash = bCrypt.hashSync("admin", salt, null);
@@ -220,6 +229,11 @@ app.get('/about', function (req, res) {
 
 /* GET request for news page */
 app.get('/news', function (req, res) {
+    var sql2 = 'SELECT id, author, title, body, timestamp FROM news ORDER BY timestamp DESC';
+    conn.query(sql2, function(error, result){
+        posts = result.rows;
+    });
+
     res.render('news', { title: "News", page_name: "news", posts: posts, logged_in: isLoggedIn});
 })
 
@@ -362,21 +376,15 @@ app.post('/map', searchServices, renderServices);
 
 /****************************************************** BLOG/NEWS ******************************************************/
 
-const posts = [];
-
 /* View a single blog post */
 app.get('/post/:id', (req, res) => {
   const post = posts.filter((post) => {
     return post.id == req.params.id
-  })[0]
+  })[0];
 
   /* render the 'post.ejs' template with the post content */
-  res.render('post', { title: "Post", page_name: "post", author: post.author, title: post.title, body: post.body, img: post.img , logged_in: isLoggedIn});
-})
-
-/* User table */
-newsTableCreate = "CREATE TABLE IF NOT EXISTS 'news' ('id' INTEGER PRIMARY KEY AUTOINCREMENT, 'title' VARCHAR(255), 'content' VARCHAR(255), 'timestamp' DATETIME)";
-conn.query(newsTableCreate);
+  res.render('post', { title: "Post", page_name: "post", author: post.author, title: post.title, body: post.body, logged_in: isLoggedIn});
+});
 
 /* For writing a new blog post */
 app.get('/write', function(req, res) {
@@ -384,18 +392,24 @@ app.get('/write', function(req, res) {
 });
 
 app.post('/write', function(req, res) {
+    var author = req.body['author'];
     var title = req.body['title'];
-    var content = req.body['content'];
-    var timestamp = new Date();
-    // var sql = 'INSERT INTO news ('
+    var body = req.body['body'];
+    var timestamp = getPrettyDate();
 
-    // var id = 1;
-    // posts.push({id: 5, author: 'Pamela', title: title, content: content, timestamp: timestamp});
+    var sql = 'INSERT INTO news (author, title, body, timestamp) VALUES ($1, $2, $3, $4)';
+    conn.query(sql, [author, title, body, timestamp]);
+
+    // new posts are on top
+    var sql2 = 'SELECT id, author, title, body, timestamp FROM news ORDER BY timestamp DESC';
+    conn.query(sql2, function(error, result){
+        posts = result.rows;
+    });
+
     res.redirect("news");
 });
 
 /****************************************************** SOCKET EVENTS ******************************************************/
-
 
 /* TODO: All socket events */
 io.on("connection", function(socket) {
@@ -415,8 +429,10 @@ function getPrettyDate() {
     /* Get current time */
     var time = new Date();
     /* Make it pretty */
-    var prettyDate = time.getDate()  + "-" + (time.getMonth()+1) + "-" + time.getFullYear() + " " + ("0" + time.getHours()).slice(-2) + ":" + ("0" + time.getMinutes()).slice(-2);
-    return prettyDate;
+    var pd = (time.getMonth()+1) + "-" + time.getDate()  + "-"; 
+    pd += time.getFullYear() + " " + ("0" + time.getHours()).slice(-2);
+    pd += ":" + ("0" + time.getMinutes()).slice(-2);
+    return pd;
 }
 
 /* Start listening */
