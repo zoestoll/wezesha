@@ -210,7 +210,7 @@ header {
 }
 
 #home_health {
-    background-color: #FF00FF;
+    background-color: #6495ed;
 }
 
 #home_ed {
@@ -218,7 +218,7 @@ header {
 }
 
 #home_comm {
-    background-color: #66FF66;
+    background-color: #00cc66;
 }
 
 .home_icon {
@@ -487,11 +487,13 @@ div.panel {
     float: right;
     font-size: 24px;
     background: pink;
-    width: 10%;
+    min-width: 100px;
     padding: 12px 20px;
     margin: 8px 0;
     display: inline-block;
     border: 5px solid black;
+    margin-bottom: 0px;
+    margin-top: 0px;
 }
 
 /* Some code borrowed from: https://www.w3schools.com/howto/howto_css_login_form.asp */
@@ -573,14 +575,25 @@ span.password {
 .footer {
     height: 20px;
     /* position: fixed; */
-    bottom: 0;
+    bottom: 0px;
     /* margin-top: 50px    ; */
     padding-bottom: 75px;
     padding-top: 20px;
     width: 100%;
     background-color: black;
+    margin-bottom: 0px;
 }
 
 .lectures {
     color: #333333;
+}
+
+.footer_title {
+    height: 0px;
+    width: 0px;
+}
+
+#footer_p {
+    vertical-align: middle;
+    margin-bottom: 0;
 }
