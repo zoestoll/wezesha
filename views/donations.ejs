@@ -3,56 +3,64 @@
 <head>
     <% include header %>
 </head>
-
-    <div class="flex-container">
-        <div class="text">
-          <h2>Help keep our community strong</h2>
-          <img src="img/community/SNV32026.JPG" style="width:350px;height:250px";>
+<body marginwidth="0" marginheight="0">
+    
+    <div id="divMainContainer" class="container">
+        <div id="divHeader">
         </div>
 
-        <div class="amount">
-            <h2>Your Contribution <br> 
-            Builds a great community</h2>
-
-            <div class="b1">
-                <button type="button">$50 </button>
-                &nbsp;&nbsp;&nbsp;&nbsp;
-                <button type="button">$100 </button>
+        <div id="divSectionContent" data-ng-view="" class="ng-scope">
+            <div class="row ng-scope">
+                <div class="col-lg-12">
+                    <h1 class="handwriting">Your Contribution Goes Toward:</h1>
+                </div>
             </div>
 
-            <div class="b2">
-                <button type="button">$150</button>
-                &nbsp;&nbsp;&nbsp;&nbsp;
-                <button type="button">$200</button>
+            <div class="row ng-scope">
+                <div class="col-lg-12">
+                    <h4>Medical and Surgical Care</h4>
+                    <h5>50 USD offers room and board at House of Hope for a parent with a child seeking local medical and surgical care</h5>
+                    <h4>Outreach Workshops</h4>
+                    <h5>100 USD covers cost of a weekend workshop on nutrition, disability support or other community health topic</h5>
+                    <h4>Supporting Education</h4>
+                    <h5>250 USD a year sends a child with disabilities to school</h5>
+                    <h4>Essential Corrective Surgery</h4>
+                    <h5>500 USD provides transportation and surgery for a child needing to travel for life saving but locally unavailable surgical care</h5>
+                </div>
             </div>
 
-            <div class="b3">
-                <button type="button">$250</button>
-                &nbsp;&nbsp;&nbsp;&nbsp;
-                <button type="button">$300</button>
+            <div class="row ng-scope" style="margin-top: -10px;">
+                <div class="col-lg-12">
+                    <h2 data-ng-bind="fund.online_fund_name" class="ng-binding">Donate to Wezesha Kupaa</h2>
+                </div>
             </div>
-     
-            <div class="donations_form">
-                <h3>Donate via</h3>
-                <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
 
-                    <!-- Identify your business so that you can collect the payments. -->
-                    <input type="hidden" name="business">
-                    <input type="hidden" name="cmd" value="_donations">
+            <div class="row ng-scope" style="margin-bottom: 20px">
+                <div class="col-lg-5 col-xs-12">
+                    <div class="input-group">
+                        <span class="input-group-addon">$</span>
+                        <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty" style="text-align: right;" data-ng-model="amount">
+                        <span class="input-group-addon">USD</span>
+                    </div>
+                </div>
+            </div>
 
-                    <!-- Specify details about the contribution -->
-                    <input type="hidden" name="item_name" value="Wezesha Kupaa">
-                    <input type="hidden" name="currency_code" value="USD">
-
-                    <!-- Display the payment button. -->
-                    <input type="image" name="submit"
-                    src="https://www.paypalobjects.com/webstatic/en_US/i/btn/png/gold-rect-paypal-26px.png" alt="PayPal">
-
-                </form>
+            <div class="row ng-scope" style="margin-bottom: 20px">
+                <div class="col-lg-2">
+                    <form name="_xclick" action="https://www.paypal.com/cgi-bin/webscr" method="post">
+                        <input type="hidden" name="cmd" value="_donations">
+                        <input type="hidden" name="business" value="online.donations@ywamtyler.org">
+                        <input type="hidden" name="item_name" value="Youth With A Mission">
+                        <input type="hidden" name="currency_code" value="USD">
+                        <input type="hidden" name="amount" value="">
+                        <input type="image" src="http://www.paypal.com/en_US/i/btn/btn_donate_LG.gif" border="0">
+                    </form>
+                </div>
             </div>
 
         </div>
     </div>
+</body>
 
 
 <footer>
