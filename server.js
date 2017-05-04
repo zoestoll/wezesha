@@ -12,6 +12,10 @@ var bCrypt = require("bcrypt-nodejs");
 var crypto = require('crypto');
 var exp = module.exports = {};
 
+/* other files with helper functions */
+var about_serv = require('./about.js');
+
+
 
 /* TODO: Update these values */
 var localhost = "127.0.0.1";
@@ -199,7 +203,7 @@ app.get('/logout', function (req, res) {
     });
 });
 
-/****************************************************** BASIC GET REQUESTS ******************************************************/
+/****************************************************** GET REQUESTS ******************************************************/
 
 /* GET request for top directory (http://localhost:8080) */
 app.get('/',function(req, res){
@@ -211,15 +215,9 @@ app.get('/',function(req, res){
     }
 });
 
-/* Sign up for new account */
-app.get("/signup", function (req, res) {
-    if (req.session.user) {
-        res.redirect("/");
-    } else {
-        res.render('signup', { title: "Signup", page_name: "signup", logged_in: isLoggedIn});
-    }
-});
+/***** NAVIGATION BAR PAGES: (1) Home, (2) About, (3) News, (4) Find Us, (5) Resources *****/
 
+/* (1) GET request for home */
 app.get('/index', function (req, res) {
     if (req.user) {
         res.render('index', { title: "Home", page_name: "home", logged_in: 1});
@@ -228,7 +226,7 @@ app.get('/index', function (req, res) {
     }
 });
 
-/* GET request for room directory (e.g. http://localhost:8080/ABCD) */
+/* (2) GET request for about */
 app.get('/about', function (req, res) {
     if (req.user) {
         res.render('about', { title: "About", page_name: "about", logged_in: 1});
@@ -237,28 +235,50 @@ app.get('/about', function (req, res) {
     }
 });
 
-/* GET request for news page */
+/* (3) GET request for news page */
 app.get('/news', function (req, res) {
     var sql2 = 'SELECT id, author, title, body, timestamp FROM news ORDER BY timestamp DESC';
     conn.query(sql2, function(error, result){
         posts = result.rows;
     });
-
     res.render('news', { title: "News", page_name: "news", posts: posts, logged_in: isLoggedIn});
 })
+
+/* (4) GET request for findus  */
+app.get('/findus', function (req, res) {
+    if (req.user) {
+        res.render('findus', { title: "Find Us", page_name: "findus", logged_in: 1});
+    } else {
+        res.render('findus', { title: "Find Us", page_name: "findus", logged_in: 0});
+    }
+});
+
+/* (5) GET request for resources page*/
+app.get('/resources', function (req, res) {
+    res.render('resources', { title: "Resources", page_name: "resources", logged_in: isLoggedIn});
+});
+
+/***** Subpages of resources page: (a) sponsors, (b) map, (c) handouts *****/
+
+/* (a) GET request for sponsors page*/
+app.get('/sponsors', function (req, res) {
+    res.render('sponsors', { title: "Sponsors", page_name: "sponsors", logged_in: isLoggedIn});
+});
+
+/* (b) GET request for general (non-admin) map page */
+app.get('/map', findPins, renderPins);
+
+/* (c) GET request for handouts page*/
+app.get('/handouts', function (req, res) {
+    res.render('handouts', { title: "Handouts", page_name: "handouts", logged_in: isLoggedIn});
+});
+
+/***** ADMIN REQUESTS *****/
 
 /* GET request for admin's version of the news page */
 app.get('/admin_blog', function (req, res) {
     res.render('admin_blog', { title: "Admin Blog", page_name: "admin_blog", logged_in: isLoggedIn});
 });
-
-/* GET request for sponsors page*/
-app.get('/sponsors', function (req, res) {
-    res.render('sponsors', { title: "Sponsors", page_name: "sponsors", logged_in: isLoggedIn});
-});
-
-/* GET request for general map page */
-app.get('/map', findPins, renderPins);
 
 /* GET request for general map page */
 app.get('/admin_map', findPins, renderPins);
@@ -266,6 +286,17 @@ app.get('/admin_map', findPins, renderPins);
 /* GET request for donations page */
 app.get('/donations', function (req, res) {
     res.render('donations', { title: "Donations", page_name: "donations", logged_in: isLoggedIn});
+});
+
+/***** ACCOUNT REQUESTS *****/
+
+/* Sign up for new account */
+app.get("/signup", function (req, res) {
+    if (req.session.user) {
+        res.redirect("/");
+    } else {
+        res.render('signup', { title: "Signup", page_name: "signup", logged_in: isLoggedIn});
+    }
 });
 
 /* GET request for login form */
@@ -278,28 +309,30 @@ app.get('/admin_map', function (req, res) {
     res.render('admin_map', { title: "Admin Map", page_name: "admin_map", logged_in: isLoggedIn});
 });
 
+// TODO: logout
 
 /****************************************************** MAP ******************************************************/
 
 
 app.post('/addPin', function(request, response) {
-    // if (!request.user) {  Unauthorized to add pin. TODO: check that user is admin. 
-    //     response.redirect("map");
-    // }
-    username = request.body.username;
-    /* TODO: Check session ID and CSRF token to be sure the user is logged in, and is the admin. This prevents CSRF. */
-
-    /* Request parameters */
-    serviceType = request.body.serviceType;
-    serviceName = request.body.serviceName;
-    address = request.body.address;
-    lat = request.body.latitude;
-    lng = request.body.longitude;
-    queryStr = "INSERT INTO mapLocations (serviceType, serviceName, address, latitude, longitude) VALUES (?,?,?,?,?)"
-    conn.query(queryStr, [serviceType, serviceName, address, lat, lng], function() {
-        // console.log("Inserted pin into mapLocations: ", serviceType, serviceName);
+    if (!request.user) {  /* Unauthorized to add pin. TODO: check that user is admin. */
         response.redirect("map");
-    });
+    }
+    else {
+        username = request.body.username;
+        /* TODO: Check session ID and CSRF token to be sure the user is logged in, and is the admin. This prevents CSRF. */
+        /* Request parameters */
+        serviceType = request.body.serviceType;
+        serviceName = request.body.serviceName;
+        address = request.body.address;
+        lat = request.body.latitude;
+        lng = request.body.longitude;
+        queryStr = "INSERT INTO mapLocations (serviceType, serviceName, address, latitude, longitude) VALUES (?,?,?,?,?)"
+        conn.query(queryStr, [serviceType, serviceName, address, lat, lng], function() {
+            // console.log("Inserted pin into mapLocations: ", serviceType, serviceName);
+            response.redirect("map");
+        });
+    }
     
     /* TODO: Check validity of latitude/longitude sent to us */
     /* TODO: Check authentication of user sending request */
@@ -367,7 +400,21 @@ function renderPins(req, res) {
 /* POST request when user looks up some services (lookup feature) */
 app.post('/map', searchServices, renderServices);
 
+/****************************************************** CONTENT EDITING ******************************************************/
+
+app.post('/editPost', function(req, res) {
+    console.log("Edit received", req);
+    res.redirect("news");
+});
+
+
+app.post('/editAbout', function(req, res) {
+    console.log("Edit about received", req.body);
+    res.redirect("about");
+});
+
 /****************************************************** BLOG/NEWS ******************************************************/
+
 
 /* View a single blog post */
 app.get('/post/:id', (req, res) => {
