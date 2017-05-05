@@ -12,6 +12,88 @@
         </div>
     </div>
 
+<script>
+
+var editing  = false; /* Not initially in editing mode */
+
+if (document.getElementById && document.createElement) {
+	var button = document.createElement('BUTTON');
+	var button_label = document.createTextNode('Save');
+	button.appendChild(button_label);
+	button.onclick = saveEdit;
+}
+
+function catchIt(e) {
+	if (editing) { /* Already editing text area*/
+		return;
+	}
+	if (!document.getElementById || !document.createElement) {
+		return;
+	}
+	if (!e) {
+		var obj = window.event.srcElement;
+	}
+	else {
+		var obj = e.target;
+	}
+	while (obj.nodeType != 1) {
+		obj = obj.parentNode;
+	}
+	if (obj.tagName == 'TEXTAREA' || obj.tagName == 'A') {
+		return;
+	}
+	while (obj.nodeName != 'P' && obj.nodeName != 'HTML') {
+		obj = obj.parentNode;
+	}
+	if (obj.nodeName == 'HTML') {
+		return;
+	}
+	var x = obj.innerHTML;
+	var y = document.createElement('TEXTAREA'); /* Create a new element to replace it */
+	var z = obj.parentNode;
+	z.insertBefore(y,obj);
+	z.insertBefore(button,obj);
+	z.removeChild(obj);
+	y.value = x;
+	y.focus();
+	editing = true;
+}
+
+/* only for editing post content */
+function saveEdit() {
+	console.log("Saving edit!");
+
+	var area = document.getElementsByTagName('TEXTAREA')[0];
+	var y = document.createElement('P');
+	var z = area.parentNode;
+	y.innerHTML = area.value;
+	z.insertBefore(y,area);
+	z.removeChild(area);
+	// z.removeChild(document.getElementsByTagName('button')[0]);
+	editing = false;
+	console.log("area: ", area);
+	console.log("y: ", y);
+	console.log("z: ", z);
+	console.log("area.value: ", area.value);
+
+	/* Information to send in the form */
+	var hiddenField = document.createElement("input");
+    hiddenField.setAttribute("type", "hidden");
+    hiddenField.setAttribute("name", "edit");
+    hiddenField.setAttribute("value", area.value);
+
+    /* Dynamic form to handle changes to post content */
+	var form = document.createElement("form");
+    form.setAttribute("method", "POST");
+    form.setAttribute("action", "/editPost");
+	form.appendChild(hiddenField);
+	document.body.appendChild(form);
+    form.submit();
+
+}
+
+document.onclick = catchIt;
+</script>
     <% include footer %>
 </body>
 </html>

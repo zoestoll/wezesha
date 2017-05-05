@@ -1,0 +1,44 @@
+<!doctype html>
+<html class="donations_main">
+<head>
+    <% include header %>
+</head>
+<body>
+    <div class="news-top-img">
+        <img src="/img/education/education-top-img.png"; alt="Education" style="max-width:600px;max-height:600px;">
+    </div> <!-- End class news-top-img -->
+    <!-- Intro to Education Section -->
+    <div class="about">
+        <h2>Improving Lives of Children with Disabilities in Tanzania</h2>
+            <p>In Tanzania, as in many African countries, children with disabilities are considered cursed and are often hidden away for life to avoid shame.  Access to education is denied due to the existence of an abnormality, with or without disability.  Day Spring Academy and Preschool provides special education for children with disabilities within an integrated preschool and primary school.  In 2015, with new wheelchair accessibility and a dedicated special needs teacher, we welcomed our first child with disabilities to Dayspring Preschool on a full scholarship. </p>
+    </div> <!-- End class about -->
+
+    <!-- Education-related news posts -->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="list-group">
+                  <!-- Render each blog post -->
+                  <% posts.forEach((post) => { %>
+                        <a href="/post/<%= post.id %>" class="list-group-item">
+                             <!-- Title -->
+                            <h4 class="list-group-item-heading"><%= post.title %></h4>
+                            <!-- Author -->
+                            <p class="list-group-item-text">by <%= post.author %></p>
+                            <!-- Body -->
+                            <p class="list-group-item-text"><%= post.body %></p>
+                            <!-- Date/Time -->
+                            <p><span class="glyphicon glyphicon-time"></span> <%= post.timestamp %></p>
+                        </a>
+                  <% }) %>
+                </div> <!-- End class list-group -->
+            </div> <!-- End class col-lg-12 -->
+        </div> <!-- End class row -->
+    </div> <!-- End class container -->
+</body>
+
+<footer>
+    <% include footer %>
+</footer>
+
+    
