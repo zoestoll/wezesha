@@ -7,7 +7,7 @@ var socket_io = require("socket.io");
 var NodeGeocoder = require('node-geocoder');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
-var Sequelize = require('sequelize');
+//var Sequelize = require('sequelize');
 var bCrypt = require("bcrypt-nodejs");
 var crypto = require('crypto');
 

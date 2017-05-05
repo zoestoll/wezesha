@@ -76,7 +76,7 @@ p {
 
 .nav_title {
     font-size: 24px;
-    font-color: gray;
+    color: gray;
 }
 
 .navbar-top {
@@ -133,8 +133,8 @@ header {
     color:green;
 }
 .home_info h3{
-    color:green;
-    text-decoration: italic;
+    color: green;
+    font-style: italic;
     font-size: 18px;
 }
 

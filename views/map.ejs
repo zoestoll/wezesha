@@ -2,14 +2,10 @@
 
 <!DOCTYPE html>
 <head>
-    <% include header %>
-</head>
-
-
-<!-- ################## EMBEDDED MAP ################## -->
+    <% include inner_head %>
+    <!-- ################## EMBEDDED MAP ################## -->
    
-<!-- Some code used from https://developers.google.com/maps/documentation/javascript/adding-a-google-map -->
-<head>
+    <!-- Some code used from https://developers.google.com/maps/documentation/javascript/adding-a-google-map -->
     <style>
     #map {
         height: 400px;
@@ -17,7 +13,8 @@
     }
     </style>
 </head>
-
+<body>
+    <% include navbar %>
   <form action="/map" method="POST">
         <select name="serviceType">
             <option>Medical</option>
@@ -30,7 +27,6 @@
         <button type="submit">Search for Services near these Coordinates</button>
     </form>
 
-    <body>
     <h3>Map of World</h3>
     <div id="map"></div>
     <script>
@@ -67,8 +63,7 @@
     <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDBs20a1Nr7ZDxF7Tq8-69JheH2zeQOLkg&callback=initMap">
     </script>
-  </body>
 
-<footer>
     <% include footer %>
-</footer>
+</body>
+</html>

@@ -1,10 +1,11 @@
 <!doctype html>
 <html class="donations_main">
 <head>
-    <% include header %>
+    <% include inner_head %>
 </head>
-
-<a <% if (logged_in === 1) { %> <a class="post-button" href="/write">Write a new post! <% } %> <% if (logged_in === 0)  { %> DOG <% } %> </a>
+<body>
+    <% include navbar %>
+<a<% if (logged_in === 1) { %> class="post-button" href="/write">Write a new post! <% } %>> <% if (logged_in === 0)  { %> DOG <% } %> </a>
 
      <!-- Page Content -->
     <div class="container">
@@ -28,11 +29,6 @@
             </div>
         </div>
     </div>
-</div>
-</body>
-
-<footer>
     <% include footer %>
-</footer>
-
-    
+</body>
+</html>
