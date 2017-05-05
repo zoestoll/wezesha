@@ -84,6 +84,23 @@ p {
     width: 100%;
 }
 
+/*.donate_nav {
+    background-color: yellow;
+}*/
+
+.donate_nav {
+    float: right;
+    background-color: rgb(103,0,206);
+    font-size: 24px;
+    min-width: 100px;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 5px solid black;
+    margin-bottom: 0px;
+    margin-top: 0px;
+}
+
 header {
     height: 50px;
 }
@@ -174,7 +191,7 @@ header {
     font-style: italic;
 }*/
 
-#home_option {
+.home_option {
     font-size: 24px;
     overflow:auto;
     float: left;
@@ -182,9 +199,10 @@ header {
     background-color: rgba(128, 0, 64, 0.3);
     margin: 10px;
     padding: 50px;
+    background-image: "/img/smiling.png";
 }
 
-#home_option h2 {
+.home_option h2 {
     color: white;
 }
 
