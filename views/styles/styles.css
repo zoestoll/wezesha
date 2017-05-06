@@ -578,11 +578,234 @@ div.panel {
 
 /******************* Donations *******************/
 
-.donations_form {
-    text-align: center;
+
+.donation-preamble h1 {
+    font-size:24px;
+    font-style: italic;
+    font-family: 'Montserrat', sans-serif;
+    color: maroon;
+    margin: 20px;
 }
 
-.flex-container {
+.donation-preamble h2 {
+    font-size:16px;
+    /*font-family: 'Montserrat', sans-serif;*/
+    margin: 30px;
+}
+/*
+.donations_form {
+    text-align: center;
+}*/
+
+.donation-container {
+    height: 1000px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    font-size: 24px;
+
+    /*border-radius: 100px;*/
+    /*text-transform: uppercase;*/
+    margin: 20px;
+    margin-top: 30px;
+
+}
+
+.donation-box {
+    width: 50%;
+    height: 50%;
+    background-color: pink;
+    /*border-radius: 100px;*/
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    
+    -webkit-transition: all 0.15s ease-out;
+    -moz-transition: all 0.15s ease-out;
+    -o-transition: all 0.15s ease-out;
+    transition: all 0.15s ease-out;
+}
+
+.donation-box .title {
+    background-color: blue;
+    width: 100%;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    color: white;
+    text-align: center;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    font-size: 15px;
+}
+
+.donation-box .donate-button {
+    background-color: blue;
+    width: 100%;
+    color: white;
+    text-align: center;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    font-size: 18px;
+    bottom: 0px;
+    position: absolute;
+    cursor: pointer;
+    font-weight: 800;
+}
+
+.donation-box .fields {
+    width: 50%;
+    display: block;
+    position: relative;
+    /*top: 60px;*/
+    left: 15px;
+}
+
+.donation-box .fields input {
+    width: 90%;
+    font-size: 17px;
+    padding: 10px;
+    border-radius: 4px;
+    border-width: 0px;
+    color: #5C5C5C;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    margin-bottom: 10px;
+    -webkit-font-smoothing: antialiased;
+}
+
+::-webkit-input-placeholder {
+   color: #cdcdcd;
+   font-size: 15px;
+}
+
+:-moz-placeholder { /* Firefox 18- */
+   color: #cdcdcd;
+   font-size: 15px;
+}
+
+::-moz-placeholder {  /* Firefox 19+ */
+   color: #cdcdcd;
+   font-size: 15px; 
+}
+
+:-ms-input-placeholder {  
+   color: #cdcdcd;
+   font-size: 15px;
+}
+
+.donation-box .amount {
+    width: 30%;
+    display: block;
+    position: absolute;
+    top: 60px;
+    right: 15px;
+    clear: both;
+}
+
+.donation-box .amount .button {
+    width: 100%;
+    background-color: gray;
+    margin-bottom: 10px;
+    text-align: center;
+    color: white;
+    padding: 15px 0px 15px 0px;
+    border-radius: 4px;
+    font-size: 20px;
+    cursor: pointer;
+    
+    -webkit-transition: 400ms background-color;
+    -moz-transition: 800ms opacity, 800ms right;
+    -ms-transition: 800ms opacity, 800ms right;
+    -o-transition: 800ms opacity, 800ms right;
+    transition: 200ms background-color;
+}
+
+.donation-box .amount .button:hover {
+    background-color: #393939;
+}
+
+.donation-box .amount .button.selected {
+    background-color: #393939;
+}
+
+.donation-box .amount .button input {
+    min-width: 34px;
+    font-size: 20px;
+    font-weight: 500;
+    border: none;
+    background-color: transparent;
+    color: white;
+    font-family: Montserrat, sans-serif;
+    font-size: 20px;
+    font-stretch: normal;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: 500;
+    border-bottom: 2px dashed white;
+    -webkit-font-smoothing: antialiased;
+    -webkit-transition: all 0.15s ease-out;
+    -moz-transition: all 0.15s ease-out;
+    -o-transition: all 0.15s ease-out;
+    transition: all 0.15s ease-out;
+}
+
+.set-amount {
+    max-width: 100px;
+}
+
+/*** custom checkboxes ***/
+/*body { margin: 30px; } 
+h1 { font-size: 1.5em; }
+label { font-size: 24px; }
+div { 
+  width: 175px; 
+  margin-left: 20px;
+}*/
+input[type=checkbox] { display:none; } /* to hide the checkbox itself */
+input[type=checkbox] + label:before {
+  font-family: FontAwesome;
+  display: inline-block;
+}
+
+input[type=checkbox] + label:before { content: "\f096"; } /* unchecked icon */
+input[type=checkbox] + label:before { letter-spacing: 10px; } /* space between checkbox and label */
+
+input[type=checkbox]:checked + label:before { content: "\f046"; } /* checked icon */
+input[type=checkbox]:checked + label:before { letter-spacing: 5px; } /* allow space for check mark */
+
+.causes h1 {
+    font-style: italic;
+    margin: 20px;
+
+}
+
+.causes {
+    margin-left: 20px;
+    font-size: 20px;
+    padding: 20px;
+}
+
+.confirm {
+    display: none;
+    position: auto;
+    top: 335px;
+    left: 15px;
+    right: 15px;
+    font-size: 16px;
+    
+    -webkit-transition: all 0.15s ease-out;
+    -moz-transition: all 0.15s ease-out;
+    -o-transition: all 0.15s ease-out;
+    transition: all 0.15s ease-out;
+}
+
+.confirm i {
+    font-weight: bold;
+    text-decoration: underline;
+    font-style: normal;
+}
+/*.flex-container {
     display: flex;
     justify-content: space-around;
 }
@@ -599,7 +822,7 @@ div.panel {
 .b1, .b2, .b3 {
     width: 40%;
 }
-
+*/
 
 /******************* Login Form *******************/
 
