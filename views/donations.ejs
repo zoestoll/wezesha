@@ -3,64 +3,55 @@
 <head>
     <% include inner_head %>
 </head>
-<body marginwidth="0" marginheight="0">
+<body>
     <% include navbar %>
-    <div id="divMainContainer" class="container">
-        <div id="divHeader">
+
+    <div class="donation-info">
+ 
+        <p>Medical and Surgical Care</p>
+        <p>50 USD offers room and board at House of Hope for a parent with a child seeking local medical and surgical care</p>
+
+        <p>Outreach Workshops</p>
+        <p>100 USD covers cost of a weekend workshop on nutrition, disability support or other community health topic</p>
+
+        <p>Supporting Education</p>
+        <p>250 USD a year sends a child with disabilities to school</p>
+
+        <p>Essential Corrective Surgery</p>
+        <p>500 USD provides transportation and surgery for a child needing to travel for life saving but locally unavailable surgical care</p>
+
+    </div>
+           
+    <div class="donation-box">
+        <div class="title">Donation Information</div>
+        
+        <div class="fields" style="margin-bottom: 20px; width: 30%;">
+            <input type="text" id="firstName" placeholder="First Name"> 
+            <input type="text" id="lastName" placeholder="Last Name"> 
+            <input type="text" id="email" placeholder="Email"> 
+            <input type="text" id="comments" placeholder="Comments">
         </div>
 
-        <div id="divSectionContent" data-ng-view="" class="ng-scope">
-            <div class="row ng-scope">
-                <div class="col-lg-12">
-                    <h1 class="handwriting">Your Contribution Goes Toward:</h1>
-                </div>
-            </div>
+        <div class="input-group" style="margin-bottom: 20px; width: 30%;">
+            <span class="input-group-addon">$</span>
+            <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty" style="text-align: right;" data-ng-model="amount">
+            <span class="input-group-addon">USD</span>
+        </div>
 
-            <div class="row ng-scope">
-                <div class="col-lg-12">
-                    <h4>Medical and Surgical Care</h4>
-                    <h5>50 USD offers room and board at House of Hope for a parent with a child seeking local medical and surgical care</h5>
-                    <h4>Outreach Workshops</h4>
-                    <h5>100 USD covers cost of a weekend workshop on nutrition, disability support or other community health topic</h5>
-                    <h4>Supporting Education</h4>
-                    <h5>250 USD a year sends a child with disabilities to school</h5>
-                    <h4>Essential Corrective Surgery</h4>
-                    <h5>500 USD provides transportation and surgery for a child needing to travel for life saving but locally unavailable surgical care</h5>
-                </div>
+        <div class="row ng-scope" style="margin-bottom: 20px">
+<!--             add image?
+ -->            <div class="col-lg-2">
+                <form name="_xclick" action="https://www.paypal.com/cgi-bin/webscr" method="post">
+                    <input type="hidden" name="cmd" value="_donations">
+                    <input type="hidden" name="business" value="online.donations@ywamtyler.org">
+                    <input type="hidden" name="item_name" value="Youth With A Mission">
+                    <input type="hidden" name="currency_code" value="USD">
+                    <input type="hidden" name="amount" value="">
+                    <input type="image" src="http://www.paypal.com/en_US/i/btn/btn_donate_LG.gif" border="0">
+                </form>
             </div>
-
-            <div class="row ng-scope" style="margin-top: -10px;">
-                <div class="col-lg-12">
-                    <h2 data-ng-bind="fund.online_fund_name" class="ng-binding">Donate to Wezesha Kupaa</h2>
-                </div>
-            </div>
-
-            <div class="row ng-scope" style="margin-bottom: 20px">
-                <div class="col-lg-5 col-xs-12">
-                    <div class="input-group">
-                        <span class="input-group-addon">$</span>
-                        <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty" style="text-align: right;" data-ng-model="amount">
-                        <span class="input-group-addon">USD</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row ng-scope" style="margin-bottom: 20px">
-                <div class="col-lg-2">
-                    <form name="_xclick" action="https://www.paypal.com/cgi-bin/webscr" method="post">
-                        <input type="hidden" name="cmd" value="_donations">
-                        <input type="hidden" name="business" value="online.donations@ywamtyler.org">
-                        <input type="hidden" name="item_name" value="Youth With A Mission">
-                        <input type="hidden" name="currency_code" value="USD">
-                        <input type="hidden" name="amount" value="">
-                        <input type="image" src="http://www.paypal.com/en_US/i/btn/btn_donate_LG.gif" border="0">
-                    </form>
-                </div>
-            </div>
-
         </div>
     </div>
-</body>
 
     <% include footer %>
     
