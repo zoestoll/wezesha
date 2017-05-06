@@ -7,7 +7,7 @@ var socket_io = require("socket.io");
 var NodeGeocoder = require('node-geocoder');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
-var Sequelize = require('sequelize');
+//var Sequelize = require('sequelize');
 var bCrypt = require("bcrypt-nodejs");
 var crypto = require('crypto');
 var exp = module.exports = {};
@@ -30,7 +30,7 @@ var conn = anyDB.createConnection('sqlite3://wezesha.db');
 console.log("here");
 /* Temporary - won't need to drop tables every time. */
 // conn.query("DROP TABLE mapLocations");
-conn.query("DROP TABLE users");
+// conn.query("DROP TABLE users");
 
 /* User table */
 userTableCreate = "CREATE TABLE IF NOT EXISTS 'users' ('id' INTEGER PRIMARY KEY AUTOINCREMENT, 'username' VARCHAR(255), 'password' VARCHAR(255), 'createdAt' DATETIME, 'updatedAt' DATETIME, 'salt' VARCHAR(255), 'isAdmin' BOOLEAN)"
@@ -238,11 +238,12 @@ app.get('/about', function (req, res) {
 
 /* (3) GET request for news page */
 app.get('/news', function (req, res) {
-    var sql2 = 'SELECT id, author, title, body, timestamp FROM news ORDER BY timestamp DESC';
-    conn.query(sql2, function(error, result){
+    var sql = 'SELECT id, author, title, body, timestamp FROM news ORDER BY timestamp DESC';
+    conn.query(sql, function(error, result){
         posts = result.rows;
+        res.render('news', { title: "News", page_name: "news", posts: posts, logged_in: isLoggedIn});
     });
-    res.render('news', { title: "News", page_name: "news", posts: posts, logged_in: isLoggedIn});
+    // res.render('news', { title: "News", page_name: "news", posts: posts, logged_in: isLoggedIn});
 })
 
 /* (4) GET request for findus  */
@@ -403,9 +404,16 @@ app.post('/map', searchServices, renderServices);
 
 /****************************************************** CONTENT EDITING ******************************************************/
 
-app.post('/editPost', function(req, res) {
-    console.log("Edit received", req);
-    res.redirect("news");
+app.post('/editPost/', function(req, res) {
+    var edit = req.body.edit;
+    var id = req.body.id;
+    console.log("Edit received", edit);
+    var timestamp = getPrettyDate();
+    var sql = "UPDATE news SET body = ?, timestamp = ? WHERE id = ?";
+    conn.query(sql, [edit, timestamp, id], function(error, result) {
+        console.log(error);
+        res.redirect("post/"+id);
+    });
 });
 
 
@@ -419,12 +427,16 @@ app.post('/editAbout', function(req, res) {
 
 /* View a single blog post */
 app.get('/post/:id', (req, res) => {
-  const post = posts.filter((post) => {
-    return post.id == req.params.id
-  })[0];
-
-  /* render the 'post.ejs' template with the post content */
-  res.render('post', { title: "Post", page_name: "post", author: post.author, title: post.title, body: post.body, logged_in: isLoggedIn});
+    var sql = 'SELECT id, author, title, body, timestamp FROM news ORDER BY timestamp DESC';
+    conn.query(sql, function(error, result){
+        posts = result.rows;
+        const post = posts.filter((post) => {
+            return post.id == req.params.id
+        })[0];
+        /* render the 'post.ejs' template with the post content */
+        console.log("ID: ", post.id);
+        res.render('post', { title: "Post", page_name: "post", postid: post.id, author: post.author, title: post.title, body: post.body, logged_in: isLoggedIn});
+    });
 });
 
 /* For writing a new blog post */

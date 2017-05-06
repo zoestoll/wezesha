@@ -34,7 +34,7 @@
                     <li class="nav_title" <% if (page_name === 'news') { %>class="active" <% } %> ><a href="/news">News</a></li>
                     <li class="nav_title" <% if (page_name === 'findus') { %>class="active" <% } %> ><a href="/findus">Find Us</a></li>
                     <li class="nav_title" <% if (page_name === 'resources') { %>class="active" <% } %> ><a href="/resources">Resources</a></li>
-                    <li class="nav_title" <% if (page_name === 'donations') { %>class="active" <% } %> ><a href="/donations">Donations</a></li>
+                    <li class="nav_title" <% if (page_name === 'donations') { %>class="active" <% } %> ><a class="donate_nav" href="/donations">Donate</a></li>
                 </ul>
             <a class="login_button" <% if (logged_in === 0) { %> <a href="/admin_login">Login <% } %> <% if (logged_in === 1)  { %> <a href="/about">View Profile <% } %></a>
             </div>

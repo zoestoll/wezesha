@@ -1,16 +1,17 @@
 <!DOCTYPE html>
-<html  class="donations_main" >
+<html class="donations_main" >
 <head>
-<% include header %>
+<% include inner_head %>
 </head>
 
 <body>
+    <% include navbar %>
     <div class="container">
             <h3>by <%= author %></h3>
+            <h2><%= title %></h2>
             <p><%= body %></p>
         </div>
     </div>
-</body>
 
 <script>
 
@@ -61,7 +62,7 @@ function catchIt(e) {
 
 /* only for editing post content */
 function saveEdit() {
-	console.log("Saving edit!");
+	console.log("Saving edit: ", <%= postid %>);
 
 	var area = document.getElementsByTagName('TEXTAREA')[0];
 	var y = document.createElement('P');
@@ -82,20 +83,23 @@ function saveEdit() {
     hiddenField.setAttribute("name", "edit");
     hiddenField.setAttribute("value", area.value);
 
+    var hiddenField2 = document.createElement("input");
+    hiddenField2.setAttribute("type", "hidden");
+    hiddenField2.setAttribute("name", "id");
+    hiddenField2.setAttribute("value", <%= postid %>);
+
     /* Dynamic form to handle changes to post content */
 	var form = document.createElement("form");
     form.setAttribute("method", "POST");
     form.setAttribute("action", "/editPost");
 	form.appendChild(hiddenField);
+	form.appendChild(hiddenField2);
 	document.body.appendChild(form);
     form.submit();
-
 }
 
 document.onclick = catchIt;
 </script>
-
-<footer>
     <% include footer %>
-</footer>
+</body>
 </html>

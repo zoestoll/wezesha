@@ -1,9 +1,10 @@
 <!doctype html>
 <html class="donations_main">
 <head>
-    <% include header %>
+    <% include inner_head %>
 </head>
-
+<body>
+    <% include navbar %>
     <div class="sponsors_list_table">
        <table class="table assignments">
             <thead>
@@ -22,14 +23,13 @@
                           <a data-toggle="collapse" href="#ngo1">NGO 1</a>
                         </h4>
                     </div>
-                    <div id="ngo1" class="panel-collapse collapse">
+                    <div class="panel-collapse collapse">
                         <div class="list-group">
-                            <li class="list-group-item">This group helps Tanzanian families find medical services.</li>
+                            <p class="list-group-item">This group helps Tanzanian families find medical services.</p>
                         </div>
                     </div>
                 </td>
                     <td>Tanzania</td>
-                </td>
                     <td><a href="xxx">ngo1@ngo.com</a></td>
                 </tr>
                 <!-- NGO 2 -->
@@ -40,14 +40,13 @@
                           <a data-toggle="collapse" href="#ngo1">NGO 2</a>
                         </h4>
                     </div>
-                    <div id="ngo1" class="panel-collapse collapse">
+                    <div class="panel-collapse collapse">
                         <div class="list-group">
-                            <li class="list-group-item">This group helps Tanzanian families find medical services.</li>
+                            <p class="list-group-item">This group helps Tanzanian families find medical services.</p>
                         </div>
                     </div>
-                </td>
-                    <td>Tanzania</td>
-                </td>
+                    </td>
+                <td>Tanzania</td>
                     <td><a href="xxx">ngo2@ngo.com</a></td>
                 </tr>
                 <!-- NGO 3 -->
@@ -58,23 +57,20 @@
                           <a data-toggle="collapse" href="#ngo1">NGO 3</a>
                         </h4>
                     </div>
-                    <div id="ngo1" class="panel-collapse collapse">
+                    <div class="panel-collapse collapse">
                         <div class="list-group">
-                            <li class="list-group-item">This group helps Tanzanian families find medical services.</li>
+                            <p class="list-group-item">This group helps Tanzanian families find medical services.</p>
                         </div>
                     </div>
-                </td>
+                    </td>
                     <td>Tanzania</td>
-                </td>
                     <td><a href="xxx">ngo3@ngo.com</a></td>
                 </tr>
             </tbody>
         </table>
     </div>
 
-<footer>
     <% include footer %>
-</footer>
-
     
 </body>
+</html>

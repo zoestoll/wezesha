@@ -76,7 +76,7 @@ p {
 
 .nav_title {
     font-size: 24px;
-    font-color: gray;
+    color: gray;
 }
 
 .navbar-top {
@@ -150,8 +150,8 @@ header {
     color:green;
 }
 .home_info h3{
-    color:green;
-    text-decoration: italic;
+    color: green;
+    font-style: italic;
     font-size: 18px;
 }
 
@@ -174,27 +174,26 @@ header {
     background-color: white;
     background-image: url("/img/smiling.png");
     background-size: cover;
-    
 }
 
 #home_main h2 {
-    /*font-size: 60pt;*/
-    /*text-align: center;*/
-    /*font-family: Lora;*/
-  /*  max-width: 700px;
-    font-weight: bold;*/
+    font-size: 60pt;
+    text-align: center;
+    font-family: Lora;
+    max-width: 700px;
+    font-weight: bold;
+    width: 100%;
 }
 
-/*#home_main h3 {
-    font-size: 40pt;
+#home_main h3 {
+    font-size: 30pt;
     font-family: Lora, sans-serif;
     font-style: italic;
-}*/
+    color: white;
+}
 
 .home_option {
     font-size: 24px;
-    overflow:auto;
-    float: left;
     text-align: center;
     background-color: rgba(128, 0, 64, 0.3);
     margin: 10px;
@@ -204,39 +203,7 @@ header {
 
 .home_option h2 {
     color: white;
-}
-
-.home_sec {
-    min-height: 80vh;
-    padding: 20px;
-}
-
-.home_sec h1 {
-    color: white;
-    font-family: Lora, sans-serif;
-    font-weight: bold;
-    font-size: 36pt;
     text-align: center;
-    padding-bottom: 25px;
-}
-
-.home_sec p {
-    color: white;
-    display: inline-block;
-    width: 60%;
-    line-height: 3ex;
-}
-
-#home_health {
-    background-color: #6495ed;
-}
-
-#home_ed {
-    background-color: #800080;
-}
-
-#home_comm {
-    background-color: #00cc66;
 }
 
 .home_icon {
@@ -249,6 +216,82 @@ header {
     justify-content: space-around;
     align-items: center;
     height: inherit;
+}
+
+#home_buttons {
+    display: flex;
+    justify-content: space-around;
+    width: 80%;
+}
+
+#home_buttons div {
+    width: 150px;
+    height: 150px;
+    background-size: cover;
+    margin: 50px;
+}
+
+#home_buttons p {
+    /*background-color: rgba(128, 0, 64, 0.3);*/
+    /*background-image: "/img/smiling.png";*/
+    height: 20px;
+    /*margin-top: 130px;*/
+    width: 250px;
+    height: 250px;
+}
+
+.image {
+  display: inline-block;
+  width: 250px;
+  height: 250px;
+}
+.image:hover {
+  /*opacity:0.5;*/
+  /*background-color: rgba(0, 0, 0, 0.6);*/
+  background-image: "/img/smiling.png";
+/*  width: 250px;
+  height: 250px;*/
+}
+
+/*image.overlay {
+  position: auto;
+  height: 100%;
+  width: 100%;*/
+  /*opacity: 0;*/
+ /* transition: .5s ease;
+  background-color: lightblue;
+}*/
+/*.container:hover .overlay {
+  opacity: 1;
+}
+
+.text {
+  color: white;
+  font-size: 20px;
+  position: auto;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+}*/
+
+
+.home_ed {
+    width: 150px;
+    height: 150px;
+    /*background-image: url("/img/education/home_ed.png");*/
+}
+
+#home_comm {
+    background-image: url("/img/community/home_comm.png");
+}
+
+#home_med {
+    background-image: url("/img/education/home_med.jpg");
+}
+
+#home_part {
+    background-image: url("/img/community/home_part.jpg");
 }
 
 /******************* News *******************/
