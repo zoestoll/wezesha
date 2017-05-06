@@ -65,9 +65,19 @@ p {
     border: 0;
     box-shadow: white 0px 0px 12px 0px;
 }
+.navbar-default .navbar-nav > .active > a {
+    /*background-color: solid;*/
+    background-color: white;
+}
+
 
 .navbar-default .navbar-nav > .active > a {
+    /*background-color: solid;*/
     background-color: white;
+}
+
+.navbar-nav {
+    background-color: black;
 }
 
 .navbar-nav > .active:hover {
@@ -602,7 +612,6 @@ div.panel {
     font-family: 'Montserrat', sans-serif;
     font-weight: 500;
     font-size: 24px;
-
     /*border-radius: 100px;*/
     /*text-transform: uppercase;*/
     margin: 20px;
@@ -632,11 +641,11 @@ div.panel {
     width: 100%;
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
-    color: white;
+    /*color: white;*/
     text-align: center;
-    padding-top: 12px;
-    padding-bottom: 12px;
-    font-size: 15px;
+/*    padding-top: 12px;
+    padding-bottom: 12px;*/
+    /*font-size: 15px;*/
 }
 
 .donation-box .donate-button {
@@ -648,9 +657,13 @@ div.panel {
     padding-bottom: 12px;
     font-size: 18px;
     bottom: 0px;
-    position: absolute;
+    position: relative;
     cursor: pointer;
     font-weight: 800;
+}
+
+.donation-box .donate-button form {
+    border: none;
 }
 
 .donation-box .fields {
@@ -776,8 +789,23 @@ input[type=checkbox]:checked + label:before { letter-spacing: 5px; } /* allow sp
 
 .causes h1 {
     font-style: italic;
-    margin: 20px;
+    margin-bottom: 10px;
+    text-decoration: underline;
+    font-size: 24px;
+    color: maroon;
+}
 
+.causes label {
+    /*font-style: italic;*/
+    /*margin: 10px;*/
+    font-size: 18px;
+    color: black;
+}
+.causes p {
+    /*font-style: italic;*/
+    margin: 10px;
+    font-size: 14px;
+    color: black;
 }
 
 .causes {

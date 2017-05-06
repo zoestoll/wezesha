@@ -72,22 +72,6 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 
-/* TODO: Session config (Couldn't get this working) */
-
-// app.use(session({ secret: 'example' }));
-
-// app.use(session({  
-//   store: new RedisStore({
-//     url: config.redisStore.url
-//   }),
-//   secret: config.redisStore.secret,
-//   resave: false,
-//   saveUninitialized: false
-// }))
-/* Passport config */
-// app.use(passport.initialize())  
-// app.use(passport.session())  
-
 app.use(require('express-session')({
   secret: 'keyboard cat',
   resave: true,
@@ -111,8 +95,6 @@ var options = {
 /****************************************************** AUTHENTICATION & SESSION MANAGEMENT ******************************************************/
 
 // TODO: SESSION STUFF
-
-// app.use(passport.session());
 
 app.use(function (req, res, next) {
     var err = req.session.error,
@@ -312,6 +294,11 @@ app.get('/admin_map', function (req, res) {
 });
 
 // TODO: logout
+
+/****************************************************** DONATIONS ******************************************************/
+
+
+
 
 /****************************************************** MAP ******************************************************/
 
