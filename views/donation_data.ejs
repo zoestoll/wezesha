@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+<head>
+    <% include inner_head %>
+</head>
+<body>
+    <% include navbar %>
+    <h1 id="about_head">Donation Information</h1>
+
+    <!-- Page Content -->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="list-group">
+                  <!-- Render each donation info -->
+                  <% posts.forEach((donation) => { %>
+                        <div class="list-group-item">
+                            <h4 class="list-group-item-heading"><%= donation.name %></h4>
+                            <p class="list-group-item-text">Amount: $<%= donation.amount %></p>
+                            <p class="list-group-item-text">Email: <%= donation.email %></p>
+                            <p class="list-group-item-text">City: <%= donation.city %></p>
+                            <p class="list-group-item-text">Zip Code: <%= donation.zip %></p>
+                            <p class="list-group-item-text">Cause: <%= donation.cause %></p>
+                            <!-- Date/Time -->
+                            <p><span class="glyphicon glyphicon-time"></span> <%= donation.timestamp %></p>
+                        </div>
+                  <% }) %>
+                </div>
+            </div>
+        </div>
+    </div>
+    <% include footer %>
+</body>
+</html>

@@ -6,10 +6,11 @@
 <body>
     <% include navbar %>
 
-    <a<% if (logged_in === 1) { %> class="post-button" href="/donation_data">Access Donation Data<% } %></a>
 
     <div class="donation_form">
         <h1 id="about_head">Donate to Wezesha Kupaa </h1>
+        <a<% if (logged_in === 1) { %> class="post-button" href="/donation_data">Access Donation Data<% } %></a>
+
         <div class="causes">
             <h1>Your contribution goes toward</h1>
               <h2>Supporting Education: School Fees</h2>

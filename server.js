@@ -39,13 +39,18 @@ conn.query(userTableCreate);
 newsTableCreate = "CREATE TABLE IF NOT EXISTS 'news' ('id' INTEGER PRIMARY KEY AUTOINCREMENT, 'author' VARCHAR(255), 'title' VARCHAR(255), 'body' VARCHAR(255), 'timestamp' DATETIME)";
 conn.query(newsTableCreate);
 var posts = [];
-var sql2 = 'SELECT id, author, title, body, timestamp FROM news ORDER BY timestamp DESC';
-    conn.query(sql2, function(error, result){
+var initialPosts = 'SELECT id, author, title, body, timestamp FROM news ORDER BY timestamp DESC';
+conn.query(initialPosts, function(error, result){
     posts = result.rows;
 });
 
 donationTableCreate = "CREATE TABLE IF NOT EXISTS 'donations' ('id' INTEGER PRIMARY KEY AUTOINCREMENT, 'name' VARCHAR(255), 'amount' INTEGER, 'email' VARCHAR(255), 'city' VARCHAR(255), 'zip' VARCHAR(255), 'cause' VARCHAR(255), 'timestamp' DATETIME)";
 conn.query(donationTableCreate);
+var donations = [];
+var initialDonations = 'SELECT id, name, amount, email, city, zip, cause, timestamp FROM donations ORDER BY timestamp DESC';
+conn.query(initialDonations, function(error, result){
+    donations = result.rows;
+});
 
 /* Create fake user - for testing purposes */
 salt = bCrypt.genSaltSync(10);
@@ -453,7 +458,7 @@ app.post('/write', function(req, res) {
     res.redirect("news");
 });
 
-/****************************************************** STORING DONATION DATA ******************************************************/
+/********************************************** STORING AND RETRIEVING DONATION DATA ******************************************************/
 
 /* TODO: display donation queries , figure out IPN stuff */
 app.post('/donations', function (req, res) {
@@ -466,17 +471,27 @@ app.post('/donations', function (req, res) {
     var timestamp = getPrettyDate();
 
     console.log(req.body);
-    // console.log(name);
-    // console.log(amount);
-    // console.log(email);
-    // console.log(city);
-    // console.log(zip);
-    // console.log(timestamp);
 
     var sql = 'INSERT INTO donations (name, amount, email, city, zip, cause, timestamp) VALUES ($1, $2, $3, $4, $5, $6, $7)';
     conn.query(sql, [name, amount, email, city, zip, cause, timestamp]);
 });
 
+
+app.get('/donation_data', function(req, res) {
+    if (req.user) {
+
+        /* new donations are on top */
+        var sql = 'SELECT id, name, amount, email, city, zip, cause, timestamp FROM donations ORDER BY timestamp DESC';
+        conn.query(sql, function(error, result){
+            donations = result.rows;
+            console.log(donations);
+        });
+
+        res.render("donation_data", { title: "Donation Data", page_name: "donation_data", posts: donations, logged_in: 1});
+    } else {
+        res.redirect("donations");
+    }
+});
 
 /****************************************************** EDUCATION NEWS PAGE ******************************************************/
 
