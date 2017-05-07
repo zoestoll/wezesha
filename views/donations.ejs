@@ -3,9 +3,21 @@
 <head>
     <% include inner_head %>
 </head>
-<body>
+<body marginwidth="0" marginheight="0">
     <% include navbar %>
+    <div class="donation-container">
+        <div class="donation-preamble">
+            <h1>Medical and Surgical Care</h1>
+                <h2>50 USD offers room and board at House of Hope for a parent with a child seeking local medical and surgical care.</h2>
+            <h1>Outreach Workshops</h1>
+                <h2>100 USD covers cost of a weekend workshop on nutrition, disability support or other community health topic.</h2>
+            <h1>Supporting Education</h1>
+                <h2>250 USD a year sends a child with disabilities to school</h2>
+            <h1>Essential Corrective Surgery</h1>
+                <h2>500 USD provides transportation and surgery for a child needing to travel for life saving but locally unavailable surgical care.</h2>
+        </div> <!-- End class 'donations-preamble' -->
 
+<<<<<<< HEAD
     <h1 id="about_head">Your Contribution Goes To </h1>
     <div class="about">
         <h2>Medical and Surgical Care</h2>
@@ -48,10 +60,59 @@
     </script>   
 
     </div>
+=======
+        <div class="donation-box">
+            <div class="title">Donation Information</div>
+
+            <div class="fields">
+                <input type="text" id="firstName" placeholder="First Name"> </input>
+                <input type="text" id="lastName" placeholder="Last Name"> </input>
+                <input type="text" id="email" placeholder="Email"> </input>
+            </div>
+            
+            <div class="amount">
+                <div class="button">$30</div>
+                <div class="button">$50</div>
+                <div class="button">$100</div>
+                <div class="button">$<input type="text" class="set-amount" placeholder=""> </input></div>
+            </div>
+
+            <div class="causes">
+                <h1>Dedicate money to specific cause</h1>
+                <input type="checkbox" id="receipt" class="checkbox" />
+                    <label>Supports Education: School Fees</label>
+                    <p>250 USD a year sends a child with disabilities to school</p>
+                <br/>
+                <input type="checkbox" id="anon" class="checkbox" />
+                    <label>Outreach Workshops</label>
+                    <p>100 USD covers cost of a weekend workshop on nutrition, disability support or other community health topic</p>
+                <br/>
+                <input type="checkbox" id="list" class="checkbox" />
+                    <label>Supporting Medical and Surgical Care</label>
+                    <p>50 USD offers room and board at House of Hope for a parent with a child seeking local medical and surgical care</p>
+                <br/>
+                <input type="checkbox" id="anon" class="checkbox" />
+                    <label>Essential Corrective Surgeries</label>
+                    <p>500 USD provides transportation and surgery for a child needing to travel for life saving but locally unavailable surgical care.</p>
+                <br/>
+            </div>
+
+            <div class="donate-button">
+                <form name="_xclick" action="https://www.paypal.com/cgi-bin/webscr" method="post">
+                    <input type="hidden" name="cmd" value="_donations">
+                    <input type="hidden" name="business" value="online.donations@ywamtyler.org">
+                    <input type="hidden" name="item_name" value="Youth With A Mission">
+                    <input type="hidden" name="currency_code" value="USD">
+                    <input type="hidden" name="amount" value="">
+                    <input type="image" src="http://www.paypal.com/en_US/i/btn/btn_donate_LG.gif" border="0">
+                </form>
+            </div> <!-- End class 'donate-button' -->
+        </div> <!-- End class 'donation-box' -->
+    </div> <!-- End class 'donation-container' -->
+>>>>>>> d6d4e8a89339626470dfaff69f8e1a485d8beb26
 
  
 
     <% include footer %>
-    
 </body>
 </html>
