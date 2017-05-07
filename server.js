@@ -44,7 +44,7 @@ var sql2 = 'SELECT id, author, title, body, timestamp FROM news ORDER BY timesta
     posts = result.rows;
 });
 
-donationTableCreate = "CREATE TABLE IF NOT EXISTS 'donations' ('id' INTEGER PRIMARY KEY AUTOINCREMENT, 'name' VARCHAR(255), 'amount' INTEGER, 'email' VARCHAR(255), 'city' VARCHAR(255), 'zip' VARCHAR(255), 'timestamp' DATETIME)";
+donationTableCreate = "CREATE TABLE IF NOT EXISTS 'donations' ('id' INTEGER PRIMARY KEY AUTOINCREMENT, 'name' VARCHAR(255), 'amount' INTEGER, 'email' VARCHAR(255), 'city' VARCHAR(255), 'zip' VARCHAR(255), 'cause' VARCHAR(255), 'timestamp' DATETIME)";
 conn.query(donationTableCreate);
 
 /* Create fake user - for testing purposes */
@@ -462,8 +462,10 @@ app.post('/donations', function (req, res) {
     var email = req.body.email;
     var city = req.body.city;
     var zip = req.body.zip;
+    var cause = req.body.cause;
     var timestamp = getPrettyDate();
 
+    console.log(req.body);
     // console.log(name);
     // console.log(amount);
     // console.log(email);
@@ -471,8 +473,8 @@ app.post('/donations', function (req, res) {
     // console.log(zip);
     // console.log(timestamp);
 
-    var sql = 'INSERT INTO donations (name, amount, email, city, zip, timestamp) VALUES ($1, $2, $3, $4, $5, $6)';
-    conn.query(sql, [name, amount, email, city, zip, timestamp]);
+    var sql = 'INSERT INTO donations (name, amount, email, city, zip, cause, timestamp) VALUES ($1, $2, $3, $4, $5, $6, $7)';
+    conn.query(sql, [name, amount, email, city, zip, cause, timestamp]);
 });
 
 

@@ -5,58 +5,60 @@
 </head>
 <body>
     <% include navbar %>
-    
+
+    <a<% if (logged_in === 1) { %> class="post-button" href="/donation_data">Access Donation Data<% } %></a>
+
     <div class="donation_form">
         <h1 id="about_head">Donate to Wezesha Kupaa </h1>
-        <div class="row ng-scope" style="margin: 20px; width:50%">
-            <form id="info" action="https://www.paypal.com/cgi-bin/webscr" method="post">
-            <div class="causes">
-                <h1>Dedicate money to specific cause</h1>
-                <input type="checkbox" id="educ" class="checkbox" />
-                    <label for="educ">Supports Education: School Fees</label>
-                    <p>250 USD a year sends a child with disabilities to school</p>
+        <div class="causes">
+            <h1>Your contribution goes toward</h1>
+              <h2>Supporting Education: School Fees</h2>
+                <p>250 USD a year sends a child with disabilities to school</p>
                 <br/>
-                <input type="checkbox" id="work" class="checkbox" />
-                    <label for="work">Outreach Workshops</label>
-                    <p>100 USD covers cost of a weekend workshop on nutrition, disability support or other community health topic</p>
-                <br/>
-                <input type="checkbox" id="med" class="checkbox" />
-                    <label for="med">Supporting Medical and Surgical Care</label>
-                    <p>50 USD offers room and board at House of Hope for a parent with a child seeking local medical and surgical care</p>
-                <br/>
-                <input type="checkbox" id="surg" class="checkbox" />
-                    <label for="surg">Essential Corrective Surgeries</label>
-                    <p>500 USD provides transportation and surgery for a child needing to travel for life saving but locally unavailable surgical care.</p>
-                <br/>
-            </div>
-              <input type="hidden" name="cmd" value="_donations">
-              <input type="hidden" name="business" value="online.donations@ywamtyler.org">
-              <input type="hidden" name="item_name" value="Wezesha Kupaa">
-              <input type="text" name="first_name" placeholder="First Name" value="">
-              <input type="text" name="last_name" placeholder="Last Name" value="">
-              <input type="text" name="address1" placeholder="Address Line 1" value="">
-              <input type="text" name="address2" placeholder="Address Line 2" value="">
-              <input type="text" name="city" placeholder="City" value="">
-              <input type="text" name="state" placeholder="State" value="">
-              <input type="text" name="zip" placeholder="Zip" value="">
-              <input type="text" name="email" placeholder="Email" value="">
-              <input type="text" id="myamount" name="amount" placeholder="Amount (USD)" value="">
-              <input type="image" name="submit" id="submit"
-                src="http://www.paypal.com/en_US/i/btn/btn_donate_LG.gif"
-                alt="PayPal - The safer, easier way to pay online">
-            </form>
 
-            <script>
-              $("#submit").click(function() {
-                  $.post("/donations", $('#info').serialize());
-              });
-            </script>
+              <h2>Outreach Workshops</h2>
+                <p>100 USD covers cost of a weekend workshop on nutrition, disability support or other community health topic</p>
+                <br/>
 
-          </div> <!-- End class 'donate-button' -->
-        </div> <!-- End class 'donation-box' -->
-    </div> <!-- End class 'donation-container' -->
+              <h2>Supporting Medical and Surgical Care</h2>
+                <p>50 USD offers room and board at House of Hope for a parent with a child seeking local medical and surgical care</p>
+                <br/>
 
-    <% include footer %>
+              <h2>Essential Corrective Surgeries</h2>
+                <p>500 USD provides transportation and surgery for a child needing to travel for life saving but locally unavailable surgical care.</p>
+        </div>
+
+        <div class="row ng-scope" style="margin: 30px; width:50%">
+          <form id="info" action="https://www.paypal.com/cgi-bin/webscr" method="post">
+            <input type="hidden" name="cmd" value="_donations">
+            <input type="hidden" name="business" value="online.donations@ywamtyler.org">
+            <input type="hidden" name="item_name" value="Wezesha Kupaa">
+            <input type="text" name="first_name" placeholder="First Name" value="">
+            <input type="text" name="last_name" placeholder="Last Name" value="">
+            <input type="text" name="address1" placeholder="Address Line 1" value="">
+            <input type="text" name="address2" placeholder="Address Line 2" value="">
+            <input type="text" name="city" placeholder="City" value="">
+            <input type="text" name="state" placeholder="State" value="">
+            <input type="text" name="zip" placeholder="Zip" value="">
+            <input type="text" name="email" placeholder="Email" value="">
+            <input type="text" name="cause" placeholder="Comments / Cause">
+            <input type="text" id="myamount" name="amount" placeholder="Amount (USD)" value="">
+            <input type="image" name="submit" id="submit"
+              src="http://www.paypal.com/en_US/i/btn/btn_donate_LG.gif"
+              alt="PayPal - The safer, easier way to pay online">
+          </form>
+
+          <script>
+            $("#submit").click(function() {
+                var info = $('#info').serialize();
+                $.post("/donations", info);
+            });
+          </script>
+
+        </div> 
+    </div>
+
+  <% include footer %>
     
 </body>
 </html>
