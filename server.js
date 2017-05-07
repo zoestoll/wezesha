@@ -27,7 +27,6 @@ var APIKey = "AIzaSyDBs20a1Nr7ZDxF7Tq8-69JheH2zeQOLkg";
 
 /* Database config. Clear all tables and re-create. */
 var conn = anyDB.createConnection('sqlite3://wezesha.db');
-console.log("here");
 /* Temporary - won't need to drop tables every time. */
 // conn.query("DROP TABLE mapLocations");
 // conn.query("DROP TABLE users");
@@ -45,8 +44,10 @@ var sql2 = 'SELECT id, author, title, body, timestamp FROM news ORDER BY timesta
     posts = result.rows;
 });
 
-/* Create fake user - for testing purposes */
+donationTableCreate = "CREATE TABLE IF NOT EXISTS 'donations' ('id' INTEGER PRIMARY KEY AUTOINCREMENT, 'name' VARCHAR(255), 'amount' INTEGER, 'email' VARCHAR(255), 'city' VARCHAR(255), 'zip' VARCHAR(255), 'timestamp' DATETIME)";
+conn.query(donationTableCreate);
 
+/* Create fake user - for testing purposes */
 salt = bCrypt.genSaltSync(10);
 hash = bCrypt.hashSync("admin", salt, null);
 conn.query("INSERT INTO users (username, password, salt, isAdmin) VALUES (?, ?, ?, ?)", ["admin", hash, salt, true]);
@@ -296,10 +297,6 @@ app.get('/admin_map', function (req, res) {
 
 // TODO: logout
 
-/****************************************************** DONATIONS ******************************************************/
-
-
-
 
 /****************************************************** MAP ******************************************************/
 
@@ -456,10 +453,26 @@ app.post('/write', function(req, res) {
     res.redirect("news");
 });
 
-/********* STORING AND SENDING FORM DATA *********/
+/****************************************************** STORING DONATION DATA ******************************************************/
 
+/* TODO: display donation queries , figure out IPN stuff */
 app.post('/donations', function (req, res) {
-    console.log(req.body);
+    var name = req.body.first_name + " " + req.body.last_name;
+    var amount = req.body.amount;
+    var email = req.body.email;
+    var city = req.body.city;
+    var zip = req.body.zip;
+    var timestamp = getPrettyDate();
+
+    // console.log(name);
+    // console.log(amount);
+    // console.log(email);
+    // console.log(city);
+    // console.log(zip);
+    // console.log(timestamp);
+
+    var sql = 'INSERT INTO donations (name, amount, email, city, zip, timestamp) VALUES ($1, $2, $3, $4, $5, $6)';
+    conn.query(sql, [name, amount, email, city, zip, timestamp]);
 });
 
 
