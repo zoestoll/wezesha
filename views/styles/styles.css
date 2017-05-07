@@ -364,29 +364,48 @@ header {
 /******************* About *******************/
 
 #about_head {
+    font-family: times, Times New Roman, times-roman, georgia, serif;
+    font-size: 48px;
+    font-style: italic;
+    line-height: 40px;
+    /*letter-spacing: -1px;*/
+    color: #444;
+    font-weight: 100;
     padding: 15px;
-    font-size: 30pt;
-    font-weight: bold;
+    margin: 15px;
+
+}
+
+.about {
+    /*font-family: Sans Serif;*/
+    padding: 15px;
+    margin: 15px;
+}
+
+.about p {
+    font-family: "Helvetica Neue", "Lucida Grande", Helvetica, Arial, Verdana, sans-serif;
+    font-size: 18px;
+    margin-top: .5em; color: #666;
 }
 
 .about h2 {
     font-size: 24pt;
-    font-family: Lucida Grande;
-    font-style: italic;
-    color: rgb(182,0,0);
-    border-bottom: 3px solid #000080;
-    padding-bottom: 5px;
+    /*font-style: italic;*/
+    color: maroon;
     margin: 15px;
+    font-family:Georgia,serif;
+    color:#4E443C;
+    font-variant: small-caps; text-transform: none; font-weight: 100; margin-bottom: 0;
 }
 
-.about-who h2 {
+.about h3 {
     font-size: 16pt;
-    font-family: Lucida Grande;
+    /*font-family: Lucida Grande;*/
     font-style: italic;
-    color: rgb(182,0,0);
-    border-bottom: 3px solid #000080;
-    padding-bottom: 5px;
-    margin: 15px 0;
+    padding: 20px;
+    /*margin: 15px;*/
+    padding: 5px;
+    /*margin: 15px 0;*/
 }
 
 /* Three columns side by side */
@@ -400,15 +419,22 @@ header {
 /* Display the columns below each other instead of side by side on small screens */
 @media (max-width: 650px) {
     .column {
-        width: 100%;
+        width: 50%;
         display: block;
     }
 }
 
 /* Add some shadows to create a card effect */
 .card {
-    padding: 20px;
+    /*padding: 10px;*/
+    /*margin: 10px;*/
+    height: 800px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+.card p {
+    font-family:Times;
+    line-height: 20px;
 }
 
 /* Some left and right padding inside the container */
@@ -428,6 +454,7 @@ header {
 }
 
 .button {
+    position: 600px;
     border: none;
     outline: 0;
     display: inline-block;
@@ -585,6 +612,36 @@ div.panel {
     width: 40%;
 }
 
+/******************* Find Us *******************/
+
+.findus {
+    background-size: 90%;
+    margin-left: 40px;
+    margin-bottom: 40px;
+}
+
+.findus h1 {
+    font-size: 24pt;
+    font-family: Lucida Grande;
+    /*font-style: italic;*/
+    color: rgb(182,0,0);
+    border-bottom: 3px solid #000080;
+    /*padding-bottom: 5px;*/
+    margin: 15px;
+}
+
+.findus h2 {
+    font-size: 24pt;
+    font-family: Lucida Grande;
+    font-style: italic;
+    margin-left: 15px;
+}
+
+.findus h3 {
+    font-size: 13pt;
+    font-family: Lucida Grande;
+    padding-left: 20px;
+}
 
 /******************* Donations *******************/
 
@@ -597,18 +654,20 @@ div.panel {
     margin: 20px;
 }
 
+#donateInput {
+    width: 50%;
+    position: center;
+    padding: 20px;
+}
+
 .donation-preamble h2 {
     font-size:16px;
     /*font-family: 'Montserrat', sans-serif;*/
     margin: 30px;
 }
-/*
-.donations_form {
-    text-align: center;
-}*/
 
 .donation-container {
-    height: 1000px;
+    /*height: 1000px;*/
     font-family: 'Montserrat', sans-serif;
     font-weight: 500;
     font-size: 24px;
@@ -620,15 +679,15 @@ div.panel {
 }
 
 .donation-box {
-    width: 50%;
-    height: 50%;
+/*    width: 50%;
+    height: 50%;*/
     background-color: pink;
     /*border-radius: 100px;*/
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
     position: relative;
-    margin-left: auto;
-    margin-right: auto;
+/*    margin-left: auto;
+    margin-right: auto;*/
     
     -webkit-transition: all 0.15s ease-out;
     -moz-transition: all 0.15s ease-out;
@@ -767,14 +826,6 @@ div.panel {
     max-width: 100px;
 }
 
-/*** custom checkboxes ***/
-/*body { margin: 30px; } 
-h1 { font-size: 1.5em; }
-label { font-size: 24px; }
-div { 
-  width: 175px; 
-  margin-left: 20px;
-}*/
 input[type=checkbox] { display:none; } /* to hide the checkbox itself */
 input[type=checkbox] + label:before {
   font-family: FontAwesome;
@@ -790,6 +841,7 @@ input[type=checkbox]:checked + label:before { letter-spacing: 5px; } /* allow sp
 .causes h1 {
     font-style: italic;
     margin-bottom: 10px;
+    margin-left: 5px;
     text-decoration: underline;
     font-size: 24px;
     color: maroon;
@@ -833,24 +885,6 @@ input[type=checkbox]:checked + label:before { letter-spacing: 5px; } /* allow sp
     text-decoration: underline;
     font-style: normal;
 }
-/*.flex-container {
-    display: flex;
-    justify-content: space-around;
-}
-
-.b1, .b2, .b3 {
-    display: flex;
-    justify-content: center;
-}
-
-.amount {
-    width: 45%;
-}
-
-.b1, .b2, .b3 {
-    width: 40%;
-}
-*/
 
 /******************* Login Form *******************/
 
