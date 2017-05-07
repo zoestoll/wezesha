@@ -290,6 +290,7 @@ app.get('/donations', function (req, res) {
     res.render('donations', { title: "Donations", page_name: "donations", logged_in: isLoggedIn});
 });
 
+
 /***** ACCOUNT REQUESTS *****/
 
 /* Sign up for new account */
@@ -467,6 +468,13 @@ app.post('/write', function(req, res) {
 
     res.redirect("news");
 });
+
+/********* STORING AND SENDING FORM DATA *********/
+
+app.post('/donations', function (req, res) {
+    console.log(req.body);
+});
+
 
 /****************************************************** EDUCATION NEWS PAGE ******************************************************/
 
