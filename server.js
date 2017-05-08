@@ -572,6 +572,19 @@ app.get('/partners', function (req, res) {
     res.render('partners', { title: "Partners", page_name: "partners", posts: posts});
 })
 
+
+/****************************************************** PARTNERS NEWS PAGE ******************************************************/
+
+/* GET request for handouts page */
+app.get('/handouts', function (req, res) {
+    res.render('handouts', { title: "Handouts", page_name: "handouts"});
+})
+
+/* GET request for handouts swahili page */
+app.get('/handouts_swahili', function (req, res) {
+    res.render('handouts_swahili', { title: "Handouts Swahili", page_name: "handouts_swahili"});
+})
+
 /******************************************************* HELPER FUNCTIONS ******************************************************/
 
 function generateRandomID() { /* From TA suggested code */
