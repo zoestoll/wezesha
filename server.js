@@ -421,11 +421,14 @@ app.post('/map', searchServices, renderServices);
 app.get('/post/:id', (req, res) => {
     var id = req.params.id;
     var sql = 'SELECT id, author, title, body, timestamp FROM news WHERE id = $1';
+
     conn.query(sql, [id], function(error, result){
-        post = result.rows;
-        // console.log(post);
-        /* render the 'post.ejs' template with the post content */
-        res.render('post', { title: "Post", page_name: "post", post_id: post.id, author: post.author, title: post.title, body: post.body, timestamp: post.timestamp});
+        post = result.rows[0];
+        if (req.isAuthenticated()) {
+            res.render('admin_post', { title: "Post", page_name: "admin_post", post_id: post.id, author: post.author, title: post.title, body: post.body, timestamp: post.timestamp});
+        } else {
+            res.render('post', { title: "Post", page_name: "post", post_id: post.id, author: post.author, title: post.title, body: post.body, timestamp: post.timestamp});
+        }
     });
 });
 
@@ -466,7 +469,7 @@ app.get('/edit/:id', (req, res) => {
         var id = req.params.id;
         var sql = 'SELECT id, author, title, body, timestamp FROM news WHERE id = $1';
         conn.query(sql, [id], function(error, result){
-            post = result.rows;
+            post = result.rows[0];
             res.render('edit', { title: "Edit", page_name: "edit", post_id: post.id, author: post.author, title: post.title, body: post.body});
         });        
     } else {
