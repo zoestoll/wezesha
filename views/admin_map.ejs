@@ -1,7 +1,18 @@
 <!DOCTYPE html>
 <head>
-    <% include header %>
+    <% include inner_head %>
+    <!-- ################## EMBEDDED MAP ################## -->
+   
+    <!-- Some code used from https://developers.google.com/maps/documentation/javascript/adding-a-google-map -->
+    <style>
+    #map {
+        height: 400px;
+        width: 100%;
+    }
+    </style>
 </head>
+<body>
+    <% include navbar %>
 
 
 <p> Please use this search tool to find resources near you! </p>
@@ -33,6 +44,8 @@ function enable() {
     </label>
     <label><b>Address of Service</b></label>
     <input placeholder="50 X Street, Providence, RI" name="address" required>
+    <label><b>Description</b></label>
+    <input placeholder="" name="description" required>
 </label>
 <p>Latitude: <input size="20" type="text" id="latitude" name="latitude" ></p>
 <p>Longitude: <input size="20" type="text" id="longitude" name="longitude" ></p>
@@ -56,16 +69,20 @@ function enable() {
 
     <script>
 
-    function addPin(map, lat, lng) {
+    function addPin(map, title, lat, lng) {
       /* Adds a pin/marker on the map at these coordinates */
       marker = new google.maps.Marker({
           map: map,
           position: new google.maps.LatLng(lat, lng),
-          title: "Location" /* TODO: Make these titles meaningful */
+          title: title
       });
       
       marker.setMap(map);
   }
+
+  var infowindow = new google.maps.InfoWindow({
+      content: "CONTENT!"
+  });
   
   var marker = null;
   function initMap() {
@@ -79,8 +96,13 @@ function enable() {
     <% pins.rows.forEach(function(row) { %>
         var lat = <%= row.latitude %> 
         var lng = <%= row.longitude %>
-        addPin(map, lat,lng);
-        <% }); %>
+        var title = "<%= row.serviceName %>"
+        addPin(map,title,lat,lng);
+        google.maps.event.addListener(marker, 'click', function() {
+            console.log("clicked!");
+            infowindow.open(map,marker);
+        });
+    <% }); %>
 }
 /* Called when a location on the map is clicked. Drops a pin and pans to it. */
 function pinAndLocate(latLng, map) {
