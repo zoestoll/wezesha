@@ -49,7 +49,7 @@ conn.query(donationTableCreate);
 var donations = [];
 var initialDonations = 'SELECT id, name, amount, email, city, zip, cause, timestamp FROM donations ORDER BY timestamp DESC';
 conn.query(initialDonations, function(error, result){
-    donations = result.rows;
+    // donations = result.rows;
 });
 
 /* Create fake user - for testing purposes */
