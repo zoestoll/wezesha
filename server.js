@@ -3,19 +3,12 @@ var express = require("express");
 var hp = require("http");
 var bodyParser = require("body-parser");
 var session = require('express-session');
-var socket_io = require("socket.io");
 var NodeGeocoder = require('node-geocoder');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
-//var Sequelize = require('sequelize');
 var bCrypt = require("bcrypt-nodejs");
 var crypto = require('crypto');
 var exp = module.exports = {};
-
-/* other files with helper functions */
-var about_serv = require('./about.js');
-
-
 
 /* TODO: Update these values */
 var localhost = "127.0.0.1";
@@ -66,7 +59,6 @@ conn.query("CREATE TABLE IF NOT EXISTS mapLocations(id INTEGER PRIMARY KEY AUTOI
 /* Server config */
 app = express()
 http = hp.createServer(app)
-io = socket_io.listen(http)
 app.set("ipaddr", localhost);
 app.set("port", port);
 app.set("views", __dirname + "/views");
@@ -392,28 +384,8 @@ function renderPins(req, res) {
 /* POST request when user looks up some services (lookup feature) */
 app.post('/map', searchServices, renderServices);
 
-/****************************************************** CONTENT EDITING ******************************************************/
-
-app.post('/editPost/', function(req, res) {
-    var edit = req.body.edit;
-    var id = req.body.id;
-    console.log("Edit received", edit);
-    var timestamp = getPrettyDate();
-    var sql = "UPDATE news SET body = ?, timestamp = ? WHERE id = ?";
-    conn.query(sql, [edit, timestamp, id], function(error, result) {
-        console.log(error);
-        res.redirect("post/"+id);
-    });
-});
-
-
-app.post('/editAbout', function(req, res) {
-    console.log("Edit about received", req.body);
-    res.redirect("about");
-});
 
 /****************************************************** BLOG/NEWS ******************************************************/
-
 
 /* View a single blog post */
 app.get('/post/:id', (req, res) => {
@@ -424,8 +396,7 @@ app.get('/post/:id', (req, res) => {
             return post.id == req.params.id
         })[0];
         /* render the 'post.ejs' template with the post content */
-        console.log("ID: ", post.id);
-        res.render('post', { title: "Post", page_name: "post", postid: post.id, author: post.author, title: post.title, body: post.body, logged_in: isLoggedIn});
+        res.render('post', { title: "Post", page_name: "post", post_id: post.id, author: post.author, title: post.title, body: post.body, timestamp: post.timestamp, logged_in: isLoggedIn});
     });
 });
 
@@ -435,7 +406,7 @@ app.get('/write', function(req, res) {
     if (req.user) {
         res.render("write", { title: "Write a Post!", page_name: "write" , logged_in: 1});
     } else {
-        res.redirect('news');
+        res.redirect('/news');
     }
 });
 
@@ -455,12 +426,53 @@ app.post('/write', function(req, res) {
         });
     }
 
-    res.redirect("news");
+    res.redirect("/news");
 });
+
+/****************************************************** BLOG CONTENT EDITING ******************************************************/
+
+app.get('/edit/:id', (req, res) => {
+    if (req.user) {
+        var sql = 'SELECT id, author, title, body, timestamp FROM news ORDER BY timestamp DESC';
+        conn.query(sql, function(error, result){
+            posts = result.rows;
+            const post = posts.filter((post) => {
+                return post.id == req.params.id; 
+            })[0];
+
+            res.render('edit', { title: "Edit", page_name: "edit", post_id: post.id, author: post.author, title: post.title, body: post.body, logged_in: isLoggedIn});
+        });
+    } else {
+        res.redirect("/news");
+    }
+});
+
+
+app.post('/edit/:id', function(req, res) {
+
+    if (req.user) { /* Check that they're authorized to send this request */
+        var author = req.body['author'];
+        var title = req.body['title'];
+        var body = req.body['body'];
+        var id = req.body['id'];
+        var timestamp = getPrettyDate();
+
+        var sql = "UPDATE news SET author = $1, title = $2, body = $3, timestamp = $4 WHERE id = $5";
+        conn.query(sql, [author, title, body, timestamp, id]);
+        
+        /* new posts are on top */
+        var sql2 = 'SELECT id, author, title, body, timestamp FROM news ORDER BY timestamp DESC';
+        conn.query(sql2, function(error, result){
+            posts = result.rows;
+        });
+    } 
+
+    res.redirect("/news");
+});
+
 
 /********************************************** STORING AND RETRIEVING DONATION DATA ******************************************************/
 
-/* TODO: display donation queries , figure out IPN stuff */
 app.post('/donations', function (req, res) {
     var name = req.body.first_name + " " + req.body.last_name;
     var amount = req.body.amount;
@@ -474,19 +486,22 @@ app.post('/donations', function (req, res) {
 
     var sql = 'INSERT INTO donations (name, amount, email, city, zip, cause, timestamp) VALUES ($1, $2, $3, $4, $5, $6, $7)';
     conn.query(sql, [name, amount, email, city, zip, cause, timestamp]);
+
+    var sql2 = 'SELECT id, name, amount, email, city, zip, cause, timestamp FROM donations ORDER BY timestamp DESC';
+        conn.query(sql2, function(error, result){
+        donations = result.rows;
+        // console.log(donations);
+    });
 });
 
 
 app.get('/donation_data', function(req, res) {
-    if (req.user) {
 
-        /* new donations are on top */
+    if (req.user) {
         var sql = 'SELECT id, name, amount, email, city, zip, cause, timestamp FROM donations ORDER BY timestamp DESC';
         conn.query(sql, function(error, result){
             donations = result.rows;
-            console.log(donations);
         });
-
         res.render("donation_data", { title: "Donation Data", page_name: "donation_data", posts: donations, logged_in: 1});
     } else {
         res.redirect("donations");
@@ -524,7 +539,7 @@ app.get('/partners', function (req, res) {
     res.render('partners', { title: "Partners", page_name: "partners", posts: posts, logged_in: isLoggedIn});
 })
 
-/****************************************************** SOCKET EVENTS ******************************************************/
+/******************************************************* HELPER FUNCTIONS ******************************************************/
 
 function generateRandomID() { /* From TA suggested code */
     /* make a list of legal characters */
@@ -545,15 +560,17 @@ function getPrettyDate() {
     return pd;
 }
 
-/* Start listening */
-http.listen(app.get("port"), app.get("ipaddr"), function(){
-    console.log("server listening on port " + port);
-});
-
 /* for backend testing */
 exp.closeServer = function(){
     http.close();
 };
+
+/********************************** LISTENING ******************************************************/
+
+http.listen(app.get("port"), app.get("ipaddr"), function(){
+    console.log("server listening on port " + port);
+});
+
 
 
 
