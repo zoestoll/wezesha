@@ -20,8 +20,6 @@
             <option>Counseling</option>
             <option>Other</option>
         </select>
-<!--         <p>Latitude: <input size="20" type="text" id="latitude" name="latitude" ></p>
-        <p>Longitude: <input size="20" type="text" id="longitude" name="longitude" ></p> -->
         <button type="submit">Search for Services near these Coordinates</button>
     </form>
 
@@ -29,16 +27,25 @@
     <div id="map"></div>
     <script>
 
-    function addPin(map, lat, lng) {
-      /* Adds a pin/marker on the map at these coordinates */
-      marker = new google.maps.Marker({
-          map: map,
-          position: new google.maps.LatLng(lat, lng),
-          title: "Location" /* TODO: Make these titles meaningful */
-      });
-      
-      marker.setMap(map);
-  }
+  
+    function addPin(map, type, title, des, lat, lng) {
+
+        var infowindow = new google.maps.InfoWindow({
+          content: type + " service: " + title + "\n" + des
+        });
+
+        /* Adds a pin/marker on the map at these coordinates */
+        marker = new google.maps.Marker({
+            map: map,
+            position: new google.maps.LatLng(lat, lng),
+            title: title /* TODO: Make these titles meaningful */
+        });
+        google.maps.event.addListener(marker, 'click', function() {
+            console.log("clicked!");
+            infowindow.open(map, marker);
+        });
+        marker.setMap(map);
+    }
 
      function initMap() {
         var location = {lat: -5, lng: 36};
@@ -46,15 +53,14 @@
           zoom: 4,
           center: location
         });
-        var marker = new google.maps.Marker({
-      position: location,
-      map: map
-        });
         <% pins.rows.forEach(function(row) { %>
-        var lat = <%= row.latitude %> 
-        var lng = <%= row.longitude %>
-        addPin(map, lat,lng);
-    <% }); %>
+            var lat = <%= row.latitude %>;
+            var lng = <%= row.longitude %>;
+            var type = "<%= row.serviceType %>";
+            var title = "<%= row.serviceName %>";
+            var des = "<%= row.description %>";
+            addPin(map, type, title, des, lat, lng);
+        <% }); %>
       }
     </script>
     <!-- async because the map API can't be loaded after the document has finished loading by default -->

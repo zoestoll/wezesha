@@ -1,17 +1,20 @@
 <!doctype html>
-<html class="donations_main">
-<head>
-    <% include header %>
-</head>
+<html>
+	<head>
+	    <% include inner_head %>
+	</head>
 
-<form action="/write" method="POST">
-	Name <input type="text" name="author"/><br/>
-	Title <input type="text" name="title"/><br/>
-	Content <input type="text" name="body"><br/>
-	<button type="submit">Submit</button>
-</form>
+	<body>
+		<% include navbar %>
+		<form action="/write" method="POST">
+			Name <input type="text" name="author"/><br/>
+			Title <input type="text" name="title"/><br/>
+			Content <input type="text" name="body"><br/>
+			<button type="submit">Submit</button>
+		</form>
+	</body>
 
-<footer>
-    <% include footer %>
-</footer>
+	<footer>
+	    <% include footer %>
+	</footer>
 </html>
