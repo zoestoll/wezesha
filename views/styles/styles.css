@@ -452,10 +452,14 @@ header {
 }
 
 .card img {
+    max-height: 200px;
+    max-width: 200px;
     float: right;
     margin-right: 20px;
     margin-top: 20px;
-    padding-left: 10px;
+    margin-left: 10px;
+    border: 1px solid #999;
+    border-radius: 10px;
 }
 
 /* Some left and right padding inside the container */
