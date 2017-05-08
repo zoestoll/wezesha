@@ -98,6 +98,19 @@ p {
     background-color: yellow;
 }*/
 
+#donate {
+    box-sizing: border-box;
+    border: 2px solid white;
+    background-color: lightgreen;
+    border-radius: 10px;
+    color: white;
+    
+}
+
+#donate li {
+    color: white;
+}
+
 .donate_nav {
     float: right;
     background-color: rgb(103,0,206);
@@ -193,6 +206,7 @@ header {
     max-width: 700px;
     font-weight: bold;
     width: 100%;
+    color: white;
 }
 
 #home_main h3 {
@@ -202,19 +216,15 @@ header {
     color: white;
 }
 
-.home_option {
+#home_option {
     font-size: 24px;
     text-align: center;
     background-color: rgba(128, 0, 64, 0.3);
     margin: 10px;
-    padding: 50px;
+    padding: 30px;
     background-image: "/img/smiling.png";
 }
 
-.home_option h2 {
-    color: white;
-    text-align: center;
-}
 
 .home_icon {
     color: white;
@@ -231,15 +241,17 @@ header {
 #home_buttons {
     display: flex;
     justify-content: space-around;
-    width: 80%;
+    width: 100%;
 }
 
-#home_buttons div {
-    width: 150px;
-    height: 150px;
+#home_buttons a {
+    width: 80px;
+    height: 80px;
     background-size: cover;
-    margin: 50px;
+    margin-top: 50px;
+    position: relative;
 }
+
 
 #home_buttons p {
     /*background-color: rgba(128, 0, 64, 0.3);*/
@@ -977,7 +989,7 @@ span.password {
 
 /******************* Footer *******************/
 
-.footer {
+footer {
     height: 20px;
     /* position: fixed; */
     bottom: 0px;
@@ -987,18 +999,20 @@ span.password {
     width: 100%;
     background-color: black;
     margin-bottom: 0px;
+    text-align: center;
 }
 
-.lectures {
-    color: #333333;
+.footer_line {
+    display: flex;
+    justify-content: center;
+    width: 105%;
 }
 
-.footer_title {
-    height: 0px;
-    width: 0px;
+footer p, footer a, footer a:visited, footer a:link {
+    color: lightgray;
+    height: 25px;
 }
 
-#footer_p {
-    vertical-align: middle;
-    margin-bottom: 0;
+footer a {
+    color: inherit;
 }
