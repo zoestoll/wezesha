@@ -56,7 +56,7 @@ conn.query("INSERT INTO users (username, password, salt, isAdmin) VALUES (?, ?, 
 conn.query("CREATE TABLE IF NOT EXISTS sessions (id INTEGER PRIMARY KEY AUTOINCREMENT, userID INTEGER, sessionID NVARCHAR(64))");
 
 /* Map table */
-conn.query("CREATE TABLE IF NOT EXISTS mapLocations(id INTEGER PRIMARY KEY AUTOINCREMENT, serviceType TEXT, serviceName TEXT, address TEXT, latitude INTEGER, longitude INTEGER)");
+conn.query("CREATE TABLE IF NOT EXISTS mapLocations(id INTEGER PRIMARY KEY AUTOINCREMENT, serviceType TEXT, serviceName TEXT, description TEXT, address TEXT, latitude INTEGER, longitude INTEGER)");
 
 /* Server config */
 app = express()
@@ -341,11 +341,12 @@ app.post('/addPin', function(request, response) {
         /* Request parameters */
         serviceType = request.body.serviceType;
         serviceName = request.body.serviceName;
+        description = request.body.description;
         address = request.body.address;
         lat = request.body.latitude;
         lng = request.body.longitude;
-        queryStr = "INSERT INTO mapLocations (serviceType, serviceName, address, latitude, longitude) VALUES (?,?,?,?,?)"
-        conn.query(queryStr, [serviceType, serviceName, address, lat, lng], function() {
+        queryStr = "INSERT INTO mapLocations (serviceType, serviceName, description, address, latitude, longitude) VALUES (?,?,?,?,?,?)"
+        conn.query(queryStr, [serviceType, serviceName, description, address, lat, lng], function() {
             // console.log("Inserted pin into mapLocations: ", serviceType, serviceName);
             response.redirect("map");
         });
@@ -364,6 +365,7 @@ function searchServices(req, res, next) {
     // var lng = req.body.longitude;
     queryStr = "SELECT * FROM mapLocations WHERE serviceType=(?)";
     conn.query(queryStr, serviceType, function(error, rows) {
+
         if(rows.length !== 0) {
             req.pins = rows;
             return next();
@@ -385,6 +387,7 @@ function renderServices(req, res) {
 function findPins(req, res, next) {
     var queryStr = 'SELECT * FROM mapLocations';
     conn.query(queryStr, function(error, rows) {
+        console.log("rows: ", rows);
         if(rows.length !== 0) {
             req.pins = rows;
             return next();

@@ -79,6 +79,26 @@ p {
 }
 
 #donate {
+    box-sizing: border-box;
+    border: 2px solid white;
+    background-color: lightgreen;
+    border-radius: 10px;
+    color: white;
+    margin-left: 10px;
+    
+}
+
+#donate li {
+    color: white;
+}
+
+.donate_nav {
+    float: right;
+    background-color: rgb(103,0,206);
+    font-size: 24px;
+    min-width: 100px;
+    padding: 12px 20px;
+    margin: 8px 0;
     display: inline-block;
     background-color: pink  ;  
 }
@@ -209,8 +229,12 @@ header {
     background-size: cover;
     margin-top: 50px;
     position: relative;
+    transition: opacity 0.3s;
 }
 
+#home_buttons a:hover {
+    opacity: 0.5;
+}
 
 #home_buttons p {
     /*background-color: rgba(128, 0, 64, 0.3);*/
@@ -399,7 +423,6 @@ header {
 .card {
     /*padding: 10px;*/
     /*margin: 10px;*/
-    /*height: 800px;*/
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
 
