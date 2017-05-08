@@ -7,7 +7,7 @@ html {
 }
 
 body {
-    background-color: lightgray;
+    /*background-color: lightgray;*/
     background-position: right; 
     /* padding-bottom: 100px; */
     margin-top: 50px;
@@ -23,18 +23,18 @@ p {
 .container {
     width: 100%;
     max-width: 2000px !important;
-    padding: 20px 30px;
+    /*padding: 20px 30px;*/
 }
 
 .highlight-card {
     min-height: 200px;
     margin-top: -300px;
-    background-color: lightgray;
+    /*background-color: lightgray;*/
 }
 
 
 nav .container, footer .container {
-    padding: 0 30px;
+    padding: 0 0px;
 }
 
 h1, h2, h3, h4, h5, h6, li, p {
@@ -46,7 +46,7 @@ h3 {
     margin-bottom: 15px;
 }
 a, a:hover, a:active, a:focus {
-    color: white;
+    /*color: white;*/
 }
 
 p {
@@ -60,43 +60,23 @@ p {
 /******************* Navigation *******************/
 
 .navbar {
-    background-color: black;
-    border-radius: 0;
-    border: 0;
-    box-shadow: white 0px 0px 12px 0px;
-}
-.navbar-default .navbar-nav > .active > a {
-    /*background-color: solid;*/
-    background-color: white;
-}
-
-
-.navbar-default .navbar-nav > .active > a {
-    /*background-color: solid;*/
-    background-color: white;
+    height:50px;
+    background-color: blue;
+    border-radius: 0
 }
 
 .navbar-nav {
     background-color: black;
+    display: block;
+    padding: 3px;
 }
 
-.navbar-nav > .active:hover {
-    background-color: red;
-}
 
 .nav_title {
     font-size: 24px;
+    display: inline-block;
     color: gray;
 }
-
-.navbar-top {
-    background-color: black;
-    width: 100%;
-}
-
-/*.donate_nav {
-    background-color: yellow;
-}*/
 
 #donate {
     box-sizing: border-box;
@@ -120,9 +100,7 @@ p {
     padding: 12px 20px;
     margin: 8px 0;
     display: inline-block;
-    border: 5px solid black;
-    margin-bottom: 0px;
-    margin-top: 0px;
+    background-color: pink  ;  
 }
 
 header {
@@ -428,7 +406,7 @@ header {
 /* Three columns side by side */
 .column {
     float: left;
-    width: 20%;
+    width: 30%;
     margin-bottom: 16px;
     padding: 8px;
 }
@@ -436,7 +414,7 @@ header {
 /* Display the columns below each other instead of side by side on small screens */
 @media (max-width: 650px) {
     .column {
-        width: 50%;
+        width: 30%;
         display: block;
     }
 }
@@ -445,13 +423,12 @@ header {
 .card {
     /*padding: 10px;*/
     /*margin: 10px;*/
-    /* height: 800px; */
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
 
 .card p {
     font-family:Times;
-    line-height: 20px;
+    /*line-height: 20px;*/
 }
 
 /* Some left and right padding inside the container */
@@ -460,11 +437,11 @@ header {
 }
 
 /* Clear floats */
-.container::after, .row::after {
+/*.container::after, .row::after {
     content: "";
     clear: both;
     display: table;
-}
+}*/
 
 .title {
     color: grey;
