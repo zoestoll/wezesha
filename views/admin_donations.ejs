@@ -9,7 +9,7 @@
 
     <div class="donation_form">
         <h1 id="about_head">Donate to Wezesha Kupaa </h1>
-        <a class="post-button" href="/donation_data">Access Donation Data}</a>
+        <a class="post-button" href="/donation_data">Access Donation Data</a>
 
         <div class="causes">
             <h1>Your contribution goes toward</h1>
@@ -27,34 +27,26 @@
 
               <h2>Essential Corrective Surgeries</h2>
                 <p>500 USD provides transportation and surgery for a child needing to travel for life saving but locally unavailable surgical care.</p>
+                <br />
+            <h1>You will be redirected to the donation page</h1>
+
         </div>
 
         <div class="row ng-scope" style="margin: 30px; width:50%">
-          <form id="info" action="https://www.paypal.com/cgi-bin/webscr" method="post">
-            <input type="hidden" name="cmd" value="_donations">
-            <input type="hidden" name="business" value="online.donations@ywamtyler.org">
-            <input type="hidden" name="item_name" value="Wezesha Kupaa">
-            <input type="text" name="first_name" placeholder="First Name" value="">
-            <input type="text" name="last_name" placeholder="Last Name" value="">
-            <input type="text" name="address1" placeholder="Address Line 1" value="">
-            <input type="text" name="address2" placeholder="Address Line 2" value="">
-            <input type="text" name="city" placeholder="City" value="">
-            <input type="text" name="state" placeholder="State" value="">
-            <input type="text" name="zip" placeholder="Zip" value="">
+          <form id="info" action="/donations" method="post">
+            <input type="text" name="name" placeholder="Name" value="">
+            <input type="text" name="address" placeholder="Mailing Address" value="">
             <input type="text" name="email" placeholder="Email" value="">
             <input type="text" name="cause" placeholder="Comments / Cause">
-            <input type="text" id="myamount" name="amount" placeholder="Amount (USD)" value="">
-            <input type="image" name="submit" id="submit"
-              src="http://www.paypal.com/en_US/i/btn/btn_donate_LG.gif"
-              alt="PayPal - The safer, easier way to pay online">
+            <input type="text" name="amount" placeholder="Amount (USD)" value="">
+            <input class="post-button" type="submit" value="Submit">
           </form>
 
-          <script>
+<!--           <script>
             $("#submit").click(function() {
-                var info = $('#info').serialize();
-                $.post("/donations", info);
+                $(location).attr('href', 'https://ywamtyler.org/funddonation?uid=8c0fa911-e498-4136-afda-614268c56541')
             });
-          </script>
+          </script> -->
 
         </div> 
     </div>

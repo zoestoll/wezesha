@@ -22,7 +22,7 @@ var APIKey = "AIzaSyDBs20a1Nr7ZDxF7Tq8-69JheH2zeQOLkg";
 var conn = anyDB.createConnection('sqlite3://wezesha.db');
 /* Temporary - won't need to drop tables every time. */
 // conn.query("DROP TABLE mapLocations");
-conn.query("DROP TABLE users");
+// conn.query("DROP TABLE users");
 
 /* User table */
 userTableCreate = "CREATE TABLE IF NOT EXISTS 'users' ('id' INTEGER PRIMARY KEY AUTOINCREMENT, 'username' VARCHAR(255), 'password' VARCHAR(255), 'createdAt' DATETIME, 'updatedAt' DATETIME, 'salt' VARCHAR(255), 'isAdmin' BOOLEAN)"
@@ -37,12 +37,12 @@ conn.query(initialPosts, function(error, result){
     posts = result.rows;
 });
 
-donationTableCreate = "CREATE TABLE IF NOT EXISTS 'donations' ('id' INTEGER PRIMARY KEY AUTOINCREMENT, 'name' VARCHAR(255), 'amount' INTEGER, 'email' VARCHAR(255), 'city' VARCHAR(255), 'zip' VARCHAR(255), 'cause' VARCHAR(255), 'timestamp' DATETIME)";
+donationTableCreate = "CREATE TABLE IF NOT EXISTS 'donations' ('id' INTEGER PRIMARY KEY AUTOINCREMENT, 'name' VARCHAR(255), 'amount' INTEGER, 'email' VARCHAR(255), 'address' VARCHAR(255), 'cause' VARCHAR(255), 'timestamp' DATETIME)";
 conn.query(donationTableCreate);
 var donations = [];
-var initialDonations = 'SELECT id, name, amount, email, city, zip, cause, timestamp FROM donations ORDER BY timestamp DESC';
+var initialDonations = 'SELECT id, name, amount, email, address, cause, timestamp FROM donations ORDER BY timestamp DESC';
 conn.query(initialDonations, function(error, result){
-    // donations = result.rows;
+    donations = result.rows;
 });
 
 /* Create fake user - for testing purposes */
@@ -216,35 +216,25 @@ app.get('/',function(req, res){
 
 /* (1) GET request for home */
 app.get('/index', function (req, res) {
-    if (req.user) {
-        res.render('index', { title: "Home", page_name: "home"});
-    } else {
-        res.render('index', { title: "Home", page_name: "home"});
-    }
+    res.render('index', { title: "Home", page_name: "home"});
 });
 
 /* (2) GET request for about */
 app.get('/about', function (req, res) {
-    if (req.user) {
-        res.render('about', { title: "About", page_name: "about"});
-    } else {
-        res.render('about', { title: "About", page_name: "about"});
-    }
+    res.render('about', { title: "About", page_name: "about"});
 });
 
 /* (3) GET request for news page */
 app.get('/news', function (req, res) {
     var sql = 'SELECT id, author, title, body, timestamp FROM news ORDER BY timestamp DESC';
     conn.query(sql, function(error, result){
-        posts = result.rows;
+        posts = result.rows;        
         if (req.isAuthenticated()) {
             res.render('admin_news', { title: "News", page_name: "news", posts: posts});
-        }
-        else {
+        } else {
             res.render('news', { title: "News", page_name: "news", posts: posts});
         }
     });
-    // res.render('news', { title: "News", page_name: "news", posts: posts});
 })
 
 /* GET request for admin's version of the news page */
@@ -252,8 +242,7 @@ app.get('/news', function (req, res) {
 app.get('/admin_news', function (req, res) {
     if (req.isAuthenticated()) {
         res.render('admin_news', { title: "News", page_name: "news"});
-    }
-    else {
+    } else {
         res.redirect("news");
     }
 });
@@ -303,9 +292,8 @@ app.get('/admin_map', ensureAuthenticated, findPins, renderPins);
 /* GET request for donations page */
 app.get('/donations', function (req, res) {
     if (req.isAuthenticated()) {
-        res.render('admin_donations', { title: "Donations", page_name: "donations"});
-    }
-    else {
+        res.render('admin_donations', { title: "Donations", page_name: "admin_donations"});
+    } else {
         res.render('donations', { title: "Donations", page_name: "donations"});
     }
 });
@@ -334,7 +322,7 @@ app.get('/admin_map', function (req, res) {
 
 /* GET request for login form */
 app.get('/admin_donations', ensureAuthenticated, function (req, res) {
-    res.render('admin_donations', { title: "Donations", page_name: "donations"});
+    res.render('admin_donations', { title: "Donations", page_name: "admin_donations"});
 });
 
 // TODO: logout
@@ -434,12 +422,11 @@ app.post('/map', searchServices, renderServices);
 
 /* View a single blog post */
 app.get('/post/:id', (req, res) => {
-    var sql = 'SELECT id, author, title, body, timestamp FROM news ORDER BY timestamp DESC';
-    conn.query(sql, function(error, result){
-        posts = result.rows;
-        const post = posts.filter((post) => {
-            return post.id == req.params.id
-        })[0];
+    var id = req.params.id;
+    var sql = 'SELECT id, author, title, body, timestamp FROM news WHERE id = $1';
+    conn.query(sql, [id], function(error, result){
+        post = result.rows;
+        // console.log(post);
         /* render the 'post.ejs' template with the post content */
         res.render('post', { title: "Post", page_name: "post", post_id: post.id, author: post.author, title: post.title, body: post.body, timestamp: post.timestamp});
     });
@@ -477,16 +464,14 @@ app.post('/write', function(req, res) {
 /****************************************************** BLOG CONTENT EDITING ******************************************************/
 
 app.get('/edit/:id', (req, res) => {
-    if (req.isAuthenticated()) {
-        var sql = 'SELECT id, author, title, body, timestamp FROM news ORDER BY timestamp DESC';
-        conn.query(sql, function(error, result){
-            posts = result.rows;
-            const post = posts.filter((post) => {
-                return post.id == req.params.id; 
-            })[0];
 
+    if (req.isAuthenticated()) {
+        var id = req.params.id;
+        var sql = 'SELECT id, author, title, body, timestamp FROM news WHERE id = $1';
+        conn.query(sql, [id], function(error, result){
+            post = result.rows;
             res.render('edit', { title: "Edit", page_name: "edit", post_id: post.id, author: post.author, title: post.title, body: post.body});
-        });
+        });        
     } else {
         res.redirect("/news");
     }
@@ -519,31 +504,31 @@ app.post('/edit/:id', function(req, res) {
 /********************************************** STORING AND RETRIEVING DONATION DATA ******************************************************/
 
 app.post('/donations', function (req, res) {
-    var name = req.body.first_name + " " + req.body.last_name;
+    var name = req.body.name;
     var amount = req.body.amount;
     var email = req.body.email;
-    var city = req.body.city;
-    var zip = req.body.zip;
+    var address = req.body.address;
     var cause = req.body.cause;
     var timestamp = getPrettyDate();
 
-    console.log(req.body);
+    // console.log(req.body);
 
-    var sql = 'INSERT INTO donations (name, amount, email, city, zip, cause, timestamp) VALUES ($1, $2, $3, $4, $5, $6, $7)';
-    conn.query(sql, [name, amount, email, city, zip, cause, timestamp]);
+    var sql = 'INSERT INTO donations (name, amount, email, address, cause, timestamp) VALUES ($1, $2, $3, $4, $5, $6)';
+    conn.query(sql, [name, amount, email, address, cause, timestamp]);
 
-    var sql2 = 'SELECT id, name, amount, email, city, zip, cause, timestamp FROM donations ORDER BY timestamp DESC';
+    var sql2 = 'SELECT id, name, amount, email, address, cause, timestamp FROM donations ORDER BY timestamp DESC';
         conn.query(sql2, function(error, result){
         donations = result.rows;
-        // console.log(donations);
     });
+
+    res.redirect('https://ywamtyler.org/funddonation?uid=8c0fa911-e498-4136-afda-614268c56541');
 });
 
 
 app.get('/donation_data', ensureAuthenticated, function(req, res) {
 
     if (req.user) {
-        var sql = 'SELECT id, name, amount, email, city, zip, cause, timestamp FROM donations ORDER BY timestamp DESC';
+        var sql = 'SELECT id, name, amount, email, address, cause, timestamp FROM donations ORDER BY timestamp DESC';
         conn.query(sql, function(error, result){
             donations = result.rows;
         });
