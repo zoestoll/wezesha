@@ -1,43 +1,35 @@
 <!doctype html>
-<html class="donations_main">
-<head>
-    <% include header %>
-</head>
-    <form action="/new_post" method="POST">
-        <input type="text" name="title" /><br />
-        <textarea name="content"></textarea><br />
-        <button type="submit">Submit</button>
-    </form>
+<html>
+    <head>
+        <% include inner_head %>
+    </head>
 
+    <body>
+        <% include navbar %>
+        <a class="post-button" href="/write">Write a new post!} </a>
 
-
-     <!-- Page Content -->
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="list-group">
-                  <!-- Render each blog post -->
-                  <% posts.forEach((post) => { %>
-                        <a href="/post/<%= post.id %>" class="list-group-item">
-                             <!-- Title -->
-                            <h4 class="list-group-item-heading"><%= post.title %></h4>
-                            <!-- Author -->
-                            <p class="list-group-item-text"><%= post.author %></p>
-                            <!-- Date/Time -->
-                            <p><span class="glyphicon glyphicon-time"></span><%= post.time %></p>
-                        </a>
-                  <% }) %>
+        <!-- Page Content -->
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="list-group">
+                      <!-- Render each blog post -->
+                      <% posts.forEach((post) => { %>
+                            <a href="/post/<%= post.id %>" class="list-group-item">
+                                 <!-- Title -->
+                                <h4 class="list-group-item-heading"><%= post.title %></h4>
+                                <!-- Author -->
+                                <p class="list-group-item-text">by <%= post.author %></p>
+                                <!-- Body -->
+                                <p class="list-group-item-text"><%= post.body %></p>
+                                <!-- Date/Time -->
+                                <p><span class="glyphicon glyphicon-time"></span> <%= post.timestamp %></p>
+                            </a>
+                      <% }) %>
+                    </div>
                 </div>
             </div>
         </div>
-
-
-    </div>
-</div>
-</body>
-
-<footer>
-    <% include footer %>
-</footer>
-
-    
+        <% include footer %>
+    </body>
+</html>

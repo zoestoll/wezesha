@@ -22,7 +22,7 @@ var APIKey = "AIzaSyDBs20a1Nr7ZDxF7Tq8-69JheH2zeQOLkg";
 var conn = anyDB.createConnection('sqlite3://wezesha.db');
 /* Temporary - won't need to drop tables every time. */
 // conn.query("DROP TABLE mapLocations");
-// conn.query("DROP TABLE users");
+conn.query("DROP TABLE users");
 
 /* User table */
 userTableCreate = "CREATE TABLE IF NOT EXISTS 'users' ('id' INTEGER PRIMARY KEY AUTOINCREMENT, 'username' VARCHAR(255), 'password' VARCHAR(255), 'createdAt' DATETIME, 'updatedAt' DATETIME, 'salt' VARCHAR(255), 'isAdmin' BOOLEAN)"
@@ -48,6 +48,8 @@ conn.query(initialDonations, function(error, result){
 /* Create fake user - for testing purposes */
 salt = bCrypt.genSaltSync(10);
 hash = bCrypt.hashSync("admin", salt, null);
+console.log("Salt stored as ", salt);
+console.log("Hash stored as ", hash);
 conn.query("INSERT INTO users (username, password, salt, isAdmin) VALUES (?, ?, ?, ?)", ["admin", hash, salt, true]);
 
 /* Session table */
@@ -121,49 +123,63 @@ function hashPassword(password, salt) {
 /* Authentication using Passport module */ 
 passport.use(new LocalStrategy(function(username, password, done) {
     console.log('authenticating %s:%s', username, password);
-    conn.query('SELECT * FROM users', function(err, row) {
+    conn.query('SELECT salt FROM users', function(err, row) {
         if (!row) {
             return done(null, false);
         }
+        console.log("Salt for this user: ", row.rows[0].salt);
+        salt = row.rows[0].salt;
+        // var hash = hashPassword(password, row.rows[0].salt);
+        hash = bCrypt.hashSync(password, salt, null);
+        console.log("Hash of password given: ", hash);
 
-        var hash = hashPassword(password, row.rows[0].salt);
-        conn.query('SELECT * FROM users', function(err, row) {
-            if (!row) {
+        conn.query('SELECT * FROM users WHERE password=(?)', [hash], function(err, row) {
+            if (row.rows[0] == undefined) {
+                console.log("Incorrect password!", row);
                 return done(null, false)
             }
-            return done(null, row.rows[0].id);
+            else {
+                console.log("Correct password!", hash, row.rows[0]);
+                return done(null, true);
+            }
+        });
     });
-  });
 }));
 
 /* Serialize session */
 passport.serializeUser(function(user, done) {
+    console.log("Serializing user!", user);
     return done(null, user);
 });
 
 passport.deserializeUser(function(id, done) {
+    console.log("De-serializing user!", id);
     conn.query('SELECT id, username FROM users WHERE id = ?', id, function(err, row) {
         if (!row) {
+            console.log("False: ", row);
             return done(null, false);
         }
+        console.log("True: ", row);
         return done(null, row);
   });
 });
 
 /* Login */
 app.get("/admin_login", function (req, res) {
-    res.render('admin_login', { title: "Admin Login", page_name: "admin_login", logged_in: isLoggedIn});
+    res.render('admin_login', { title: "Admin Login", page_name: "admin_login"});
 });
 
 app.post('/admin_login', passport.authenticate('local', { failureRedirect: '/admin_login' }), function(req, res) {
-    isLoggedIn = 1;
-    res.render('index', { title: "Home", page_name: "home", logged_in: isLoggedIn});
+    // isLoggedIn = 1;
+    /* Successful login. Generate session token, store in database. */
+
+    res.render('index', { title: "Home", page_name: "home"});
 });
 
 /* Signup */
 
 app.get('/signup', function(req, res) {
-    res.render('signup', { title: "Signup", page_name: "signup", logged_in: isLoggedIn});
+    res.render('signup', { title: "Signup", page_name: "signup"});
 });
 
 app.post('/signup', function(req, res) {
@@ -190,9 +206,9 @@ app.get('/logout', function (req, res) {
 app.get('/',function(req, res){
     // console.log("Req session: ", req.session)
     if (req.user) {
-        res.render('index', { title: "Home", page_name: "home", logged_in: 1});
+        res.render('index', { title: "Home", page_name: "home"});
     } else {
-        res.render('index', { title: "Home", page_name: "home", logged_in: 0});
+        res.render('index', { title: "Home", page_name: "home"});
     }
 });
 
@@ -201,18 +217,18 @@ app.get('/',function(req, res){
 /* (1) GET request for home */
 app.get('/index', function (req, res) {
     if (req.user) {
-        res.render('index', { title: "Home", page_name: "home", logged_in: 1});
+        res.render('index', { title: "Home", page_name: "home"});
     } else {
-        res.render('index', { title: "Home", page_name: "home", logged_in: 0});
+        res.render('index', { title: "Home", page_name: "home"});
     }
 });
 
 /* (2) GET request for about */
 app.get('/about', function (req, res) {
     if (req.user) {
-        res.render('about', { title: "About", page_name: "about", logged_in: 1});
+        res.render('about', { title: "About", page_name: "about"});
     } else {
-        res.render('about', { title: "About", page_name: "about", logged_in: 0});
+        res.render('about', { title: "About", page_name: "about"});
     }
 });
 
@@ -221,30 +237,53 @@ app.get('/news', function (req, res) {
     var sql = 'SELECT id, author, title, body, timestamp FROM news ORDER BY timestamp DESC';
     conn.query(sql, function(error, result){
         posts = result.rows;
-        res.render('news', { title: "News", page_name: "news", posts: posts, logged_in: isLoggedIn});
+        if (req.isAuthenticated()) {
+            res.render('admin_news', { title: "News", page_name: "news", posts: posts});
+        }
+        else {
+            res.render('news', { title: "News", page_name: "news", posts: posts});
+        }
     });
-    // res.render('news', { title: "News", page_name: "news", posts: posts, logged_in: isLoggedIn});
+    // res.render('news', { title: "News", page_name: "news", posts: posts});
 })
+
+/* GET request for admin's version of the news page */
+/* (4) GET request for findus  */
+app.get('/admin_news', function (req, res) {
+    if (req.isAuthenticated()) {
+        res.render('admin_news', { title: "News", page_name: "news"});
+    }
+    else {
+        res.redirect("news");
+    }
+});
+
+function ensureAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) {
+    /* Checks if req.user is available */
+    console.log("Authenticated!");
+    return next(); }
+
+  /* denied. redirect to login */
+  console.log("Not Authenticated!");
+  res.redirect('/')
+}
 
 /* (4) GET request for findus  */
 app.get('/findus', function (req, res) {
-    if (req.user) {
-        res.render('findus', { title: "Find Us", page_name: "findus", logged_in: 1});
-    } else {
-        res.render('findus', { title: "Find Us", page_name: "findus", logged_in: 0});
-    }
+    res.render('findus', { title: "Find Us", page_name: "findus"});
 });
 
 /* (5) GET request for resources page*/
 app.get('/resources', function (req, res) {
-    res.render('resources', { title: "Resources", page_name: "resources", logged_in: isLoggedIn});
+    res.render('resources', { title: "Resources", page_name: "resources"});
 });
 
 /***** Subpages of resources page: (a) sponsors, (b) map, (c) handouts *****/
 
 /* (a) GET request for sponsors page*/
 app.get('/sponsors', function (req, res) {
-    res.render('sponsors', { title: "Sponsors", page_name: "sponsors", logged_in: isLoggedIn});
+    res.render('sponsors', { title: "Sponsors", page_name: "sponsors"});
 });
 
 /* (b) GET request for general (non-admin) map page */
@@ -252,22 +291,23 @@ app.get('/map', findPins, renderPins);
 
 /* (c) GET request for handouts page*/
 app.get('/handouts', function (req, res) {
-    res.render('handouts', { title: "Handouts", page_name: "handouts", logged_in: isLoggedIn});
+    res.render('handouts', { title: "Handouts", page_name: "handouts"});
 });
 
 /***** ADMIN REQUESTS *****/
 
-/* GET request for admin's version of the news page */
-app.get('/admin_blog', function (req, res) {
-    res.render('admin_blog', { title: "Admin Blog", page_name: "admin_blog", logged_in: isLoggedIn});
-});
 
 /* GET request for general map page */
-app.get('/admin_map', findPins, renderPins);
+app.get('/admin_map', ensureAuthenticated, findPins, renderPins);
 
 /* GET request for donations page */
 app.get('/donations', function (req, res) {
-    res.render('donations', { title: "Donations", page_name: "donations", logged_in: isLoggedIn});
+    if (req.isAuthenticated()) {
+        res.render('admin_donations', { title: "Donations", page_name: "donations"});
+    }
+    else {
+        res.render('donations', { title: "Donations", page_name: "donations"});
+    }
 });
 
 
@@ -278,18 +318,23 @@ app.get("/signup", function (req, res) {
     if (req.session.user) {
         res.redirect("/");
     } else {
-        res.render('signup', { title: "Signup", page_name: "signup", logged_in: isLoggedIn});
+        res.render('signup', { title: "Signup", page_name: "signup"});
     }
 });
 
 /* GET request for login form */
 app.get('/login', function (req, res) {
-    res.render('admin_login', { title: "Login", page_name: "login", logged_in: isLoggedIn});
+    res.render('admin_login', { title: "Login", page_name: "login"});
 });
 
 /* GET request for login form */
 app.get('/admin_map', function (req, res) {
-    res.render('admin_map', { title: "Admin Map", page_name: "admin_map", logged_in: isLoggedIn});
+    res.render('admin_map', { title: "Admin Map", page_name: "admin_map"});
+});
+
+/* GET request for login form */
+app.get('/admin_donations', ensureAuthenticated, function (req, res) {
+    res.render('admin_donations', { title: "Donations", page_name: "donations"});
 });
 
 // TODO: logout
@@ -344,8 +389,7 @@ function renderServices(req, res) {
     res.render('map', {
         title: "Map",
         page_name: "map",
-        pins: req.pins,
-        logged_in: isLoggedIn
+        pins: req.pins
     });
 }
 
@@ -368,15 +412,13 @@ function renderPins(req, res) {
          res.render('admin_map', {
             title: "Admin Map",
             page_name: "map",
-            pins: req.pins,
-            logged_in: 1
+            pins: req.pins
         });
     } else { /* unauthorized to view admin map */
         res.render('map', {
             title: "Map",
             page_name: "map",
-            pins: req.pins,
-            logged_in: 0
+            pins: req.pins
         });
     }
 }
@@ -396,15 +438,15 @@ app.get('/post/:id', (req, res) => {
             return post.id == req.params.id
         })[0];
         /* render the 'post.ejs' template with the post content */
-        res.render('post', { title: "Post", page_name: "post", post_id: post.id, author: post.author, title: post.title, body: post.body, timestamp: post.timestamp, logged_in: isLoggedIn});
+        res.render('post', { title: "Post", page_name: "post", post_id: post.id, author: post.author, title: post.title, body: post.body, timestamp: post.timestamp});
     });
 });
 
 /* For writing a new blog post */
 
 app.get('/write', function(req, res) {
-    if (req.user) {
-        res.render("write", { title: "Write a Post!", page_name: "write" , logged_in: 1});
+    if (req.isAuthenticated()) {
+        res.render("write", { title: "Write a Post!", page_name: "write" });
     } else {
         res.redirect('/news');
     }
@@ -412,7 +454,7 @@ app.get('/write', function(req, res) {
 
 app.post('/write', function(req, res) {
 
-    if (req.user) { /* Check that they're authorized to send this request */
+    if (req.isAuthenticated()) { /* Check that they're authorized to send this request */
         var author = req.body['author'];
         var title = req.body['title'];
         var body = req.body['body'];
@@ -432,7 +474,7 @@ app.post('/write', function(req, res) {
 /****************************************************** BLOG CONTENT EDITING ******************************************************/
 
 app.get('/edit/:id', (req, res) => {
-    if (req.user) {
+    if (req.isAuthenticated()) {
         var sql = 'SELECT id, author, title, body, timestamp FROM news ORDER BY timestamp DESC';
         conn.query(sql, function(error, result){
             posts = result.rows;
@@ -440,7 +482,7 @@ app.get('/edit/:id', (req, res) => {
                 return post.id == req.params.id; 
             })[0];
 
-            res.render('edit', { title: "Edit", page_name: "edit", post_id: post.id, author: post.author, title: post.title, body: post.body, logged_in: isLoggedIn});
+            res.render('edit', { title: "Edit", page_name: "edit", post_id: post.id, author: post.author, title: post.title, body: post.body});
         });
     } else {
         res.redirect("/news");
@@ -450,7 +492,7 @@ app.get('/edit/:id', (req, res) => {
 
 app.post('/edit/:id', function(req, res) {
 
-    if (req.user) { /* Check that they're authorized to send this request */
+    if (req.isAuthenticated()) {/* Check that they're authorized to send this request */
         var author = req.body['author'];
         var title = req.body['title'];
         var body = req.body['body'];
@@ -495,14 +537,14 @@ app.post('/donations', function (req, res) {
 });
 
 
-app.get('/donation_data', function(req, res) {
+app.get('/donation_data', ensureAuthenticated, function(req, res) {
 
     if (req.user) {
         var sql = 'SELECT id, name, amount, email, city, zip, cause, timestamp FROM donations ORDER BY timestamp DESC';
         conn.query(sql, function(error, result){
             donations = result.rows;
         });
-        res.render("donation_data", { title: "Donation Data", page_name: "donation_data", posts: donations, logged_in: 1});
+        res.render("donation_data", { title: "Donation Data", page_name: "donation_data", posts: donations});
     } else {
         res.redirect("donations");
     }
@@ -512,7 +554,7 @@ app.get('/donation_data', function(req, res) {
 
 /* GET request for news page */
 app.get('/education', function (req, res) {
-    res.render('education', { title: "Education", page_name: "education", posts: posts, logged_in: isLoggedIn});
+    res.render('education', { title: "Education", page_name: "education", posts: posts});
 })
 
 /****************************************************** MEDICAL NEWS PAGE ******************************************************/
@@ -520,7 +562,7 @@ app.get('/education', function (req, res) {
 
 /* GET request for news page */
 app.get('/medical', function (req, res) {
-    res.render('medical', { title: "Medical", page_name: "medical", posts: posts, logged_in: isLoggedIn});
+    res.render('medical', { title: "Medical", page_name: "medical", posts: posts});
 })
 
 /****************************************************** COMMUNITY NEWS PAGE ******************************************************/
@@ -528,7 +570,7 @@ app.get('/medical', function (req, res) {
 
 /* GET request for news page */
 app.get('/community', function (req, res) {
-    res.render('community', { title: "Community", page_name: "community", posts: posts, logged_in: isLoggedIn});
+    res.render('community', { title: "Community", page_name: "community", posts: posts});
 })
 
 /****************************************************** PARTNERS NEWS PAGE ******************************************************/
@@ -536,7 +578,7 @@ app.get('/community', function (req, res) {
 
 /* GET request for news page */
 app.get('/partners', function (req, res) {
-    res.render('partners', { title: "Partners", page_name: "partners", posts: posts, logged_in: isLoggedIn});
+    res.render('partners', { title: "Partners", page_name: "partners", posts: posts});
 })
 
 /******************************************************* HELPER FUNCTIONS ******************************************************/
