@@ -410,7 +410,10 @@ header {
     margin: 15px;
     font-family:Georgia,serif;
     color:#4E443C;
-    font-variant: small-caps; text-transform: none; font-weight: 100; margin-bottom: 0;
+    font-variant: small-caps;
+    text-transform: none;
+    font-weight: 100;
+    margin-bottom: 0;
 }
 
 .about h3 {
@@ -421,6 +424,10 @@ header {
     /*margin: 15px;*/
     padding: 5px;
     /*margin: 15px 0;*/
+}
+
+.about span {
+    font-weight: bold;
 }
 
 /* Three columns side by side */
@@ -460,8 +467,8 @@ header {
     margin-right: 20px;
     margin-top: 20px;
     margin-left: 10px;
-    border: 1px solid #999;
-    border-radius: 10px;
+    border: 3px solid silver;
+    border-radius: 25px;
 }
 
 /* Some left and right padding inside the container */
