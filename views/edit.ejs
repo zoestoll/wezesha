@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<% include inner_head %>
+</head>
+
+<body>
+
+    <% include navbar %>
+
+    <div class="post_edit">
+    	<h1 id="about_head">Edit Your Post</h1>
+    	<form action="/edit/<%= post_id %>" method="post" style="width: 50%; margin: 20px">
+            Title <input type="text" name="title" value="<%= title %>">
+            Author <input type="text" name="author" value="<%= author %>">
+            Text <input type="text" name="body" value="<%= body %>">
+            <input type="hidden" name="id" value="<%= post_id %>">
+            <input class="post-button" type="submit" value="Submit">
+        </form>
+    </div>
+
+<script>
+
+</script>
+    <% include footer %>
+</body>
+</html>

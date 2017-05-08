@@ -424,8 +424,7 @@ app.get('/post/:id', (req, res) => {
             return post.id == req.params.id
         })[0];
         /* render the 'post.ejs' template with the post content */
-        console.log("ID: ", post.id);
-        res.render('post', { title: "Post", page_name: "post", postid: post.id, author: post.author, title: post.title, body: post.body, logged_in: isLoggedIn});
+        res.render('post', { title: "Post", page_name: "post", post_id: post.id, author: post.author, title: post.title, body: post.body, timestamp: post.timestamp, logged_in: isLoggedIn});
     });
 });
 
@@ -435,7 +434,7 @@ app.get('/write', function(req, res) {
     if (req.user) {
         res.render("write", { title: "Write a Post!", page_name: "write" , logged_in: 1});
     } else {
-        res.redirect('news');
+        res.redirect('/news');
     }
 });
 
@@ -455,12 +454,47 @@ app.post('/write', function(req, res) {
         });
     }
 
-    res.redirect("news");
+    res.redirect("/news");
+});
+
+/* View a single blog post */
+app.get('/edit/:id', (req, res) => {
+    var sql = 'SELECT id, author, title, body, timestamp FROM news ORDER BY timestamp DESC';
+    conn.query(sql, function(error, result){
+        posts = result.rows;
+        const post = posts.filter((post) => {
+            return post.id == req.params.id; 
+        })[0];
+
+        res.render('edit', { title: "Edit", page_name: "edit", post_id: post.id, author: post.author, title: post.title, body: post.body, logged_in: isLoggedIn});
+    });
+});
+
+
+app.post('/edit/:id', function(req, res) {
+
+    if (req.user) { /* Check that they're authorized to send this request */
+        var author = req.body['author'];
+        var title = req.body['title'];
+        var body = req.body['body'];
+        var id = req.body['id'];
+        var timestamp = getPrettyDate();
+
+        var sql = "UPDATE news SET author = $1, title = $2, body = $3, timestamp = $4 WHERE id = $5";
+        conn.query(sql, [author, title, body, timestamp, id]);
+        
+        /* new posts are on top */
+        var sql2 = 'SELECT id, author, title, body, timestamp FROM news ORDER BY timestamp DESC';
+        conn.query(sql2, function(error, result){
+            posts = result.rows;
+        });
+    }
+
+    res.redirect("/news");
 });
 
 /********************************************** STORING AND RETRIEVING DONATION DATA ******************************************************/
 
-/* TODO: display donation queries , figure out IPN stuff */
 app.post('/donations', function (req, res) {
     var name = req.body.first_name + " " + req.body.last_name;
     var amount = req.body.amount;
@@ -479,7 +513,6 @@ app.post('/donations', function (req, res) {
 
 app.get('/donation_data', function(req, res) {
     if (req.user) {
-
         /* new donations are on top */
         var sql = 'SELECT id, name, amount, email, city, zip, cause, timestamp FROM donations ORDER BY timestamp DESC';
         conn.query(sql, function(error, result){
