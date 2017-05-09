@@ -34,12 +34,12 @@ newsTableCreate = "CREATE TABLE IF NOT EXISTS 'news' (" +
     "'author' VARCHAR(255), 'title' VARCHAR(255)," +
     "'body' VARCHAR(255)," + 
     "'timestamp' DATETIME," +
-    "'genEd' BOOLEAN," + 
-    "'schoolStories' BOOLEAN," + 
-    "'newStudents' BOOLEAN," + 
-    "'educationFundOps' BOOLEAN," + 
-    "'outreach' BOOLEAN)";
+    "'education' BOOLEAN," + 
+    "'community' BOOLEAN," + 
+    "'medical' BOOLEAN," + 
+    "'partners' BOOLEAN)";  
 conn.query(newsTableCreate);
+
 var posts = [];
 var initialPosts = 'SELECT id, author, title, body, timestamp FROM news ORDER BY timestamp DESC';
 conn.query(initialPosts, function(error, result){
@@ -53,7 +53,9 @@ conn.query(donationTableCreate);
 var donations = [];
 var initialDonations = 'SELECT id, name, amount, email, address, cause, timestamp FROM donations ORDER BY timestamp DESC';
 conn.query(initialDonations, function(error, result){
-    donations = result.rows;
+    if (result != undefined) {
+        donations = result.rows;
+    }
 });
 
 /* Create fake user - for testing purposes */
@@ -413,54 +415,36 @@ app.post('/map', searchServices, renderServices);
 /* View a single blog post */
 app.get('/post/:id', (req, res) => {
     var id = req.params.id;
-    var sql = 'SELECT id, author, title, body, timestamp FROM news WHERE id = $1';
+    var sql = 'SELECT id, author, title, body, timestamp, education, community, medical, partners FROM news WHERE id = $1';
 
     conn.query(sql, [id], function(error, result){
         post = result.rows[0];
+
         if (req.isAuthenticated()) {
-            res.render('admin_post', { title: "Post", page_name: "admin_post", post_id: post.id, author: post.author, title: post.title, body: post.body, timestamp: post.timestamp});
+            res.render('admin_post', 
+                { title: "Post", 
+                page_name: "admin_post", 
+                post_id: post.id, 
+                author: post.author, 
+                title: post.title, 
+                body: post.body, 
+                timestamp: post.timestamp
+            });
+
         } else {
-            res.render('post', { title: "Post", page_name: "post", post_id: post.id, author: post.author, title: post.title, body: post.body, timestamp: post.timestamp});
+            res.render('post', 
+                { title: "Post", 
+                page_name: "post", 
+                author: post.author, 
+                title: post.title, 
+                body: post.body, 
+                timestamp: post.timestamp,
+            });
         }
     });
 });
-app.get('/write/education', function(req, res) {
-    console.log("education write!");
-    if (req.isAuthenticated()) {
-        res.render("write", { title: "Write a Post!", page_name: "write", post_page: "medical"});
-    } else {
-        res.redirect('/education');
-    }
-});
-app.get('/write/medical', function(req, res) {
-    console.log("medical write!");
-    if (req.isAuthenticated()) {
-        res.render("write", { title: "Write a Post!", page_name: "write", post_page: "medical"});
-    } else {
-        res.redirect('/medical');
-    }
-});
-
-app.get('/write/community', function(req, res) {
-    console.log("community write!");
-    if (req.isAuthenticated()) {
-        res.render("write", { title: "Write a Post!", page_name: "write", post_page: "medical"});
-    } else {
-        res.redirect('/community');
-    }
-});
-
-app.get('/write/partners', function(req, res) {
-    console.log("partners write!");
-    if (req.isAuthenticated()) {
-        res.render("write", { title: "Write a Post!", page_name: "write", post_page: "medical"});
-    } else {
-        res.redirect('/partners');
-    }
-});
 
 /* For writing a new blog post */
-
 app.get('/write', function(req, res) {
     if (req.isAuthenticated()) {
         res.render("write", { title: "Write a Post!", page_name: "write" });
@@ -469,36 +453,11 @@ app.get('/write', function(req, res) {
     }
 });
 
-// <input type="checkbox" name="News Category">
-// <!-- Education -->
-// <option>General Education Updates</option>
-// <option>School Stories</option>
-// <option>New Students</option>
-// <option>Education Funding Opportunities</option>
-// <!-- Community -->
-// <option>Outreach Activities</option>
-// <option>Planned Workshops</option>
-// <option>Microfinancing Projects</option>
-// <option>Community Funding Opportunities</option>
-// <!-- Medical -->
-// <option>General Medical News</option>
-// <option>Surgical Options</option>
-// <option>Medical Supports</option>
-// <option>Therapy</option>
-// <option>Mobility Aids</option>
-// <option>Medical Funding Opportunities</option>
-// <!-- Partners -->
-// <option>New Local and Regional Partnerships</option>
-// <option>Network Opportunities</option>
-// <option>International Partners</option>
-// <option>Support Requests</option>
-// </input>
 
 function isChecked(req, category) {
     if (req.body[category] == undefined) {
         return false;
-    }
-    else {
+    } else {
         return true;
     }
 }
@@ -509,23 +468,16 @@ app.post('/write', function(req, res) {
         var author = req.body['author'];
         var title = req.body['title'];
         var body = req.body['body'];
-
-        var genEd = req.body['genEd']
-        var schoolStories = req.body['schoolStories']
-        var newsStudents = req.body['newsStudents']
-        var educationFundOps = req.body['educationFundOps']
-
-        console.log("genEd checked? ", req.body['genEd']);
-        console.log("educationFundOps checked? ", req.body['educationFundOps']);
-        console.log("educationFundOps checked? ", isChecked(req, "educationFundOps"));
         var timestamp = getPrettyDate();
-        var sql = 'INSERT INTO news (author, title, body, timestamp, genEd, schoolStories, newStudents, educationFundOps) VALUES ($1, $2, $3, $4, ?, ?, ?, ?)';
+
+        var sql = 'INSERT INTO news (author, title, body, timestamp, education, community, medical, partners) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
         conn.query(sql, [author, title, body, timestamp,
-            isChecked(req, "genEd"),
-            isChecked(req, "schoolStories"),
-            isChecked(req, "newStudents"),
-            isChecked(req, "educationFundOps")
+            isChecked(req, "education"),
+            isChecked(req, "community"),
+            isChecked(req, "medical"),
+            isChecked(req, "partners")
         ]);
+
         /* new posts are on top */
         var sql2 = 'SELECT id, author, title, body, timestamp FROM news ORDER BY timestamp DESC';
         conn.query(sql2, function(error, result){
@@ -549,7 +501,8 @@ app.get('/edit/:id', (req, res) => {
         conn.query(sql, [id], function(error, result){
             post = result.rows[0];
             res.render('edit', { title: "Edit", page_name: "edit", post_id: post.id, author: post.author, title: post.title, body: post.body});
-        });        
+        });
+
     } else {
         res.redirect("/news");
     }
@@ -621,75 +574,62 @@ app.get('/donation_data', ensureAuthenticated, function(req, res) {
 
 /****************************************************** EDUCATION NEWS PAGE ******************************************************/
 
-
-/* GET request for news page */
-app.get('/admin_education', function (req, res) {
-    res.render('admin_education', { title: "Education", page_name: "education", posts: posts});
-});
-
 /* GET request for news page */
 app.get('/education', function (req, res) {
 
     /* Funding opportunities */
-    var sql = 'SELECT id, author, title, body, timestamp FROM news WHERE educationFundOps = $1 ORDER BY timestamp DESC';
+    var sql = 'SELECT id, author, title, body, timestamp FROM news WHERE education = $1 ORDER BY timestamp DESC';
     conn.query(sql, true, function(error, result){
-        console.log("Result: ", error, result);
-        var funding_posts = [];
+        var education_posts = [];        
         if (result != undefined) {
-            funding_posts = result.rows;
+            education_posts = result.rows;
         }
-        if (req.isAuthenticated()) {
-            res.render('admin_education', { title: "Education", page_name: "education", funding_posts: funding_posts});
-        } else {
-            res.render('education', { title: "Education", page_name: "education", funding_posts: funding_posts});
-        }
+        res.render('education', { title: "Education", page_name: "education", posts: education_posts});
     });
+
 });
 
 /****************************************************** MEDICAL NEWS PAGE ******************************************************/
 
-
-/* GET request for news page */
-app.get('/admin_medical', function (req, res) {
-    res.render('admin_medical', { title: "Medical", page_name: "education", posts: posts});
-})
-
 /* GET request for news page */
 app.get('/medical', function (req, res) {
-    var sql = 'SELECT id, author, title, body, timestamp FROM news ORDER BY timestamp DESC';
-    conn.query(sql, function(error, result){
-        var posts = [];
+    var sql = 'SELECT id, author, title, body, timestamp FROM news WHERE medical = $1 ORDER BY timestamp DESC';
+    conn.query(sql, true, function(error, result){
+        var medical_posts = [];
         if (result != undefined) {
-            posts = result.rows;
+            medical_posts = result.rows;
         }      
-        if (req.isAuthenticated()) {
-            res.render('admin_medical', { title: "Medical", page_name: "medical", posts: posts});
-        } else {
-            res.render('medical', { title: "Medical", page_name: "medical", posts: posts});
-        }
+        res.render('medical', { title: "Medical", page_name: "medical", posts: medical_posts});
     });
 })
 
 /****************************************************** COMMUNITY NEWS PAGE ******************************************************/
 
 /* GET request for news page */
-app.get('/admin_community', function (req, res) {
-    res.render('admin_community', { title: "Community", page_name: "education", posts: posts});
-})
-
-/* GET request for news page */
 app.get('/community', function (req, res) {
-    res.render('community', { title: "Community", page_name: "community", posts: posts});
+    var sql = 'SELECT id, author, title, body, timestamp FROM news WHERE community = $1 ORDER BY timestamp DESC';
+    conn.query(sql, true, function(error, result){
+        var community_posts = [];
+        if (result != undefined) {
+            community_posts = result.rows;
+        }      
+        res.render('community', { title: "Community", page_name: "community", posts: community_posts});
+    });
 })
 
 /****************************************************** PARTNERS NEWS PAGE ******************************************************/
 
-
 /* GET request for news page */
 app.get('/partners', function (req, res) {
-    res.render('partners', { title: "Partners", page_name: "partners", posts: posts});
+    var sql = 'SELECT id, author, title, body, timestamp FROM news WHERE partners = $1 ORDER BY timestamp DESC';
+    conn.query(sql, true, function(error, result){
+        var partner_posts = [];
+        if (result != undefined) {
+            partner_posts = result.rows;
+        }      
+        res.render('partners', { title: "Partners", page_name: "partners", posts: partner_posts});
+    });
 })
-
 
 /****************************************************** PARTNERS NEWS PAGE ******************************************************/
 

@@ -15,14 +15,14 @@
             <p>In Tanzania, as in many African countries, children with disabilities are considered cursed and are often hidden away for life to avoid shame.  Access to education is denied due to the existence of an abnormality, with or without disability.  Day Spring Academy and Preschool provides special education for children with disabilities within an integrated preschool and primary school.  In 2015, with new wheelchair accessibility and a dedicated special needs teacher, we welcomed our first child with disabilities to Dayspring Preschool on a full scholarship. </p>
     </div> <!-- End class about -->
 
-    <!-- Education-related news posts -->
-    <div class="about">
+    <!-- Page Content -->
+    <div class="container">
         <div class="row">
             <div class="col-lg-12">
+                <h2>Education News</h2>
                 <div class="list-group">
-                <h2>Funding Opportunities<h2>
-                <!-- Render each blog post -->
-                <% posts.forEach((post) => { %>
+                  <!-- Render each blog post -->
+                  <% posts.forEach((post) => { %>
                         <a href="/post/<%= post.id %>" class="list-group-item">
                              <!-- Title -->
                             <h4 class="list-group-item-heading"><%= post.title %></h4>
@@ -38,6 +38,7 @@
             </div> <!-- End class col-lg-12 -->
         </div> <!-- End class row -->
     </div> <!-- End class container -->
+
 </body>
 
 <footer>
