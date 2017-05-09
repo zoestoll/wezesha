@@ -14,12 +14,17 @@ body {
     margin-top: 50px;
     width: 100%;
     margin: 0 auto;
-    height: 100%;
+    /*height: 100%;*/
+    /*padding-bottom: 20px;*/
 }
 
 p { 
     font-size: 18px;
     padding: 0 30px;
+}
+
+main {
+    height: ;
 }
 
 .container {
@@ -30,7 +35,11 @@ p {
 }
 
 #container {
-    min-height: 71%;
+    /*min-height: 77%;
+    padding-bottom: 20px;*/
+
+    min-height: calc(100% - 95px);
+
 }
 
 .main {
@@ -367,6 +376,37 @@ header {
     padding: 20px;
 }
 
+.list-group-item-heading, .post #about_head {
+    font-size: 42px;
+    font-family: times, Times New Roman, times-roman, georgia, serif;
+    font-style: italic;
+    color: #444;
+    border-bottom: 3px solid #000080;
+    font-weight: 100;
+    padding: 15px;
+    margin: 15px;
+    margin-bottom: 0px;
+    border-bottom: 3px solid #000080;
+}
+
+.list-group-item-author, .post h2 {
+    font-size: 28px; 
+    font-family: Georgia, serif;
+    color: #4E443C;
+    font-variant: small-caps;
+    padding: 15px;
+    margin-left: 15px;
+    margin-right: 15px;
+    margin-top: 0px;
+}
+
+.list-group-item-text, .post .message {
+    color: #666;
+    font-family: "Helvetica Neue", "Lucida Grande", Helvetica, Arial, Verdana, sans-serif;
+    padding-bottom: 5px;
+    margin-left: 5px;
+}
+
 /******************* About *******************/
 
 #about_head {
@@ -378,7 +418,7 @@ header {
     color: #444;
     font-weight: 100;
     padding: 15px;
-    margin: 15px;
+    margin: 10px;
     margin-bottom: 0px;
     border-bottom: 3px solid #000080;
 }
@@ -512,21 +552,22 @@ header {
 }
 
 .resources_list {
+    margin-top: 10px;
+    width: 80%;
     /* Font */
-    position: left;
+    /*position: left;*/
     font-family: Lucida Grande;
     font-size: 18px;
     /* Background */
     background-origin: border-box;
     /* Border */
     /*border-spacing: 5px;*/
-    border: 10px solid transparent;
+    /*border: 10px solid transparent;*/
     /*background-color: transparent !important;*/
     border-collapse: collapse;
     /* Position */
-    margin-top: 20px;
-    padding-left: 20px;
-    width: 40%;
+/*    margin-top: 20px;
+    padding-left: 20px;*/
 }
 
 .resources_list a {
@@ -541,7 +582,7 @@ header {
 
 /* unvisited link */
 a:link {
-    color: red;
+    color: green;
     font-style: italic;
 }
 
@@ -562,6 +603,17 @@ a:active {
 
 #resource_item {
     position: left;
+    
+}
+
+#resource_item p {
+    color: #666;
+    font-family: "Helvetica Neue", "Lucida Grande", Helvetica, Arial, Verdana, sans-serif;
+    padding: 15px;
+    margin-left: 15px;
+    margin-right: 15px;
+    margin-top: 0px;
+    font-size: 18px;
 }
 
 #resources_main {
@@ -577,13 +629,25 @@ a:active {
     
 }
 .resources_list h2 {
-    font-size: 16pt;
+    font-size: 42px;
+    font-family: times, Times New Roman, times-roman, georgia, serif;
+    font-style: italic;
+    color: #444;
+    border-bottom: 3px solid #000080;
+    /* padding-bottom: 5px; */
+    font-weight: 100;
+
+    padding: 15px;
+    margin: 15px;
+    margin-bottom: 0px;
+
+    /*font-size: 16pt;
     font-family: Lucida Grande;
     font-style: italic;
     color: rgb(182,0,0);
-    border-bottom: 3px solid #000080;
-    padding-bottom: 5px;
-    margin: 15px 0;
+    border-bottom: 3px solid #000080;*/
+/*    padding-bottom: 5px;
+    margin: 15px 0;*/
 }
 
 .resources {
@@ -651,6 +715,7 @@ div.panel {
 
 .findus {
     background-size: 90%;
+    width: 80%;
     /*margin-left: 40px;
     margin-bottom: 40px;*/
 }
