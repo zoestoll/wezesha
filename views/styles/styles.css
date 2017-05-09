@@ -16,7 +16,7 @@ body {
 
 p { 
     font-size: 18px;
-    padding: 0 30px;
+   /* padding: 0 30px;*/
 }
 
 .container {
@@ -139,6 +139,11 @@ header {
 }
 
 /******************* Home *******************/
+
+#gl1, #gl2, #gl3, #gl4 {
+    color: green;
+    font-size: 24px;
+}
 
 .home_info {
     font-family: Lucida Grande;
@@ -416,7 +421,6 @@ header {
     margin-right: 15px;
     margin-top: 0px;
     display: flex;
-    justify-content: space-around;
     flex-wrap: wrap;
     position: relative;
 }
@@ -442,7 +446,7 @@ header {
     color: maroon;
     margin: 15px;
     font-family:Georgia,serif;
-    color:#4E443C;
+    color: #000080;
     font-variant: small-caps;
     text-transform: none;
     font-weight: 100;
