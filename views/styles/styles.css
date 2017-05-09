@@ -38,7 +38,7 @@ main {
     /*min-height: 77%;
     padding-bottom: 20px;*/
 
-    min-height: calc(100% - 95px);
+    min-height: calc(100vh - 155px);
 
 }
 
