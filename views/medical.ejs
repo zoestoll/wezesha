@@ -16,6 +16,8 @@
             <p class="picpara"> Children with developmental disabilities have multiple obstacles to overcome and appropriate medical care is only a beginning. Our center at the Uzima Clinic, YWAM-Mwandege, Tanzania provides access to specialty medical care, health support and surgical referral to children with developmental disabilities. Our new Diagnostic Center for Children, completed In 2012, also houses the central office for Wezesha Kupaa.</p>
     </div> <!-- End class about -->
 
+    <div class="news_header">Medical News</div>
+
     <!-- Page Content -->
         <div class="row">
             <div class="col-lg-12">
@@ -26,11 +28,11 @@
                              <!-- Title -->
                             <h4 class="list-group-item-heading"><%= post.title %></h4>
                             <!-- Author -->
-                            <p class="list-group-item-text">by <%= post.author %></p>
+                            <p class="list-group-item-author">by <%= post.author %></p>
                             <!-- Body -->
                             <p class="list-group-item-text"><%= post.body %></p>
                             <!-- Date/Time -->
-                            <p><span class="glyphicon glyphicon-time"></span> <%= post.timestamp %></p>
+                            <p id="time"><span class="glyphicon glyphicon-time"></span> <%= post.timestamp %></p>
                         </a>
                   <% }) %>
                 </div> <!-- End class list-group -->

@@ -140,6 +140,23 @@ header {
 
 /******************* Home *******************/
 
+.news_header {
+    clear: left;
+    margin-top: 100px;
+    width: 100%;
+    text-align: center;
+
+    font-size: 42px;
+    font-family: times, Times New Roman, times-roman, georgia, serif;
+    font-style: italic;
+    color: #444;
+    border-bottom: 3px solid #000080;
+    font-weight: 100;
+    padding: 15px;
+    margin: 15px;
+    margin-bottom: 0px;
+}
+
 #gl1, #gl2, #gl3, #gl4 {
     color: green;
     font-size: 24px;
@@ -345,7 +362,7 @@ header {
     padding: 20px;
 }
 
-.list-group-item-heading, .post #about_head {
+.list-group-item-heading, .post #about_head, list-group-item h4 {
     font-size: 36px;
     font-family: times, Times New Roman, times-roman, georgia, serif;
     font-style: italic;
@@ -381,7 +398,7 @@ header {
     padding-top: 5px;
 }
 
-.list-group-item-text, .post p {
+.list-group-item-text, .post p, list-group-item p {
     color: #666;
     font-family: "Helvetica Neue", "Lucida Grande", Helvetica, Arial, Verdana, sans-serif;
     padding-left: 40px;
@@ -392,7 +409,7 @@ header {
 }
 
 .list-group-item {
-    padding: 0px;
+    padding: 5px;
 }
 
 #writeform {
@@ -569,18 +586,8 @@ header {
 
 /* unvisited link */
 a:link {
-    color: white;
+    color: green;
     font-style: italic;
-}
-
-/* visited link */
-a:visited {
-    color: white;
-}
-
-/* mouse over link */
-a:hover {
-    color: white;
 }
 
 /* selected link */
@@ -712,7 +719,7 @@ div.panel {
     color: #666;
     font-family: "Helvetica Neue", "Lucida Grande", Helvetica, Arial, Verdana, sans-serif;
     padding-bottom: 5px;
-    margin-left: 5px;
+    margin-left: 40px;
 }
 
 
@@ -930,11 +937,11 @@ input[type=checkbox]:checked + label:before { letter-spacing: 5px; } /* allow sp
     color: #666;
     font-family: "Helvetica Neue", "Lucida Grande", Helvetica, Arial, Verdana, sans-serif;
     padding-bottom: 5px;
-    margin-left: 5px;
+    margin-left: 40px;
+    margin-top: 0;
 }
 
 .causes {
-    margin-left: 20px;
     font-size: 20px;
     padding: 20px;
 }
