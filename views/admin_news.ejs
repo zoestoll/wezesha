@@ -19,11 +19,11 @@
                                  <!-- Title -->
                                 <h4 class="list-group-item-heading"><%= post.title %></h4>
                                 <!-- Author -->
-                                <p class="list-group-item-text">by <%= post.author %></p>
+                                <p class="list-group-item-author">by <%= post.author %></p>
                                 <!-- Body -->
                                 <p class="list-group-item-text"><%= post.body %></p>
                                 <!-- Date/Time -->
-                                <p><span class="glyphicon glyphicon-time"></span> <%= post.timestamp %></p>
+                                <p id="time"><span class="glyphicon glyphicon-time"></span> <%= post.timestamp %></p>
                             </a>
                       <% }) %>
                     </div>
