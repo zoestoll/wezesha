@@ -1055,8 +1055,10 @@ footer {
     display: flex;
     justify-content: center;
     width: 100%;
-    position: relative;
-    left: 33px;
+}
+
+.footer_line p {
+    width: 200px;
 }
 
 footer p, footer a, footer a:visited, footer a:link {
