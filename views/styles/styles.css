@@ -428,6 +428,11 @@ header {
     padding: 0px;
 }
 
+#writeform {
+    margin-top: 10px;
+    padding: 8px;
+}
+
 /******************* About *******************/
 
 #about_head {
@@ -453,6 +458,7 @@ header {
     display: flex;
     justify-content: space-around;
     flex-wrap: wrap;
+    position: relative;
 }
 
 .card:first-child {
@@ -462,7 +468,11 @@ header {
 .about p {
     font-family: "Helvetica Neue", "Lucida Grande", Helvetica, Arial, Verdana, sans-serif;
     font-size: 18px;
-    margin-top: .5em; color: #666;
+    color: #666;
+}
+
+.about .picpara {
+    margin-top: 100px;
 }
 
 .about h2 {
@@ -475,7 +485,12 @@ header {
     font-variant: small-caps;
     text-transform: none;
     font-weight: 100;
-    margin-bottom: 0;
+}
+
+.about .picpage {
+    position: absolute;
+    top: 20px;
+    left: 0;
 }
 
 .about h3 {
@@ -486,6 +501,11 @@ header {
     /*margin: 15px;*/
     padding: 5px;
     /*margin: 15px 0;*/
+}
+
+.about .aboutpage {
+    width: 100%;
+    text-align: left;
 }
 
 .about span {
