@@ -208,7 +208,7 @@ header {
 }
 
 #home_main h3 {
-    font-size: 30pt;
+    font-size: 25pt;
     font-family: Lora, sans-serif;
     font-style: italic;
     color: white;
@@ -239,6 +239,7 @@ header {
 #home_buttons {
     display: flex;
     justify-content: space-around;
+    flex-wrap: wrap;
     width: 100%;
 }
 
@@ -1122,6 +1123,7 @@ footer {
 .footer_line {
     display: flex;
     justify-content: center;
+    flex-wrap: wrap;
     width: 100%;
 }
 
