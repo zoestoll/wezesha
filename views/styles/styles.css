@@ -424,6 +424,10 @@ header {
     flex-wrap: wrap;
 }
 
+.aflex {
+    justify-content: center;
+}
+
 .card:first-child {
     width: 700px;
     margin-left: 40px;
