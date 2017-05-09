@@ -30,7 +30,8 @@ p {
 }
 
 #container {
-    min-height: 71%;
+    /*min-height: 71%;*/
+    padding-bottom: 20px;
 }
 
 .main {
@@ -1039,6 +1040,9 @@ span.password {
 /******************* Footer *******************/
 
 footer {
+    position:absolute;
+
+
     height: 20px;
     /* position: fixed; */
     bottom: 0px;
