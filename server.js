@@ -157,7 +157,7 @@ passport.deserializeUser(function(id, done) {
             return done(null, false);
         }
         return done(null, row);
-  });
+    });
 });
 
 /* Login */

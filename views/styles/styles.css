@@ -91,7 +91,6 @@ p {
     padding: 3px;
 }
 
-
 .nav_title {
     font-size: 24px;
     display: inline-block;
@@ -359,19 +358,28 @@ header {
     text-align: left;
 }
 
-.post-button {
-    /*font-style: italic;*/
+.logout-button {
+    font-style: italic;
     font-size: 24px;
     color: blue;
-    background: black;
+    background: pink;
     /*width: 20%;*/
     padding: 12px 20px;
-    /*margin: 8px 20px;*/
-    /*display: inline-block;*/
+    margin: 8px 20px;
+    display: inline-block;
+    border: 2px solid yellow;
+}
+
+.post-button {
+    font-style: italic;
+    font-size: 24px;
+    color: blue;
+    background: pink;
+    /*width: 20%;*/
+    padding: 12px 20px;
+    margin: 8px 20px;
+    display: inline-block;
     border: 2px solid black;
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
 }
 
 .news-top-img {
