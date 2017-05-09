@@ -6,23 +6,26 @@
 
 <body style="width: 100%">
     <% include navbar %>
-
     <div class="news-top-img">
-        <img src="/img/medical/medical-top-img.png"; alt="Education" style="max-width:600px;max-height:600px;">
+        <img src="/img/education/education-top-img.png"; alt="Education" style="max-width:600px;max-height:600px;">
     </div> <!-- End class news-top-img -->
-    <!-- Intro to Medical Section -->
+
+    <a class="post-button" href="/write/education">Write a new education post!</a>
+
+    <!-- Intro to Education Section -->
     <div class="about">
-        <h2>Medical Resources</h2>
-            <p> Children with developmental disabilities have multiple obstacles to overcome and appropriate medical care is only a beginning. Our center at the Uzima Clinic, YWAM-Mwandege, Tanzania provides access to specialty medical care, health support and surgical referral to children with developmental disabilities. Our new Diagnostic Center for Children, completed In 2012, also houses the central office for Wezesha Kupaa.</p>
+        <h2>Improving Lives of Children with Disabilities in Tanzania</h2>
+            <p>In Tanzania, as in many African countries, children with disabilities are considered cursed and are often hidden away for life to avoid shame.  Access to education is denied due to the existence of an abnormality, with or without disability.  Day Spring Academy and Preschool provides special education for children with disabilities within an integrated preschool and primary school.  In 2015, with new wheelchair accessibility and a dedicated special needs teacher, we welcomed our first child with disabilities to Dayspring Preschool on a full scholarship. </p>
     </div> <!-- End class about -->
 
-    <!-- Page Content -->
+    <!-- Education-related news posts -->
     <div class="container">
+        <h1>Funding Opportunities<h1>
         <div class="row">
             <div class="col-lg-12">
                 <div class="list-group">
                     <!-- Render each blog post -->
-                    <% posts.forEach((post) => { %>
+                    <% funding_posts.forEach((post) => { %>
                         <a href="/post/<%= post.id %>" class="list-group-item">
                              <!-- Title -->
                             <h4 class="list-group-item-heading"><%= post.title %></h4>
@@ -38,7 +41,7 @@
             </div> <!-- End class col-lg-12 -->
         </div> <!-- End class row -->
     </div> <!-- End class container -->
-    </body>
+</body>
 
 <footer>
     <% include footer %>

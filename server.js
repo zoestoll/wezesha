@@ -22,19 +22,30 @@ var APIKey = "AIzaSyDBs20a1Nr7ZDxF7Tq8-69JheH2zeQOLkg";
 var conn = anyDB.createConnection('sqlite3://wezesha.db');
 /* Temporary - won't need to drop tables every time. */
 // conn.query("DROP TABLE mapLocations");
-// conn.query("DROP TABLE users");
+// conn.query("DROP TABLE news");
 
 /* User table */
 userTableCreate = "CREATE TABLE IF NOT EXISTS 'users' ('id' INTEGER PRIMARY KEY AUTOINCREMENT, 'username' VARCHAR(255), 'password' VARCHAR(255), 'createdAt' DATETIME, 'updatedAt' DATETIME, 'salt' VARCHAR(255), 'isAdmin' BOOLEAN)"
 conn.query(userTableCreate);
 
 /* News Posts table */
-newsTableCreate = "CREATE TABLE IF NOT EXISTS 'news' ('id' INTEGER PRIMARY KEY AUTOINCREMENT, 'author' VARCHAR(255), 'title' VARCHAR(255), 'body' VARCHAR(255), 'timestamp' DATETIME)";
+newsTableCreate = "CREATE TABLE IF NOT EXISTS 'news' (" +
+    "'id' INTEGER PRIMARY KEY AUTOINCREMENT," + 
+    "'author' VARCHAR(255), 'title' VARCHAR(255)," +
+    "'body' VARCHAR(255)," + 
+    "'timestamp' DATETIME," +
+    "'genEd' BOOLEAN," + 
+    "'schoolStories' BOOLEAN," + 
+    "'newStudents' BOOLEAN," + 
+    "'educationFundOps' BOOLEAN," + 
+    "'outreach' BOOLEAN)";
 conn.query(newsTableCreate);
 var posts = [];
 var initialPosts = 'SELECT id, author, title, body, timestamp FROM news ORDER BY timestamp DESC';
 conn.query(initialPosts, function(error, result){
-    posts = result.rows;
+    if (result != undefined) {
+        posts = result.rows;
+    }
 });
 
 donationTableCreate = "CREATE TABLE IF NOT EXISTS 'donations' ('id' INTEGER PRIMARY KEY AUTOINCREMENT, 'name' VARCHAR(255), 'amount' INTEGER, 'email' VARCHAR(255), 'address' VARCHAR(255), 'cause' VARCHAR(255), 'timestamp' DATETIME)";
@@ -94,8 +105,6 @@ var options = {
 
 /****************************************************** AUTHENTICATION & SESSION MANAGEMENT ******************************************************/
 
-// TODO: SESSION STUFF
-
 app.use(function (req, res, next) {
     var err = req.session.error,
         msg = req.session.success;
@@ -113,13 +122,6 @@ var createHash = function(password){
     return bCrypt.hashSync(password, bCrypt.genSaltSync(10), null);
 }
 
-function hashPassword(password, salt) {
-    var hash = crypto.createHash('sha256');
-    hash.update(password);
-    hash.update(salt);
-    return hash.digest('hex');
-}
-
 /* Authentication using Passport module */ 
 passport.use(new LocalStrategy(function(username, password, done) {
     console.log('authenticating %s:%s', username, password);
@@ -127,11 +129,8 @@ passport.use(new LocalStrategy(function(username, password, done) {
         if (!row) {
             return done(null, false);
         }
-        console.log("Salt for this user: ", row.rows[0].salt);
         salt = row.rows[0].salt;
-        // var hash = hashPassword(password, row.rows[0].salt);
         hash = bCrypt.hashSync(password, salt, null);
-        console.log("Hash of password given: ", hash);
 
         conn.query('SELECT * FROM users WHERE password=(?)', [hash], function(err, row) {
             if (row.rows[0] == undefined) {
@@ -139,7 +138,6 @@ passport.use(new LocalStrategy(function(username, password, done) {
                 return done(null, false)
             }
             else {
-                console.log("Correct password!", hash, row.rows[0]);
                 return done(null, true);
             }
         });
@@ -148,18 +146,14 @@ passport.use(new LocalStrategy(function(username, password, done) {
 
 /* Serialize session */
 passport.serializeUser(function(user, done) {
-    console.log("Serializing user!", user);
     return done(null, user);
 });
 
 passport.deserializeUser(function(id, done) {
-    console.log("De-serializing user!", id);
     conn.query('SELECT id, username FROM users WHERE id = ?', id, function(err, row) {
         if (!row) {
-            console.log("False: ", row);
             return done(null, false);
         }
-        console.log("True: ", row);
         return done(null, row);
   });
 });
@@ -170,9 +164,7 @@ app.get("/admin_login", function (req, res) {
 });
 
 app.post('/admin_login', passport.authenticate('local', { failureRedirect: '/admin_login' }), function(req, res) {
-    // isLoggedIn = 1;
-    /* Successful login. Generate session token, store in database. */
-
+    /* Successful login */
     res.render('index', { title: "Home", page_name: "home"});
 });
 
@@ -188,7 +180,6 @@ app.post('/signup', function(req, res) {
     salt = bCrypt.genSaltSync(10);
     hash = bCrypt.hashSync(password, salt, null);
     conn.query("INSERT INTO users (id, username, password, salt, isAdmin) VALUES (?, ?, ?, ?, ?)", [1, username, hash, salt, true], function(err) {
-        console.log(err);
         console.log("Signed up for a new account with username: ", username, " Password: ", password, " Password hash: ", hash, " Salt: ", salt);
         res.redirect('/admin_login');
     });
@@ -204,7 +195,6 @@ app.get('/logout', function (req, res) {
 
 /* GET request for top directory (http://localhost:8080) */
 app.get('/',function(req, res){
-    // console.log("Req session: ", req.session)
     if (req.user) {
         res.render('index', { title: "Home", page_name: "home"});
     } else {
@@ -228,7 +218,10 @@ app.get('/about', function (req, res) {
 app.get('/news', function (req, res) {
     var sql = 'SELECT id, author, title, body, timestamp FROM news ORDER BY timestamp DESC';
     conn.query(sql, function(error, result){
-        posts = result.rows;        
+        var posts = [];
+        if (result != undefined) {
+            posts = result.rows;
+        }      
         if (req.isAuthenticated()) {
             res.render('admin_news', { title: "News", page_name: "news", posts: posts});
         } else {
@@ -250,11 +243,9 @@ app.get('/admin_news', function (req, res) {
 function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
     /* Checks if req.user is available */
-    console.log("Authenticated!");
     return next(); }
 
   /* denied. redirect to login */
-  console.log("Not Authenticated!");
   res.redirect('/')
 }
 
@@ -398,7 +389,6 @@ function findPins(req, res, next) {
 
 /* Tells the client to render these pins */
 function renderPins(req, res) {
-    console.log("Rendering pins: ", req.pins);
      if (req.user) { // TODO: Check that they're an admin
          res.render('admin_map', {
             title: "Admin Map",
@@ -434,6 +424,40 @@ app.get('/post/:id', (req, res) => {
         }
     });
 });
+app.get('/write/education', function(req, res) {
+    console.log("education write!");
+    if (req.isAuthenticated()) {
+        res.render("write", { title: "Write a Post!", page_name: "write", post_page: "medical"});
+    } else {
+        res.redirect('/education');
+    }
+});
+app.get('/write/medical', function(req, res) {
+    console.log("medical write!");
+    if (req.isAuthenticated()) {
+        res.render("write", { title: "Write a Post!", page_name: "write", post_page: "medical"});
+    } else {
+        res.redirect('/medical');
+    }
+});
+
+app.get('/write/community', function(req, res) {
+    console.log("community write!");
+    if (req.isAuthenticated()) {
+        res.render("write", { title: "Write a Post!", page_name: "write", post_page: "medical"});
+    } else {
+        res.redirect('/community');
+    }
+});
+
+app.get('/write/partners', function(req, res) {
+    console.log("partners write!");
+    if (req.isAuthenticated()) {
+        res.render("write", { title: "Write a Post!", page_name: "write", post_page: "medical"});
+    } else {
+        res.redirect('/partners');
+    }
+});
 
 /* For writing a new blog post */
 
@@ -445,19 +469,70 @@ app.get('/write', function(req, res) {
     }
 });
 
+// <input type="checkbox" name="News Category">
+// <!-- Education -->
+// <option>General Education Updates</option>
+// <option>School Stories</option>
+// <option>New Students</option>
+// <option>Education Funding Opportunities</option>
+// <!-- Community -->
+// <option>Outreach Activities</option>
+// <option>Planned Workshops</option>
+// <option>Microfinancing Projects</option>
+// <option>Community Funding Opportunities</option>
+// <!-- Medical -->
+// <option>General Medical News</option>
+// <option>Surgical Options</option>
+// <option>Medical Supports</option>
+// <option>Therapy</option>
+// <option>Mobility Aids</option>
+// <option>Medical Funding Opportunities</option>
+// <!-- Partners -->
+// <option>New Local and Regional Partnerships</option>
+// <option>Network Opportunities</option>
+// <option>International Partners</option>
+// <option>Support Requests</option>
+// </input>
+
+function isChecked(req, category) {
+    if (req.body[category] == undefined) {
+        return false;
+    }
+    else {
+        return true;
+    }
+}
+
 app.post('/write', function(req, res) {
 
     if (req.isAuthenticated()) { /* Check that they're authorized to send this request */
         var author = req.body['author'];
         var title = req.body['title'];
         var body = req.body['body'];
+
+        var genEd = req.body['genEd']
+        var schoolStories = req.body['schoolStories']
+        var newsStudents = req.body['newsStudents']
+        var educationFundOps = req.body['educationFundOps']
+
+        console.log("genEd checked? ", req.body['genEd']);
+        console.log("educationFundOps checked? ", req.body['educationFundOps']);
+        console.log("educationFundOps checked? ", isChecked(req, "educationFundOps"));
         var timestamp = getPrettyDate();
-        var sql = 'INSERT INTO news (author, title, body, timestamp) VALUES ($1, $2, $3, $4)';
-        conn.query(sql, [author, title, body, timestamp]);
+        var sql = 'INSERT INTO news (author, title, body, timestamp, genEd, schoolStories, newStudents, educationFundOps) VALUES ($1, $2, $3, $4, ?, ?, ?, ?)';
+        conn.query(sql, [author, title, body, timestamp,
+            isChecked(req, "genEd"),
+            isChecked(req, "schoolStories"),
+            isChecked(req, "newStudents"),
+            isChecked(req, "educationFundOps")
+        ]);
         /* new posts are on top */
         var sql2 = 'SELECT id, author, title, body, timestamp FROM news ORDER BY timestamp DESC';
         conn.query(sql2, function(error, result){
-            posts = result.rows;
+            var posts = [];
+            if (result != undefined) {
+                posts = result.rows;
+            }
         });
     }
 
@@ -496,7 +571,10 @@ app.post('/edit/:id', function(req, res) {
         /* new posts are on top */
         var sql2 = 'SELECT id, author, title, body, timestamp FROM news ORDER BY timestamp DESC';
         conn.query(sql2, function(error, result){
-            posts = result.rows;
+            var posts = [];
+            if (result != undefined) {
+                posts = result.rows;
+            }
         });
     } 
 
@@ -543,21 +621,61 @@ app.get('/donation_data', ensureAuthenticated, function(req, res) {
 
 /****************************************************** EDUCATION NEWS PAGE ******************************************************/
 
+
+/* GET request for news page */
+app.get('/admin_education', function (req, res) {
+    res.render('admin_education', { title: "Education", page_name: "education", posts: posts});
+});
+
 /* GET request for news page */
 app.get('/education', function (req, res) {
-    res.render('education', { title: "Education", page_name: "education", posts: posts});
-})
+
+    /* Funding opportunities */
+    var sql = 'SELECT id, author, title, body, timestamp FROM news WHERE educationFundOps = $1 ORDER BY timestamp DESC';
+    conn.query(sql, true, function(error, result){
+        console.log("Result: ", error, result);
+        var funding_posts = [];
+        if (result != undefined) {
+            funding_posts = result.rows;
+        }
+        if (req.isAuthenticated()) {
+            res.render('admin_education', { title: "Education", page_name: "education", funding_posts: funding_posts});
+        } else {
+            res.render('education', { title: "Education", page_name: "education", funding_posts: funding_posts});
+        }
+    });
+});
 
 /****************************************************** MEDICAL NEWS PAGE ******************************************************/
 
 
 /* GET request for news page */
+app.get('/admin_medical', function (req, res) {
+    res.render('admin_medical', { title: "Medical", page_name: "education", posts: posts});
+})
+
+/* GET request for news page */
 app.get('/medical', function (req, res) {
-    res.render('medical', { title: "Medical", page_name: "medical", posts: posts});
+    var sql = 'SELECT id, author, title, body, timestamp FROM news ORDER BY timestamp DESC';
+    conn.query(sql, function(error, result){
+        var posts = [];
+        if (result != undefined) {
+            posts = result.rows;
+        }      
+        if (req.isAuthenticated()) {
+            res.render('admin_medical', { title: "Medical", page_name: "medical", posts: posts});
+        } else {
+            res.render('medical', { title: "Medical", page_name: "medical", posts: posts});
+        }
+    });
 })
 
 /****************************************************** COMMUNITY NEWS PAGE ******************************************************/
 
+/* GET request for news page */
+app.get('/admin_community', function (req, res) {
+    res.render('admin_community', { title: "Community", page_name: "education", posts: posts});
+})
 
 /* GET request for news page */
 app.get('/community', function (req, res) {
@@ -571,6 +689,7 @@ app.get('/community', function (req, res) {
 app.get('/partners', function (req, res) {
     res.render('partners', { title: "Partners", page_name: "partners", posts: posts});
 })
+
 
 /******************************************************* HELPER FUNCTIONS ******************************************************/
 
