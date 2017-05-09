@@ -10,11 +10,9 @@
 
     <div class="post">
 		<h1 id="about_head"><%= title %></h1>
-		<p>by <%= author %></p>
-		<p><span class="glyphicon glyphicon-time"></span> <%= timestamp %></p>
-		</br>
+		<h2>by <%= author %></h2>
+		<h2 id="time"><span class="glyphicon glyphicon-time"></span> <%= timestamp %></h2>
 		<p><%= body %></p>
-		</br>
     </div>
 
     <a class="post-button" href="/edit/<%= post_id %>">Edit this post!</a>

@@ -7,15 +7,13 @@
 <body>
     <% include navbar %>
 
-    <div class="post">
+     <div class="post">
 		<h1 id="about_head"><%= title %></h1>
 		<h2>by <%= author %></h2>
-		<p><span class="glyphicon glyphicon-time"></span> <%= timestamp %></p>
-		</br>
-		<p class="message"><%= body %></p>
-		<br>
+		<h2 id="time"><span class="glyphicon glyphicon-time"></span> <%= timestamp %></h2>
+		<p><%= body %></p>
     </div>
 </body>
 
-    <% include footer %>
+<% include footer %>
 </html>
