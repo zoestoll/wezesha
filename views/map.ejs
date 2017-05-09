@@ -25,33 +25,31 @@
 
     <h3>Map of World</h3>
     <div id="map"></div>
+
     <script>
-
-  
-    function addPin(map, type, title, des, lat, lng) {
-
-        var infowindow = new google.maps.InfoWindow({
-          content: type + " service: " + title + "\n" + des
-        });
+    function addPin(infowindow, map, type, title, des, lat, lng) {
+        var ltlng = new google.maps.LatLng(lat, lng);
 
         /* Adds a pin/marker on the map at these coordinates */
         marker = new google.maps.Marker({
             map: map,
-            position: new google.maps.LatLng(lat, lng),
-            title: title /* TODO: Make these titles meaningful */
+            position: ltlng,
+            title: title
         });
+
         google.maps.event.addListener(marker, 'click', function() {
-            console.log("clicked!");
-            infowindow.open(map, marker);
+            infowindow.setContent(type + " service: " + title + "\n" + des);
+            infowindow.open(map, this);
         });
         marker.setMap(map);
     }
 
      function initMap() {
+        var infowindow = new google.maps.InfoWindow;
         var location = {lat: -5, lng: 36};
         var map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 4,
-          center: location
+            zoom: 4,
+            center: location
         });
         <% pins.rows.forEach(function(row) { %>
             var lat = <%= row.latitude %>;
@@ -59,9 +57,9 @@
             var type = "<%= row.serviceType %>";
             var title = "<%= row.serviceName %>";
             var des = "<%= row.description %>";
-            addPin(map, type, title, des, lat, lng);
+            addPin(infowindow, map, type, title, des, lat, lng);
         <% }); %>
-      }
+    }
     </script>
     <!-- async because the map API can't be loaded after the document has finished loading by default -->
     <script async defer
