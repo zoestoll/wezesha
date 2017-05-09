@@ -6,38 +6,40 @@
 
 <body>
     <% include navbar %>
-    <div class="news-top-img">
-        <img src="/img/partners/partners-top-img.png"; alt="Education" style="max-width:600px;max-height:600px;">
-    </div> <!-- End class news-top-img -->
+    <div id="container">
+        <div class="news-top-img">
+            <img src="/img/partners/partners-top-img.png"; alt="Education" style="max-width:400px;max-height:400px;">
+        </div> <!-- End class news-top-img -->
 
-    <!-- Intro to Partners Section -->
-    <div class="about">
-        <h2>Who we work with in Tanzania</h2>
-            <p>House of Hope residence and training facility offers safe housing for children and families seeking assistance and hosts educational workshops on the many challenges of  living well with disabilities.  The facility functions as a partnership with international funding organization ChildHelp  and a local Tanzanian parents organization, the Association of Spina Bifida and Hydrocephalus of Tanzania (ASBAHT) </p>
-    </div> <!-- End class about -->
+        <!-- Intro to Partners Section -->
+        <div class="about">
+            <h2>Who we work with in Tanzania</h2>
+                <p>House of Hope residence and training facility offers safe housing for children and families seeking assistance and hosts educational workshops on the many challenges of living well with disabilities. The facility functions as a partnership with international funding organization ChildHelp and a local Tanzanian parents organization, the Association of Spina Bifida and Hydrocephalus of Tanzania (ASBAHT) </p>
+        </div> <!-- End class about -->
 
-    <!-- Page Content -->
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="list-group">
-                  <!-- Render each blog post -->
-                  <% posts.forEach((post) => { %>
-                        <a href="/post/<%= post.id %>" class="list-group-item">
-                             <!-- Title -->
-                            <h4 class="list-group-item-heading"><%= post.title %></h4>
-                            <!-- Author -->
-                            <p class="list-group-item-text">by <%= post.author %></p>
-                            <!-- Body -->
-                            <p class="list-group-item-text"><%= post.body %></p>
-                            <!-- Date/Time -->
-                            <p><span class="glyphicon glyphicon-time"></span> <%= post.timestamp %></p>
-                        </a>
-                  <% }) %>
-                </div> <!-- End class list-group -->
-            </div> <!-- End class col-lg-12 -->
-        </div> <!-- End class row -->
-    </div> <!-- End class container -->
+        <!-- Page Content -->
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="list-group">
+                      <!-- Render each blog post -->
+                      <% posts.forEach((post) => { %>
+                            <a href="/post/<%= post.id %>" class="list-group-item">
+                                 <!-- Title -->
+                                <h4 class="list-group-item-heading"><%= post.title %></h4>
+                                <!-- Author -->
+                                <p class="list-group-item-text">by <%= post.author %></p>
+                                <!-- Body -->
+                                <p class="list-group-item-text"><%= post.body %></p>
+                                <!-- Date/Time -->
+                                <p><span class="glyphicon glyphicon-time"></span> <%= post.timestamp %></p>
+                            </a>
+                      <% }) %>
+                    </div> <!-- End class list-group -->
+                </div> <!-- End class col-lg-12 -->
+            </div> <!-- End class row -->
+        </div> <!-- End class container -->
+    </div> <!--End container id -->
 </body>
 
 <footer>

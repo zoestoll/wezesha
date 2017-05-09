@@ -26,7 +26,7 @@ p {
     width: 100%;
     max-width: 2000px !important;
     /*padding: 20px 30px;*/
-    min-height: 80%;
+    /*min-height: 80%;*/
 }
 
 #container {
@@ -371,7 +371,7 @@ header {
 
 #about_head {
     font-family: times, "Times New Roman", times-roman, georgia, serif;
-    font-size: 48px;
+    font-size: 42px;
     font-style: italic;
     line-height: 40px;
     /*letter-spacing: -1px;*/
@@ -640,21 +640,26 @@ div.panel {
 
 .findus {
     background-size: 90%;
-    margin-left: 40px;
-    margin-bottom: 40px;
+    /*margin-left: 40px;
+    margin-bottom: 40px;*/
 }
 
 .findus h1 {
-    font-size: 36px;
+    font-size: 42px;
     font-family: times, Times New Roman, times-roman, georgia, serif;
     font-style: italic;
     color: #444;
     border-bottom: 3px solid #000080;
     /*padding-bottom: 5px;*/
-    margin: 15px;
+/*    margin: 15px;
     padding-top: 10px;
     padding-bottom: 5px;
-
+*/
+    font-weight: 100;
+    padding: 15px;
+    margin: 15px;
+    margin-bottom: 0px;
+    border-bottom: 3px solid #000080;
 }
 
 /*.findus h2 {
@@ -673,9 +678,12 @@ div.panel {
 .findus .lowerheader {
     font-size: 28px; 
     font-family: Georgia, serif;
-    padding-bottom: 5px;
     color: #4E443C;
     font-variant: small-caps;
+    padding: 15px;
+    margin-left: 15px;
+    margin-right: 15px;
+    margin-top: 0px;
 }
 
 .findus .text {
