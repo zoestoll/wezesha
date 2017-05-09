@@ -13,16 +13,12 @@ var exp = module.exports = {};
 /* TODO: Update these values */
 var localhost = "127.0.0.1";
 var port = 8080;
-var messages = [];
 var APIKey = "AIzaSyDBs20a1Nr7ZDxF7Tq8-69JheH2zeQOLkg";
 
-/****************************************************** INIT ******************************************************/
+/****************************************************** SETUP DB AND INITIALIZE ******************************************************/
 
 /* Database config. Clear all tables and re-create. */
 var conn = anyDB.createConnection('sqlite3://wezesha.db');
-/* Temporary - won't need to drop tables every time. */
-// conn.query("DROP TABLE mapLocations");
-// conn.query("DROP TABLE news");
 
 /* User table */
 userTableCreate = "CREATE TABLE IF NOT EXISTS 'users' ('id' INTEGER PRIMARY KEY AUTOINCREMENT, 'username' VARCHAR(255), 'password' VARCHAR(255), 'createdAt' DATETIME, 'updatedAt' DATETIME, 'salt' VARCHAR(255), 'isAdmin' BOOLEAN)"
@@ -92,8 +88,6 @@ app.use(require('express-session')({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-
-var isLoggedIn = 0; /* TEMPORARY FOR DEMONSTRATION PURPOSES. REMOVE THIS LATER! */
 
 /* Maps config */
 var geocoder = NodeGeocoder(options);
@@ -278,7 +272,6 @@ app.get('/handouts', function (req, res) {
 
 /***** ADMIN REQUESTS *****/
 
-
 /* GET request for general map page */
 app.get('/admin_map', ensureAuthenticated, findPins, renderPins);
 
@@ -292,7 +285,7 @@ app.get('/donations', function (req, res) {
 });
 
 
-/***** ACCOUNT REQUESTS *****/
+/**************************************************** ACCOUNT REQUESTS *************************************************/
 
 /* Sign up for new account */
 app.get("/signup", function (req, res) {
@@ -318,8 +311,6 @@ app.get('/admin_donations', ensureAuthenticated, function (req, res) {
     res.render('admin_donations', { title: "Donations", page_name: "admin_donations", logged_in: req.isAuthenticated()});
 });
 
-// TODO: logout
-
 
 /****************************************************** MAP ******************************************************/
 
@@ -344,18 +335,11 @@ app.post('/addPin', function(request, response) {
             response.redirect("map");
         });
     }
-    
-    /* TODO: Check validity of latitude/longitude sent to us */
-    /* TODO: Check authentication of user sending request */
-
 });
 
 function searchServices(req, res, next) {
-    /* TODO: Incorporate searching by specific location */
     var serviceType = req.body.serviceType;
-    console.log("serviceType requested: ", serviceType);
-    // var lat = req.body.latitude;
-    // var lng = req.body.longitude;
+    // console.log("serviceType requested: ", serviceType);
     queryStr = "SELECT * FROM mapLocations WHERE serviceType=(?)";
     conn.query(queryStr, serviceType, function(error, rows) {
 
@@ -368,7 +352,7 @@ function searchServices(req, res, next) {
 }
 
 function renderServices(req, res) {
-    console.log("Retrieve pins: ", req.pins);
+    // console.log("Retrieve pins: ", req.pins);
     res.render('map', {
         title: "Map",
         page_name: "map",
@@ -449,7 +433,7 @@ app.get('/post/:id', (req, res) => {
     });
 });
 
-/* For writing a new blog post */
+
 app.get('/write', function(req, res) {
     if (req.isAuthenticated()) {
         res.render("write", { title: "Write a Post!", page_name: "write", logged_in: req.isAuthenticated()});
@@ -469,7 +453,8 @@ function isChecked(req, category) {
 
 app.post('/write', function(req, res) {
 
-    if (req.isAuthenticated()) { /* Check that they're authorized to send this request */
+    /* Check that they're authorized to send this request */
+    if (req.isAuthenticated()) { 
         var author = req.body['author'];
         var title = req.body['title'];
         var body = req.body['body'];
@@ -516,7 +501,8 @@ app.get('/edit/:id', (req, res) => {
 
 app.post('/edit/:id', function(req, res) {
 
-    if (req.isAuthenticated()) {/* Check that they're authorized to send this request */
+    /* Check that they're authorized to send this request */
+    if (req.isAuthenticated()) {
         var author = req.body['author'];
         var title = req.body['title'];
         var body = req.body['body'];
@@ -540,7 +526,7 @@ app.post('/edit/:id', function(req, res) {
 });
 
 
-/********************************************** STORING AND RETRIEVING DONATION DATA ******************************************************/
+/********************************************** DONATIONS PAGE ******************************************************/
 
 app.post('/donations', function (req, res) {
     var name = req.body.name;
@@ -549,9 +535,6 @@ app.post('/donations', function (req, res) {
     var address = req.body.address;
     var cause = req.body.cause;
     var timestamp = getPrettyDate();
-
-    // console.log(req.body);
-
     var sql = 'INSERT INTO donations (name, amount, email, address, cause, timestamp) VALUES ($1, $2, $3, $4, $5, $6)';
     conn.query(sql, [name, amount, email, address, cause, timestamp]);
 
@@ -575,7 +558,7 @@ app.get('/donation_data', ensureAuthenticated, function(req, res) {
     }
 });
 
-/****************************************************** EDUCATION NEWS PAGE ******************************************************/
+/****************************************************** EDUCATION PAGE ******************************************************/
 
 /* GET request for news page */
 app.get('/education', function (req, res) {
@@ -592,7 +575,7 @@ app.get('/education', function (req, res) {
 
 });
 
-/****************************************************** MEDICAL NEWS PAGE ******************************************************/
+/****************************************************** MEDICAL PAGE ******************************************************/
 
 /* GET request for news page */
 app.get('/medical', function (req, res) {
@@ -606,7 +589,7 @@ app.get('/medical', function (req, res) {
     });
 })
 
-/****************************************************** COMMUNITY NEWS PAGE ******************************************************/
+/****************************************************** COMMUNITY PAGE ******************************************************/
 
 /* GET request for news page */
 app.get('/community', function (req, res) {
@@ -620,7 +603,7 @@ app.get('/community', function (req, res) {
     });
 })
 
-/****************************************************** PARTNERS NEWS PAGE ******************************************************/
+/****************************************************** PARTNERS PAGE ******************************************************/
 
 /* GET request for news page */
 app.get('/partners', function (req, res) {
@@ -634,7 +617,7 @@ app.get('/partners', function (req, res) {
     });
 })
 
-/****************************************************** PARTNERS NEWS PAGE ******************************************************/
+/****************************************************** HANDOUTS PAGE ******************************************************/
 
 /* GET request for handouts page */
 app.get('/handouts', function (req, res) {
@@ -647,15 +630,6 @@ app.get('/handouts_swahili', function (req, res) {
 })
 
 /******************************************************* HELPER FUNCTIONS ******************************************************/
-
-function generateRandomID() { /* From TA suggested code */
-    /* make a list of legal characters */
-    var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-    var result = '';
-    for (var i = 0; i < 6; i++)
-        result += chars.charAt(Math.floor(Math.random() * chars.length));
-    return result;
-};
 
 function getPrettyDate() {
     /* Get current time */
@@ -672,7 +646,7 @@ exp.closeServer = function(){
     http.close();
 };
 
-/********************************** LISTENING ******************************************************/
+/************************************************************* LISTENING ******************************************************/
 
 http.listen(app.get("port"), app.get("ipaddr"), function(){
     console.log("server listening on port " + port);
