@@ -8,14 +8,10 @@ html {
 }
 
 body {
-    /*background-color: lightgray;*/
     background-position: right; 
-    /* padding-bottom: 100px; */
     margin-top: 50px;
     width: 100%;
     margin: 0 auto;
-    /*height: 100%;*/
-    /*padding-bottom: 20px;*/
 }
 
 p { 
@@ -23,23 +19,13 @@ p {
     padding: 0 30px;
 }
 
-main {
-    height: ;
-}
-
 .container {
     width: 100%;
     max-width: 2000px !important;
-    /*padding: 20px 30px;*/
-    /*min-height: 80%;*/
 }
 
 #container {
-    /*min-height: 77%;
-    padding-bottom: 20px;*/
-
     min-height: calc(100vh - 155px);
-
 }
 
 .main {
@@ -49,7 +35,6 @@ main {
 .highlight-card {
     min-height: 200px;
     margin-top: -300px;
-    /*background-color: lightgray;*/
 }
 
 
@@ -64,9 +49,6 @@ h1, h2, h3, h4, h5, h6, li, p {
 
 h3 {
     margin-bottom: 15px;
-}
-a, a:hover, a:active, a:focus {
-    /*color: white;*/
 }
 
 p {
@@ -227,7 +209,6 @@ header {
     background-image: "/img/smiling.png";
 }
 
-
 .home_icon {
     color: white;
     font-size: 200pt;
@@ -261,10 +242,7 @@ header {
 }
 
 #home_buttons p {
-    /*background-color: rgba(128, 0, 64, 0.3);*/
-    /*background-image: "/img/smiling.png";*/
     height: 20px;
-    /*margin-top: 130px;*/
     width: 250px;
     height: 250px;
 }
@@ -275,40 +253,12 @@ header {
   height: 250px;
 }
 .image:hover {
-  /*opacity:0.5;*/
-  /*background-color: rgba(0, 0, 0, 0.6);*/
   background-image: "/img/smiling.png";
-/*  width: 250px;
-  height: 250px;*/
 }
-
-/*image.overlay {
-  position: auto;
-  height: 100%;
-  width: 100%;*/
-  /*opacity: 0;*/
- /* transition: .5s ease;
-  background-color: lightblue;
-}*/
-/*.container:hover .overlay {
-  opacity: 1;
-}
-
-.text {
-  color: white;
-  font-size: 20px;
-  position: auto;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  -ms-transform: translate(-50%, -50%);
-}*/
-
 
 .home_ed {
     width: 150px;
     height: 150px;
-    /*background-image: url("/img/education/home_ed.png");*/
 }
 
 #home_comm {
@@ -351,7 +301,6 @@ header {
     margin-left: 25px;
 }
 
-
 .news_embedded_calendar {
     /* Font */
     font-weight: bold;
@@ -368,7 +317,6 @@ header {
     font-size: 24px;
     color: white;
     background: #008000;
-    /*width: 20%;*/
     padding: 12px 20px;
     margin: 8px 20px;
     display: inline-block;
@@ -380,7 +328,6 @@ header {
     font-size: 24px;
     color: white;
     background: #008000;
-    /*width: 20%;*/
     padding: 12px 20px;
     margin: 8px 20px;
     margin-top: 30px;
@@ -398,8 +345,7 @@ header {
     font-family: times, Times New Roman, times-roman, georgia, serif;
     font-style: italic;
     color: #444;
-/*    border-bottom: 3px solid #000080;
-*/    font-weight: 100;
+    font-weight: 100;
     padding: 25px; 
     padding-bottom: 0px;
     padding-top: 20px;
@@ -456,7 +402,6 @@ header {
     font-size: 42px;
     font-style: italic;
     line-height: 40px;
-    /*letter-spacing: -1px;*/
     color: #444;
     font-weight: 100;
     padding: 15px;
@@ -466,7 +411,6 @@ header {
 }
 
 .about {
-    /*font-family: Sans Serif;*/
     padding: 15px;
     margin-left: 15px;
     margin-right: 15px;
@@ -495,7 +439,6 @@ header {
 
 .about h2 {
     font-size: 24pt;
-    /*font-style: italic;*/
     color: maroon;
     margin: 15px;
     font-family:Georgia,serif;
@@ -548,8 +491,6 @@ header {
 
 /* Add some shadows to create a card effect */
 .card {
-    /*padding: 10px;*/
-    /*margin: 10px;*/
     box-shadow: 0px 4px 8px 3px rgba(0, 0, 0, 0.2);
     width: 440px;
     margin: 10px;
@@ -557,7 +498,6 @@ header {
 
 .card p {
     font-family:Times;
-    /*line-height: 20px;*/
 }
 
 .card img {
@@ -576,13 +516,6 @@ header {
     padding: 16px;
 }
 
-/* Clear floats */
-/*.container::after, .row::after {
-    content: "";
-    clear: both;
-    display: table;
-}*/
-
 .title {
     color: grey;
 }
@@ -597,7 +530,6 @@ header {
     background-color: #000;
     text-align: center;
     cursor: pointer;
-    /*width: 100%;*/
 }
 
 .button:hover {
@@ -614,24 +546,16 @@ header {
     margin-top: 10px;
     width: 80%;
     /* Font */
-    /*position: left;*/
     font-family: Lucida Grande;
     font-size: 18px;
     /* Background */
     background-origin: border-box;
     /* Border */
-    /*border-spacing: 5px;*/
-    /*border: 10px solid transparent;*/
-    /*background-color: transparent !important;*/
     border-collapse: collapse;
-    /* Position */
-/*    margin-top: 20px;
-    padding-left: 20px;*/
 }
 
 .resources_list a {
     color: black;
-    /*font-size:;*/
 }
 
 .resources_list p {
@@ -641,18 +565,18 @@ header {
 
 /* unvisited link */
 a:link {
-    color: green;
+    color: white;
     font-style: italic;
 }
 
 /* visited link */
 a:visited {
-    color: green;
+    color: white;
 }
 
 /* mouse over link */
 a:hover {
-    color: hotpink;
+    color: white;
 }
 
 /* selected link */
@@ -683,7 +607,6 @@ a:active {
     min-height: 80vh;
     width: 100%;
     background-color: white;
-    /*background-image: url("/img/smiling.png");*/
     background-size: cover;
     
 }
@@ -693,32 +616,16 @@ a:active {
     font-style: italic;
     color: #444;
     border-bottom: 3px solid #000080;
-    /* padding-bottom: 5px; */
     font-weight: 100;
-
     padding: 15px;
     margin: 15px;
     margin-bottom: 0px;
-
-    /*font-size: 16pt;
-    font-family: Lucida Grande;
-    font-style: italic;
-    color: rgb(182,0,0);
-    border-bottom: 3px solid #000080;*/
-/*    padding-bottom: 5px;
-    margin: 15px 0;*/
 }
 
 .resources {
     padding-left: 40px;
 }
 
-/*.resources_list h2 {
-    font-family: Lucida Grande;
-    color: purple;
-    font-style: italic;
-}
-*/
 .resources ul {
     list-style-type: none;
     padding: 10px;
@@ -746,7 +653,6 @@ div.panel {
 }
 
 
-
 /******************* Sponsors & NGOs *******************/
 
 .sponsors_main {
@@ -757,10 +663,8 @@ div.panel {
     /* Font */
     font-family: Lucida Grande;
     font-size: 18px;
-    /* Background */
     /* Border */
     border-spacing: 5px;
-    /*border: 10px solid transparent;*/
     background-color: black;
     border-collapse: collapse;
     /* Position */
@@ -775,8 +679,6 @@ div.panel {
 .findus {
     background-size: 90%;
     width: 80%;
-    /*margin-left: 40px;
-    margin-bottom: 40px;*/
 }
 
 .findus h1 {
@@ -785,30 +687,11 @@ div.panel {
     font-style: italic;
     color: #444;
     border-bottom: 3px solid #000080;
-    /*padding-bottom: 5px;*/
-/*    margin: 15px;
-    padding-top: 10px;
-    padding-bottom: 5px;
-*/
     font-weight: 100;
     padding: 15px;
     margin: 15px;
     margin-bottom: 0px;
-    border-bottom: 3px solid #000080;
 }
-
-/*.findus h2 {
-    font-size: 24pt;
-    font-family: Lucida Grande;
-    font-style: italic;
-    margin-left: 15px;
-}
-
-.findus h3 {
-    font-size: 13pt;
-    font-family: Lucida Grande;
-    padding-left: 20px;
-}*/
 
 .findus .lowerheader {
     font-size: 28px; 
@@ -831,7 +714,6 @@ div.panel {
 
 /******************* Donations *******************/
 
-
 .donation-preamble h1 {
     font-size:24px;
     font-style: italic;
@@ -848,32 +730,23 @@ div.panel {
 
 .donation-preamble h2 {
     font-size:16px;
-    /*font-family: 'Montserrat', sans-serif;*/
     margin: 30px;
 }
 
 .donation-container {
-    /*height: 1000px;*/
     font-family: 'Montserrat', sans-serif;
     font-weight: 500;
     font-size: 24px;
-    /*border-radius: 100px;*/
-    /*text-transform: uppercase;*/
     margin: 20px;
     margin-top: 30px;
 
 }
 
 .donation-box {
-/*    width: 50%;
-    height: 50%;*/
     background-color: pink;
-    /*border-radius: 100px;*/
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
     position: relative;
-/*    margin-left: auto;
-    margin-right: auto;*/
     
     -webkit-transition: all 0.15s ease-out;
     -moz-transition: all 0.15s ease-out;
@@ -886,11 +759,7 @@ div.panel {
     width: 100%;
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
-    /*color: white;*/
     text-align: center;
-/*    padding-top: 12px;
-    padding-bottom: 12px;*/
-    /*font-size: 15px;*/
 }
 
 .donation-box .donate-button {
@@ -915,7 +784,6 @@ div.panel {
     width: 50%;
     display: block;
     position: relative;
-    /*top: 60px;*/
     left: 15px;
 }
 
@@ -1048,18 +916,13 @@ input[type=checkbox]:checked + label:before { letter-spacing: 5px; } /* allow sp
 }
 
 .causes label {
-    /*font-style: italic;*/
-    /*margin: 10px;*/
     font-size: 18px;
     color: black;
 }
+
 .causes p {
-    /*font-style: italic;*/
     margin: 10px;
     font-size: 18px;
-    color: black;
-
-
     color: #666;
     font-family: "Helvetica Neue", "Lucida Grande", Helvetica, Arial, Verdana, sans-serif;
     padding-bottom: 5px;
@@ -1185,9 +1048,7 @@ span.password {
 
 footer {
     height: 20px;
-    /* position: fixed; */
     bottom: 0px;
-    /* margin-top: 50px    ; */
     padding-bottom: 75px;
     padding-top: 20px;
     width: 100%;
