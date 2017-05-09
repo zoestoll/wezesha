@@ -4,6 +4,7 @@ html {
     position: relative;
     min-height: 100%;
     width: 100%;
+    height: 100%;
 }
 
 body {
@@ -13,6 +14,7 @@ body {
     margin-top: 50px;
     width: 100%;
     margin: 0 auto;
+    height: 100%;
 }
 
 p { 
@@ -24,6 +26,15 @@ p {
     width: 100%;
     max-width: 2000px !important;
     /*padding: 20px 30px;*/
+    min-height: 80%;
+}
+
+#container {
+    min-height: 71%;
+}
+
+.main {
+    min-height: 80%;
 }
 
 .highlight-card {
@@ -182,7 +193,6 @@ header {
     font-size: 60pt;
     text-align: center;
     font-family: Lora;
-    max-width: 700px;
     font-weight: bold;
     width: 100%;
     color: white;
@@ -359,7 +369,7 @@ header {
 /******************* About *******************/
 
 #about_head {
-    font-family: times, Times New Roman, times-roman, georgia, serif;
+    font-family: times, "Times New Roman", times-roman, georgia, serif;
     font-size: 48px;
     font-style: italic;
     line-height: 40px;
@@ -368,13 +378,23 @@ header {
     font-weight: 100;
     padding: 15px;
     margin: 15px;
-
+    margin-bottom: 0px;
+    border-bottom: 3px solid #000080;
 }
 
 .about {
     /*font-family: Sans Serif;*/
     padding: 15px;
-    margin: 15px;
+    margin-left: 15px;
+    margin-right: 15px;
+    margin-top: 0px;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.card:first-child {
+    width: 700px;
 }
 
 .about p {
@@ -390,7 +410,10 @@ header {
     margin: 15px;
     font-family:Georgia,serif;
     color:#4E443C;
-    font-variant: small-caps; text-transform: none; font-weight: 100; margin-bottom: 0;
+    font-variant: small-caps;
+    text-transform: none;
+    font-weight: 100;
+    margin-bottom: 0;
 }
 
 .about h3 {
@@ -401,6 +424,10 @@ header {
     /*margin: 15px;*/
     padding: 5px;
     /*margin: 15px 0;*/
+}
+
+.about span {
+    font-weight: bold;
 }
 
 /* Three columns side by side */
@@ -423,12 +450,25 @@ header {
 .card {
     /*padding: 10px;*/
     /*margin: 10px;*/
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 4px 8px 3px rgba(0, 0, 0, 0.2);
+    width: 500px;
+    margin: 10px;
 }
 
 .card p {
     font-family:Times;
     /*line-height: 20px;*/
+}
+
+.card img {
+    max-height: 200px;
+    max-width: 200px;
+    float: right;
+    margin-right: 20px;
+    margin-top: 20px;
+    margin-left: 10px;
+    border: 3px solid silver;
+    border-radius: 25px;
 }
 
 /* Some left and right padding inside the container */
@@ -615,16 +655,19 @@ div.panel {
 }
 
 .findus h1 {
-    font-size: 24pt;
-    font-family: Lucida Grande;
-    /*font-style: italic;*/
-    color: rgb(182,0,0);
+    font-size: 36px;
+    font-family: times, Times New Roman, times-roman, georgia, serif;
+    font-style: italic;
+    color: #444;
     border-bottom: 3px solid #000080;
     /*padding-bottom: 5px;*/
     margin: 15px;
+    padding-top: 10px;
+    padding-bottom: 5px;
+
 }
 
-.findus h2 {
+/*.findus h2 {
     font-size: 24pt;
     font-family: Lucida Grande;
     font-style: italic;
@@ -635,7 +678,23 @@ div.panel {
     font-size: 13pt;
     font-family: Lucida Grande;
     padding-left: 20px;
+}*/
+
+.findus .lowerheader {
+    font-size: 28px; 
+    font-family: Georgia, serif;
+    padding-bottom: 5px;
+    color: #4E443C;
+    font-variant: small-caps;
 }
+
+.findus .text {
+    color: #666;
+    font-family: "Helvetica Neue", "Lucida Grande", Helvetica, Arial, Verdana, sans-serif;
+    padding-bottom: 5px;
+    margin-left: 5px;
+}
+
 
 /******************* Donations *******************/
 
@@ -987,7 +1046,9 @@ footer {
 .footer_line {
     display: flex;
     justify-content: center;
-    width: 105%;
+    width: 100%;
+    position: relative;
+    left: 33px;
 }
 
 footer p, footer a, footer a:visited, footer a:link {
