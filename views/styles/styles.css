@@ -350,15 +350,18 @@ header {
 }
 
 .post-button {
-    font-style: italic;
+    /*font-style: italic;*/
     font-size: 24px;
     color: blue;
-    background: pink;
+    background: black;
     /*width: 20%;*/
     padding: 12px 20px;
-    margin: 8px 20px;
-    display: inline-block;
+    /*margin: 8px 20px;*/
+    /*display: inline-block;*/
     border: 2px solid black;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
 }
 
 .news-top-img {
