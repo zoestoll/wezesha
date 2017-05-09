@@ -440,10 +440,6 @@ header {
     color: #666;
 }
 
-.about .picpara {
-    margin-top: 100px;
-}
-
 .about h2 {
     font-size: 24pt;
     color: maroon;
@@ -453,12 +449,6 @@ header {
     font-variant: small-caps;
     text-transform: none;
     font-weight: 100;
-}
-
-.about .picpage {
-    position: absolute;
-    top: 20px;
-    left: 0;
 }
 
 .about h3 {
