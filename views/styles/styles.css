@@ -193,7 +193,6 @@ header {
     font-size: 60pt;
     text-align: center;
     font-family: Lora;
-    max-width: 700px;
     font-weight: bold;
     width: 100%;
     color: white;
@@ -411,7 +410,10 @@ header {
     margin: 15px;
     font-family:Georgia,serif;
     color:#4E443C;
-    font-variant: small-caps; text-transform: none; font-weight: 100; margin-bottom: 0;
+    font-variant: small-caps;
+    text-transform: none;
+    font-weight: 100;
+    margin-bottom: 0;
 }
 
 .about h3 {
@@ -422,6 +424,10 @@ header {
     /*margin: 15px;*/
     padding: 5px;
     /*margin: 15px 0;*/
+}
+
+.about span {
+    font-weight: bold;
 }
 
 /* Three columns side by side */
@@ -455,10 +461,14 @@ header {
 }
 
 .card img {
+    max-height: 200px;
+    max-width: 200px;
     float: right;
     margin-right: 20px;
     margin-top: 20px;
-    padding-left: 10px;
+    margin-left: 10px;
+    border: 3px solid silver;
+    border-radius: 25px;
 }
 
 /* Some left and right padding inside the container */
@@ -1045,6 +1055,8 @@ footer {
     display: flex;
     justify-content: center;
     width: 100%;
+    position: relative;
+    left: 33px;
 }
 
 footer p, footer a, footer a:visited, footer a:link {
