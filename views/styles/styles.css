@@ -38,7 +38,7 @@ main {
     /*min-height: 77%;
     padding-bottom: 20px;*/
 
-    min-height: calc(100% - 95px);
+    min-height: calc(100vh - 155px);
 
 }
 
@@ -90,7 +90,6 @@ p {
     display: block;
     padding: 3px;
 }
-
 
 .nav_title {
     font-size: 24px;
@@ -359,6 +358,18 @@ header {
     text-align: left;
 }
 
+.logout-button {
+    font-style: italic;
+    font-size: 24px;
+    color: blue;
+    background: pink;
+    /*width: 20%;*/
+    padding: 12px 20px;
+    margin: 8px 20px;
+    display: inline-block;
+    border: 2px solid yellow;
+}
+
 .post-button {
     font-style: italic;
     font-size: 24px;
@@ -463,6 +474,8 @@ header {
 
 .card:first-child {
     width: 700px;
+    margin-left: 40px;
+    margin-right: 40px;
 }
 
 .about p {

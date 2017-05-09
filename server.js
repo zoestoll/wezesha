@@ -157,23 +157,23 @@ passport.deserializeUser(function(id, done) {
             return done(null, false);
         }
         return done(null, row);
-  });
+    });
 });
 
 /* Login */
 app.get("/admin_login", function (req, res) {
-    res.render('admin_login', { title: "Admin Login", page_name: "admin_login"});
+    res.render('admin_login', { title: "Admin Login", page_name: "admin_login", logged_in: req.isAuthenticated()});
 });
 
 app.post('/admin_login', passport.authenticate('local', { failureRedirect: '/admin_login' }), function(req, res) {
     /* Successful login */
-    res.render('index', { title: "Home", page_name: "home"});
+    res.render('index', { title: "Home", page_name: "home", logged_in: req.isAuthenticated()});
 });
 
 /* Signup */
 
 app.get('/signup', function(req, res) {
-    res.render('signup', { title: "Signup", page_name: "signup"});
+    res.render('signup', { title: "Signup", page_name: "signup", logged_in: req.isAuthenticated()});
 });
 
 app.post('/signup', function(req, res) {
@@ -198,9 +198,9 @@ app.get('/logout', function (req, res) {
 /* GET request for top directory (http://localhost:8080) */
 app.get('/',function(req, res){
     if (req.user) {
-        res.render('index', { title: "Home", page_name: "home"});
+        res.render('index', { title: "Home", page_name: "home", logged_in: req.isAuthenticated()});
     } else {
-        res.render('index', { title: "Home", page_name: "home"});
+        res.render('index', { title: "Home", page_name: "home", logged_in: req.isAuthenticated()});
     }
 });
 
@@ -208,12 +208,12 @@ app.get('/',function(req, res){
 
 /* (1) GET request for home */
 app.get('/index', function (req, res) {
-    res.render('index', { title: "Home", page_name: "home"});
+    res.render('index', { title: "Home", page_name: "home", logged_in: req.isAuthenticated()});
 });
 
 /* (2) GET request for about */
 app.get('/about', function (req, res) {
-    res.render('about', { title: "About", page_name: "about"});
+    res.render('about', { title: "About", page_name: "about", logged_in: req.isAuthenticated()});
 });
 
 /* (3) GET request for news page */
@@ -225,9 +225,9 @@ app.get('/news', function (req, res) {
             posts = result.rows;
         }      
         if (req.isAuthenticated()) {
-            res.render('admin_news', { title: "News", page_name: "news", posts: posts});
+            res.render('admin_news', { title: "News", page_name: "news", posts: posts, logged_in: req.isAuthenticated()});
         } else {
-            res.render('news', { title: "News", page_name: "news", posts: posts});
+            res.render('news', { title: "News", page_name: "news", posts: posts, logged_in: req.isAuthenticated()});
         }
     });
 })
@@ -236,7 +236,7 @@ app.get('/news', function (req, res) {
 /* (4) GET request for findus  */
 app.get('/admin_news', function (req, res) {
     if (req.isAuthenticated()) {
-        res.render('admin_news', { title: "News", page_name: "news"});
+        res.render('admin_news', { title: "News", page_name: "news", logged_in: req.isAuthenticated()});
     } else {
         res.redirect("news");
     }
@@ -253,19 +253,19 @@ function ensureAuthenticated(req, res, next) {
 
 /* (4) GET request for findus  */
 app.get('/findus', function (req, res) {
-    res.render('findus', { title: "Find Us", page_name: "findus"});
+    res.render('findus', { title: "Find Us", page_name: "findus", logged_in: req.isAuthenticated()});
 });
 
 /* (5) GET request for resources page*/
 app.get('/resources', function (req, res) {
-    res.render('resources', { title: "Resources", page_name: "resources"});
+    res.render('resources', { title: "Resources", page_name: "resources", logged_in: req.isAuthenticated()});
 });
 
 /***** Subpages of resources page: (a) sponsors, (b) map, (c) handouts *****/
 
 /* (a) GET request for sponsors page*/
 app.get('/sponsors', function (req, res) {
-    res.render('sponsors', { title: "Sponsors", page_name: "sponsors"});
+    res.render('sponsors', { title: "Sponsors", page_name: "sponsors", logged_in: req.isAuthenticated()});
 });
 
 /* (b) GET request for general (non-admin) map page */
@@ -273,7 +273,7 @@ app.get('/map', findPins, renderPins);
 
 /* (c) GET request for handouts page*/
 app.get('/handouts', function (req, res) {
-    res.render('handouts', { title: "Handouts", page_name: "handouts"});
+    res.render('handouts', { title: "Handouts", page_name: "handouts", logged_in: req.isAuthenticated()});
 });
 
 /***** ADMIN REQUESTS *****/
@@ -285,9 +285,9 @@ app.get('/admin_map', ensureAuthenticated, findPins, renderPins);
 /* GET request for donations page */
 app.get('/donations', function (req, res) {
     if (req.isAuthenticated()) {
-        res.render('admin_donations', { title: "Donations", page_name: "admin_donations"});
+        res.render('admin_donations', { title: "Donations", page_name: "admin_donations", logged_in: req.isAuthenticated()});
     } else {
-        res.render('donations', { title: "Donations", page_name: "donations"});
+        res.render('donations', { title: "Donations", page_name: "donations", logged_in: req.isAuthenticated()});
     }
 });
 
@@ -299,23 +299,23 @@ app.get("/signup", function (req, res) {
     if (req.session.user) {
         res.redirect("/");
     } else {
-        res.render('signup', { title: "Signup", page_name: "signup"});
+        res.render('signup', { title: "Signup", page_name: "signup", logged_in: req.isAuthenticated()});
     }
 });
 
 /* GET request for login form */
 app.get('/login', function (req, res) {
-    res.render('admin_login', { title: "Login", page_name: "login"});
+    res.render('admin_login', { title: "Login", page_name: "login", logged_in: req.isAuthenticated()});
 });
 
 /* GET request for login form */
 app.get('/admin_map', function (req, res) {
-    res.render('admin_map', { title: "Admin Map", page_name: "admin_map"});
+    res.render('admin_map', { title: "Admin Map", page_name: "admin_map", logged_in: req.isAuthenticated()});
 });
 
 /* GET request for login form */
 app.get('/admin_donations', ensureAuthenticated, function (req, res) {
-    res.render('admin_donations', { title: "Donations", page_name: "admin_donations"});
+    res.render('admin_donations', { title: "Donations", page_name: "admin_donations", logged_in: req.isAuthenticated()});
 });
 
 // TODO: logout
@@ -372,7 +372,8 @@ function renderServices(req, res) {
     res.render('map', {
         title: "Map",
         page_name: "map",
-        pins: req.pins
+        pins: req.pins,
+        logged_in: req.isAuthenticated()
     });
 }
 
@@ -395,13 +396,15 @@ function renderPins(req, res) {
          res.render('admin_map', {
             title: "Admin Map",
             page_name: "map",
-            pins: req.pins
+            pins: req.pins,
+            logged_in: req.isAuthenticated()
         });
     } else { /* unauthorized to view admin map */
         res.render('map', {
             title: "Map",
             page_name: "map",
-            pins: req.pins
+            pins: req.pins,
+            logged_in: req.isAuthenticated()
         });
     }
 }
@@ -428,7 +431,8 @@ app.get('/post/:id', (req, res) => {
                 author: post.author, 
                 title: post.title, 
                 body: post.body, 
-                timestamp: post.timestamp
+                timestamp: post.timestamp,
+                logged_in: req.isAuthenticated()
             });
 
         } else {
@@ -439,6 +443,7 @@ app.get('/post/:id', (req, res) => {
                 title: post.title, 
                 body: post.body, 
                 timestamp: post.timestamp,
+                logged_in: req.isAuthenticated()
             });
         }
     });
@@ -447,7 +452,7 @@ app.get('/post/:id', (req, res) => {
 /* For writing a new blog post */
 app.get('/write', function(req, res) {
     if (req.isAuthenticated()) {
-        res.render("write", { title: "Write a Post!", page_name: "write" });
+        res.render("write", { title: "Write a Post!", page_name: "write", logged_in: req.isAuthenticated()});
     } else {
         res.redirect('/news');
     }
@@ -500,7 +505,7 @@ app.get('/edit/:id', (req, res) => {
         var sql = 'SELECT id, author, title, body, timestamp FROM news WHERE id = $1';
         conn.query(sql, [id], function(error, result){
             post = result.rows[0];
-            res.render('edit', { title: "Edit", page_name: "edit", post_id: post.id, author: post.author, title: post.title, body: post.body});
+            res.render('edit', { title: "Edit", page_name: "edit", post_id: post.id, author: post.author, title: post.title, body: post.body, logged_in: req.isAuthenticated()});
         });
 
     } else {
@@ -554,19 +559,17 @@ app.post('/donations', function (req, res) {
         conn.query(sql2, function(error, result){
         donations = result.rows;
     });
-
     res.redirect('https://ywamtyler.org/funddonation?uid=8c0fa911-e498-4136-afda-614268c56541');
 });
 
 
 app.get('/donation_data', ensureAuthenticated, function(req, res) {
-
     if (req.user) {
         var sql = 'SELECT id, name, amount, email, address, cause, timestamp FROM donations ORDER BY timestamp DESC';
         conn.query(sql, function(error, result){
             donations = result.rows;
         });
-        res.render("donation_data", { title: "Donation Data", page_name: "donation_data", posts: donations});
+        res.render("donation_data", { title: "Donation Data", page_name: "donation_data", posts: donations, logged_in: req.isAuthenticated()});
     } else {
         res.redirect("donations");
     }
@@ -584,7 +587,7 @@ app.get('/education', function (req, res) {
         if (result != undefined) {
             education_posts = result.rows;
         }
-        res.render('education', { title: "Education", page_name: "education", posts: education_posts});
+        res.render('education', { title: "Education", page_name: "education", posts: education_posts, logged_in: req.isAuthenticated()});
     });
 
 });
@@ -599,7 +602,7 @@ app.get('/medical', function (req, res) {
         if (result != undefined) {
             medical_posts = result.rows;
         }      
-        res.render('medical', { title: "Medical", page_name: "medical", posts: medical_posts});
+        res.render('medical', { title: "Medical", page_name: "medical", posts: medical_posts, logged_in: req.isAuthenticated()});
     });
 })
 
@@ -613,7 +616,7 @@ app.get('/community', function (req, res) {
         if (result != undefined) {
             community_posts = result.rows;
         }      
-        res.render('community', { title: "Community", page_name: "community", posts: community_posts});
+        res.render('community', { title: "Community", page_name: "community", posts: community_posts, logged_in: req.isAuthenticated()});
     });
 })
 
@@ -627,7 +630,7 @@ app.get('/partners', function (req, res) {
         if (result != undefined) {
             partner_posts = result.rows;
         }      
-        res.render('partners', { title: "Partners", page_name: "partners", posts: partner_posts});
+        res.render('partners', { title: "Partners", page_name: "partners", posts: partner_posts, logged_in: req.isAuthenticated()});
     });
 })
 
@@ -635,12 +638,12 @@ app.get('/partners', function (req, res) {
 
 /* GET request for handouts page */
 app.get('/handouts', function (req, res) {
-    res.render('handouts', { title: "Handouts", page_name: "handouts"});
+    res.render('handouts', { title: "Handouts", page_name: "handouts", logged_in: req.isAuthenticated()});
 })
 
 /* GET request for handouts swahili page */
 app.get('/handouts_swahili', function (req, res) {
-    res.render('handouts_swahili', { title: "Handouts Swahili", page_name: "handouts_swahili"});
+    res.render('handouts_swahili', { title: "Handouts Swahili", page_name: "handouts_swahili", logged_in: req.isAuthenticated()});
 })
 
 /******************************************************* HELPER FUNCTIONS ******************************************************/
